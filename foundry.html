@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Azure AI Foundry – AI-102</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header"><span>AI-102</span>Azure AI Engineer Associate</div>
+  <nav>
+    <div class="section-label">Overview</div>
+    <a href="index.html">Exam Overview</a>
+    <div class="section-label">Module 1</div>
+    <a href="m1.html">Azure AI Services</a>
+    <div class="section-label">Module 2</div>
+    <a href="m2.html">Computer Vision</a>
+    <div class="section-label">Module 3</div>
+    <a href="m3.html">Azure AI Language</a>
+    <a href="translator.html">Azure AI Translator</a>
+    <div class="section-label">Module 4</div>
+    <a href="m4.html">Speech Services</a>
+    <div class="section-label">Module 5</div>
+    <a href="m5.html">Language Understanding (CLU)</a>
+    <div class="section-label">Module 6</div>
+    <a href="m6.html">Document Intelligence</a>
+    <div class="section-label">Module 7</div>
+    <a href="m7.html">Knowledge Mining &amp; AI Search</a>
+    <div class="section-label">Module 8</div>
+    <a href="m8.html">Azure OpenAI &amp; Generative AI</a>
+    <div class="section-label">Module 9</div>
+    <a href="m9.html">Content Safety &amp; Responsible AI</a>
+    <div class="section-label">Platform</div>
+    <a href="foundry.html">Azure AI Foundry</a>
+    <div class="section-label">Reference</div>
+    <a href="pricing.html">Tiers &amp; Pricing</a>
+    <a href="quickref.html">Quick Reference</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <div class="module" id="foundry">
+    <div class="module-header">
+      <div class="module-number">F</div>
+      <h2>Azure AI Foundry</h2>
+    </div>
+
+    <h3>What is Azure AI Foundry?</h3>
+    <p>Azure AI Foundry (formerly Azure AI Studio) is the unified platform for building, evaluating, and deploying enterprise-grade AI applications and agents. It combines model access, development tools, safety evaluation, and deployment into a single portal at <strong>ai.azure.com</strong>.</p>
+
+    <div class="callout info">
+      <strong>Key Concept</strong>
+      Azure AI Foundry is the go-to platform for AI-102. It consolidates model catalog, prompt flow, evaluation, fine-tuning, and the Azure AI Foundry SDK. Many exam questions relate to choosing the right tool within Foundry.
+    </div>
+
+    <h3>Hub and Project Architecture</h3>
+    <p>Foundry uses a two-level hierarchy:</p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Hub</div>
+        <p>Top-level resource. Defines <strong>shared infrastructure</strong>: connections to Azure services (OpenAI, Search, Storage), network policy, compute, and identity. Created once per team/organization.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Project</div>
+        <p>Team workspace <strong>within</strong> a Hub. Where you build, test, and deploy AI apps. Projects inherit Hub connections but can have their own resources. Used to organize work by app or team.</p>
+      </div>
+    </div>
+
+    <h3>Model Catalog</h3>
+    <p>Browse and deploy models from multiple providers without managing infrastructure.</p>
+    <table>
+      <tr><th>Family</th><th>Models</th><th>Strengths</th></tr>
+      <tr><td>Azure OpenAI</td><td>GPT-4o, GPT-4o mini, o1, o3-mini, GPT-3.5 Turbo, DALL-E 3, Whisper, text-embedding-3-*</td><td>Most capable; enterprise SLA</td></tr>
+      <tr><td>Microsoft Phi</td><td>Phi-3.5-mini, Phi-3.5-MoE, Phi-3-mini/small/medium</td><td>Small, fast, on-device; strong reasoning per size</td></tr>
+      <tr><td>Meta Llama</td><td>Llama 3.1/3.2/3.3 (8B, 70B, 405B)</td><td>Open weights, large community</td></tr>
+      <tr><td>Mistral AI</td><td>Mistral Large, Mistral Small, Mixtral</td><td>Efficient, multilingual</td></tr>
+      <tr><td>Cohere</td><td>Command R+, Embed v3</td><td>RAG-optimised, embeddings</td></tr>
+    </table>
+
+    <h3>Deployment Types</h3>
+    <table>
+      <tr><th>Type</th><th>Description</th><th>Best For</th></tr>
+      <tr><td><strong>Standard</strong></td><td>Shared compute. Pay per token from a model quota pool.</td><td>Development, variable/low workloads</td></tr>
+      <tr><td><strong>Global Standard</strong></td><td>Dynamically routes to the best Azure region. Higher quota.</td><td>High-throughput, global apps</td></tr>
+      <tr><td><strong>Provisioned (PTU)</strong></td><td>Reserved compute capacity. Predictable latency. Billed per PTU-hour.</td><td>Production with steady, high load</td></tr>
+      <tr><td><strong>Serverless API</strong></td><td>For non-OpenAI models (Phi, Llama, Mistral). No quota reservation; pay per token.</td><td>Open-source models at scale</td></tr>
+    </table>
+
+    <div class="callout exam">
+      <strong>Exam Tip — PTU vs Standard</strong>
+      PTU (Provisioned Throughput Units) gives guaranteed throughput and lower, consistent latency — choose it when you need predictable performance in production. Standard is cheaper for irregular workloads. PTU is billed hourly regardless of usage.
+    </div>
+
+    <h3>Prompt Flow</h3>
+    <p>Prompt Flow is a visual LLM application builder inside Foundry. It lets you create, test, and evaluate multi-step AI pipelines.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">DAG Flow</div>
+        <p>Directed Acyclic Graph of connected nodes. Each node is a step: LLM call, Python code, tool invocation, or prompt template. General-purpose.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Chat Flow</div>
+        <p>Optimised for multi-turn conversational applications. Includes chat history management and a built-in test interface.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Evaluation Flow</div>
+        <p>Tests another flow against a dataset. Returns quality and safety metrics for comparison. Used to benchmark prompt or model changes.</p>
+      </div>
+    </div>
+
+    <h4>Flow Node Types</h4>
+    <table>
+      <tr><th>Node Type</th><th>Purpose</th></tr>
+      <tr><td>LLM</td><td>Call an Azure OpenAI or other model with a prompt template</td></tr>
+      <tr><td>Python</td><td>Run custom Python code for pre/post-processing</td></tr>
+      <tr><td>Prompt</td><td>Render a Jinja2 prompt template with input variables</td></tr>
+      <tr><td>Tool (Function)</td><td>Call an Azure AI service (Search, Content Safety, etc.)</td></tr>
+      <tr><td>Condition</td><td>Branch flow logic based on conditions</td></tr>
+    </table>
+
+    <h3>Evaluation</h3>
+    <p>Foundry's built-in evaluation runs assess your flows against datasets and return scored metrics.</p>
+
+    <h4>Quality Metrics (AI-Assisted)</h4>
+    <table>
+      <tr><th>Metric</th><th>What it measures</th><th>Scale</th></tr>
+      <tr><td>Groundedness</td><td>Is the response supported by the provided context/sources?</td><td>1–5</td></tr>
+      <tr><td>Relevance</td><td>How well does the response address the question?</td><td>1–5</td></tr>
+      <tr><td>Coherence</td><td>Is the response logically structured and easy to follow?</td><td>1–5</td></tr>
+      <tr><td>Fluency</td><td>Is the language grammatically correct and natural?</td><td>1–5</td></tr>
+      <tr><td>Similarity</td><td>How similar is the response to the ground-truth answer?</td><td>1–5</td></tr>
+    </table>
+
+    <h4>Safety Metrics</h4>
+    <table>
+      <tr><th>Metric</th><th>Description</th></tr>
+      <tr><td>Violence</td><td>Detects violent content in model outputs</td></tr>
+      <tr><td>Hate/Unfairness</td><td>Detects discriminatory language</td></tr>
+      <tr><td>Sexual</td><td>Detects sexually explicit content</td></tr>
+      <tr><td>Self-Harm</td><td>Detects content encouraging self-harm</td></tr>
+    </table>
+
+    <h3>Fine-tuning in Azure AI Foundry</h3>
+    <p>Fine-tune supported models using your own training data within the Foundry portal.</p>
+    <ul>
+      <li><strong>Supported models</strong>: GPT-4o, GPT-4o mini, GPT-3.5 Turbo, Phi-3</li>
+      <li><strong>Data format</strong>: JSONL with <code>{"messages": [{"role": "system", ...}, {"role": "user", ...}, {"role": "assistant", ...}]}</code></li>
+      <li><strong>Process</strong>: Upload training data → Create fine-tuning job → Monitor → Evaluate → Deploy as new deployment</li>
+      <li><strong>Validation data</strong>: Optional; used to measure overfitting</li>
+    </ul>
+
+    <div class="callout warn">
+      <strong>Fine-tuning vs RAG</strong>
+      Prefer RAG for keeping responses grounded in up-to-date private data. Use fine-tuning only when you need consistent output <em>style</em>, <em>format</em>, or <em>tone</em> that prompt engineering alone cannot achieve.
+    </div>
+
+    <h3>Azure AI Foundry SDK</h3>
+    <p>The <code>azure-ai-projects</code> SDK provides programmatic access to Foundry resources from code.</p>
+    <pre><span class="kw">from</span> azure.ai.projects <span class="kw">import</span> <span class="cls">AIProjectClient</span>
+<span class="kw">from</span> azure.identity <span class="kw">import</span> <span class="cls">DefaultAzureCredential</span>
+
+client = <span class="cls">AIProjectClient</span>.from_connection_string(
+    conn_str=<span class="str">"&lt;project-connection-string&gt;"</span>,
+    credential=<span class="cls">DefaultAzureCredential</span>()
+)
+
+<span class="cm"># Get an Azure OpenAI client scoped to this project</span>
+openai_client = client.inference.get_azure_openai_client(api_version=<span class="str">"2024-12-01-preview"</span>)
+
+<span class="cm"># Retrieve a connection (e.g., Azure AI Search)</span>
+search_conn = client.connections.get(<span class="str">"my-search-connection"</span>)
+
+<span class="cm"># Run an evaluation</span>
+eval_result = client.evaluations.create(
+    evaluation={<span class="str">"display_name"</span>: <span class="str">"RAG eval run"</span>, ...}
+)</pre>
+
+    <h3>Connections</h3>
+    <p>Connections store credentials and endpoints for external services, so code doesn't contain secrets.</p>
+    <table>
+      <tr><th>Connection Type</th><th>Use</th></tr>
+      <tr><td>Azure OpenAI</td><td>LLM and embedding models</td></tr>
+      <tr><td>Azure AI Search</td><td>Vector and hybrid search for RAG</td></tr>
+      <tr><td>Azure Blob Storage</td><td>Training data, documents, outputs</td></tr>
+      <tr><td>Azure AI Services</td><td>Vision, Speech, Language services</td></tr>
+      <tr><td>Custom (Key Vault)</td><td>Any other service credential</td></tr>
+    </table>
+
+    <div class="callout tip">
+      <strong>Integrated Vectorization</strong>
+      In Azure AI Search + Foundry, you can configure <strong>integrated vectorization</strong>: the indexer automatically calls an Azure OpenAI embedding model during indexing. No separate embedding pipeline code needed.
+    </div>
+  </div>
+
+  <div class="page-nav">
+    <a href="m9.html" class="page-nav-btn">← Content Safety &amp; Responsible AI</a>
+    <a href="pricing.html" class="page-nav-btn">Next: Tiers &amp; Pricing →</a>
+  </div>
+
+  <footer style="text-align:center; color: var(--muted); font-size:0.8rem; padding: 2rem 0; border-top: 1px solid var(--border); margin-top: 2rem;">
+    AI-102 Study Notes &mdash; Azure AI Engineer Associate &mdash; Always verify against the official Microsoft Learn documentation.
+  </footer>
+
+</div>
+
+<script>
+const cur = window.location.pathname.split('/').pop() || 'index.html';
+document.querySelectorAll('.sidebar nav a').forEach(a => {
+  if (a.getAttribute('href').split('#')[0] === cur) a.classList.add('active');
+});
+</script>
+</body>
+</html>

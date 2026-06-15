@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 2: Computer Vision – AI-102</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header"><span>AI-102</span>Azure AI Engineer Associate</div>
+  <nav>
+    <div class="section-label">Overview</div>
+    <a href="index.html">Exam Overview</a>
+    <div class="section-label">Module 1</div>
+    <a href="m1.html">Azure AI Services</a>
+    <div class="section-label">Module 2</div>
+    <a href="m2.html">Computer Vision</a>
+    <div class="section-label">Module 3</div>
+    <a href="m3.html">Azure AI Language</a>
+    <a href="translator.html">Azure AI Translator</a>
+    <div class="section-label">Module 4</div>
+    <a href="m4.html">Speech Services</a>
+    <div class="section-label">Module 5</div>
+    <a href="m5.html">Language Understanding (CLU)</a>
+    <div class="section-label">Module 6</div>
+    <a href="m6.html">Document Intelligence</a>
+    <div class="section-label">Module 7</div>
+    <a href="m7.html">Knowledge Mining &amp; AI Search</a>
+    <div class="section-label">Module 8</div>
+    <a href="m8.html">Azure OpenAI &amp; Generative AI</a>
+    <div class="section-label">Module 9</div>
+    <a href="m9.html">Content Safety &amp; Responsible AI</a>
+    <div class="section-label">Platform</div>
+    <a href="foundry.html">Azure AI Foundry</a>
+    <div class="section-label">Reference</div>
+    <a href="pricing.html">Tiers &amp; Pricing</a>
+    <a href="quickref.html">Quick Reference</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <div class="module" id="m2">
+    <div class="module-header">
+      <div class="module-number">2</div>
+      <h2>Computer Vision</h2>
+    </div>
+
+    <h3>Azure AI Vision (Image Analysis)</h3>
+    <p>The <strong>Azure AI Vision</strong> service (v4.0 Image Analysis API) provides a unified endpoint for analysing images. It replaces earlier Computer Vision v3 endpoints.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Caption &amp; Dense Captions</div>
+        <p>Generates human-readable description of an image and per-region captions. Uses Florence foundation model.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Object Detection</div>
+        <p>Detects objects and returns bounding boxes with labels and confidence scores.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Smart Crop</div>
+        <p>Returns cropping coordinates that preserve the most visually interesting region.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Tags</div>
+        <p>Returns list of content tags with confidence scores (e.g., "outdoor", "sky", "person").</p>
+      </div>
+      <div class="card">
+        <div class="card-title">People Detection</div>
+        <p>Detects people in an image (bounding boxes). Does NOT identify individuals.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Background Removal</div>
+        <p>Segments the subject from background. Returns PNG with alpha channel.</p>
+      </div>
+    </div>
+
+    <h4>API Call (v4.0)</h4>
+    <pre>POST https://&lt;endpoint&gt;/computervision/imageanalysis:analyze
+    ?api-version=2023-02-01-preview
+    &features=Caption,Tags,Objects
+    &language=en
+
+Content-Type: application/json
+Ocp-Apim-Subscription-Key: &lt;key&gt;
+
+{ <span class="str">"url"</span>: <span class="str">"https://example.com/image.jpg"</span> }</pre>
+
+    <h3>OCR — Reading Text in Images</h3>
+    <p>Two options exist for reading text:</p>
+    <table>
+      <tr><th>Feature</th><th>Read API (recommended)</th><th>OCR API (legacy)</th></tr>
+      <tr><td>Best for</td><td>Dense text, documents, handwriting</td><td>Simple image text</td></tr>
+      <tr><td>Languages</td><td>73+</td><td>25</td></tr>
+      <tr><td>Async</td><td>Yes (operation ID polling)</td><td>No (synchronous)</td></tr>
+      <tr><td>Output structure</td><td>Page → Lines → Words</td><td>Regions → Lines → Words</td></tr>
+    </table>
+
+    <pre><span class="cm"># Submit Read operation</span>
+POST /computervision/imageanalysis:analyze?features=Read
+
+<span class="cm"># Python SDK example</span>
+<span class="kw">from</span> azure.ai.vision.imageanalysis <span class="kw">import</span> <span class="cls">ImageAnalysisClient</span>
+<span class="kw">from</span> azure.core.credentials <span class="kw">import</span> <span class="cls">AzureKeyCredential</span>
+
+client = <span class="cls">ImageAnalysisClient</span>(endpoint, <span class="cls">AzureKeyCredential</span>(key))
+result = client.analyze(image_url=url, visual_features=[<span class="cls">VisualFeatures</span>.READ])
+<span class="kw">for</span> line <span class="kw">in</span> result.read.blocks[<span class="num">0</span>].lines:
+    <span class="fn">print</span>(line.text)</pre>
+
+    <h3>Custom Vision</h3>
+    <p>Azure AI Custom Vision lets you train models for <strong>image classification</strong> and <strong>object detection</strong> on your own dataset without coding.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Image Classification</div>
+        <p>Assigns one or more labels to an entire image. Types: <strong>Multiclass</strong> (one label) or <strong>Multilabel</strong> (multiple labels). Min: 5 images per tag to train.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Object Detection</div>
+        <p>Identifies object locations with bounding boxes. Min: 15 images per tag. Labels must be drawn per image.</p>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <strong>Retirement Notice — September 30, 2026</strong>
+      Azure AI Custom Vision is being retired. For new projects, use <strong>Azure AI Vision custom models</strong> (image classification and object detection fine-tuned via Vision Studio) or Florence-based model fine-tuning in Azure AI Foundry. Custom Vision content remains on the current AI-102 exam.
+    </div>
+
+    <div class="callout exam">
+      <strong>Exam Tip</strong>
+      Custom Vision uses two separate resources: a <strong>Training</strong> resource and a <strong>Prediction</strong> resource. Training key is used to create/train; Prediction key is used for inference calls. You export models as ONNX, TensorFlow, CoreML, or Docker container for offline use.
+    </div>
+
+    <table>
+      <tr><th>Concept</th><th>Detail</th></tr>
+      <tr><td>Iteration</td><td>Each training run creates an iteration. Publish an iteration to make it available for prediction.</td></tr>
+      <tr><td>Domain</td><td>Compact domains (faster, exportable) vs. General domains (more accurate, cloud only)</td></tr>
+      <tr><td>Quick Test</td><td>Test an unpublished iteration within the portal</td></tr>
+      <tr><td>Performance metrics</td><td>Precision, Recall, AP (Average Precision) per tag</td></tr>
+    </table>
+
+    <h3>Face API</h3>
+    <p>The <strong>Face API</strong> detects, analyzes, and compares human faces.</p>
+    <div class="callout warn">
+      <strong>Responsible AI Note</strong>
+      Face identification, verification, and emotion detection features require Limited Access approval from Microsoft. Default capability is face detection only (locations, attributes).
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Face Detection</div>
+        <p>Returns face rectangles, age estimate, gender, emotion, accessories, blur, exposure, noise, occlusion, headPose, smile, glasses.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Face Verification</div>
+        <p>Compares two faces — are they the same person? Returns confidence 0–1.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Face Identification</div>
+        <p>Matches a face against a <strong>PersonGroup</strong> of known individuals. Requires training a PersonGroup first.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Find Similar</div>
+        <p>Finds similar faces from a FaceList without a PersonGroup.</p>
+      </div>
+    </div>
+
+    <h4>Face Identification Workflow</h4>
+    <pre><span class="num">1.</span> Create PersonGroup → <span class="num">2.</span> Add Persons → <span class="num">3.</span> Add Face images → <span class="num">4.</span> Train PersonGroup
+<span class="num">5.</span> Detect face in new image (get faceId) → <span class="num">6.</span> Identify faceId against PersonGroup</pre>
+
+    <h3>Video Indexer</h3>
+    <p>Extracts insights from video: transcripts, speaker identification, face detection, keyframes, labels, sentiments, brands, named entities, scene changes, and more.</p>
+    <table>
+      <tr><th>Insight Type</th><th>Description</th></tr>
+      <tr><td>Transcript &amp; OCR</td><td>Auto-captions and on-screen text</td></tr>
+      <tr><td>Faces</td><td>Celebrity recognition + custom people models</td></tr>
+      <tr><td>Labels</td><td>Objects, scenes, activities</td></tr>
+      <tr><td>Keywords</td><td>Key phrases from audio</td></tr>
+      <tr><td>Sentiments</td><td>Timeline of positive/neutral/negative sentiment</td></tr>
+      <tr><td>Topics</td><td>High-level topic classification</td></tr>
+      <tr><td>Shots &amp; Scenes</td><td>Shot detection, scene grouping</td></tr>
+    </table>
+  </div>
+
+  <div class="page-nav">
+    <a href="m1.html" class="page-nav-btn">← Azure AI Services</a>
+    <a href="m3.html" class="page-nav-btn">Next: Natural Language Processing →</a>
+  </div>
+
+  <footer style="text-align:center; color: var(--muted); font-size:0.8rem; padding: 2rem 0; border-top: 1px solid var(--border); margin-top: 2rem;">
+    AI-102 Study Notes &mdash; Azure AI Engineer Associate &mdash; Always verify against the official Microsoft Learn documentation.
+  </footer>
+
+</div>
+
+<script>
+const cur = window.location.pathname.split('/').pop() || 'index.html';
+document.querySelectorAll('.sidebar nav a').forEach(a => {
+  if (a.getAttribute('href').split('#')[0] === cur) a.classList.add('active');
+});
+</script>
+</body>
+</html>

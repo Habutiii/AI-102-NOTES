@@ -3,159 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI-102: Azure AI Engineer Associate – Complete Study Notes</title>
-<style>
-  :root {
-    --azure: #0078d4;
-    --azure-dark: #005a9e;
-    --azure-light: #e3f2fd;
-    --accent: #00b294;
-    --warn: #d83b01;
-    --note: #ffd700;
-    --bg: #f8f9fa;
-    --card: #ffffff;
-    --text: #1a1a1a;
-    --muted: #555;
-    --border: #dce1e7;
-    --code-bg: #1e1e1e;
-    --code-text: #d4d4d4;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 15px; }
-
-  /* Layout */
-  .sidebar { position: fixed; top: 0; left: 0; width: 260px; height: 100vh; background: var(--azure-dark); color: #fff; overflow-y: auto; z-index: 100; padding-bottom: 2rem; }
-  .sidebar-header { background: var(--azure); padding: 1.2rem 1rem; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.15); }
-  .sidebar-header span { font-size: 1.1rem; display: block; margin-bottom: 2px; }
-  .sidebar nav a { display: block; padding: 0.45rem 1rem 0.45rem 1.2rem; color: rgba(255,255,255,0.82); text-decoration: none; font-size: 0.82rem; border-left: 3px solid transparent; transition: all 0.15s; }
-  .sidebar nav a:hover, .sidebar nav a.active { background: rgba(255,255,255,0.1); border-left-color: var(--note); color: #fff; }
-  .sidebar nav .section-label { padding: 0.8rem 1rem 0.25rem; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.45); }
-
-  .main { margin-left: 260px; padding: 2rem 2.5rem 4rem; max-width: 1100px; }
-
-  /* Hero */
-  .hero { background: linear-gradient(135deg, var(--azure) 0%, var(--azure-dark) 100%); color: #fff; border-radius: 12px; padding: 2.5rem 2rem; margin-bottom: 2.5rem; }
-  .hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-  .hero p { opacity: 0.88; font-size: 1rem; max-width: 700px; }
-  .hero .tags { margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .hero .tag { background: rgba(255,255,255,0.18); border-radius: 20px; padding: 0.2rem 0.75rem; font-size: 0.78rem; font-weight: 600; }
-
-  /* Sections */
-  .module { margin-bottom: 3.5rem; scroll-margin-top: 1.5rem; }
-  .module-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 3px solid var(--azure); }
-  .module-number { background: var(--azure); color: #fff; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
-  .module h2 { font-size: 1.5rem; font-weight: 700; color: var(--azure-dark); }
-  .module h3 { font-size: 1.1rem; font-weight: 700; color: var(--azure-dark); margin: 1.5rem 0 0.6rem; padding-left: 0.75rem; border-left: 4px solid var(--accent); }
-  .module h4 { font-size: 0.95rem; font-weight: 700; margin: 1rem 0 0.4rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
-
-  /* Cards */
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.4rem; margin: 1rem 0; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
-  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin: 1rem 0; }
-  .card-grid .card { margin: 0; }
-  .card .card-title { font-weight: 700; color: var(--azure); margin-bottom: 0.5rem; font-size: 0.95rem; }
-
-  /* Callouts */
-  .callout { border-radius: 8px; padding: 1rem 1.2rem; margin: 1rem 0; border-left: 4px solid; }
-  .callout.tip { background: #f0faf7; border-color: var(--accent); }
-  .callout.warn { background: #fef3ee; border-color: var(--warn); }
-  .callout.exam { background: #fff8e1; border-color: var(--note); }
-  .callout.info { background: var(--azure-light); border-color: var(--azure); }
-  .callout strong { display: block; margin-bottom: 0.3rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
-  .callout.tip strong { color: var(--accent); }
-  .callout.warn strong { color: var(--warn); }
-  .callout.exam strong { color: #b8860b; }
-  .callout.info strong { color: var(--azure); }
-
-  /* Code */
-  pre, code { font-family: 'Cascadia Code', 'Consolas', monospace; }
-  pre { background: var(--code-bg); color: var(--code-text); border-radius: 8px; padding: 1.2rem 1.4rem; overflow-x: auto; margin: 1rem 0; font-size: 0.83rem; line-height: 1.6; }
-  code { background: #eef0f3; color: #c7254e; padding: 0.1em 0.35em; border-radius: 3px; font-size: 0.88em; }
-  pre code { background: transparent; color: inherit; padding: 0; }
-  .kw { color: #569cd6; } .str { color: #ce9178; } .cm { color: #6a9955; } .fn { color: #dcdcaa; } .cls { color: #4ec9b0; } .num { color: #b5cea8; }
-
-  /* Tables */
-  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
-  th { background: var(--azure); color: #fff; padding: 0.6rem 0.9rem; text-align: left; font-weight: 600; }
-  td { padding: 0.55rem 0.9rem; border-bottom: 1px solid var(--border); }
-  tr:nth-child(even) td { background: var(--bg); }
-  tr:hover td { background: var(--azure-light); }
-
-  /* Lists */
-  ul, ol { padding-left: 1.4rem; margin: 0.5rem 0; }
-  li { margin-bottom: 0.3rem; }
-  ul li::marker { color: var(--azure); }
-
-  /* Badge */
-  .badge { display: inline-block; border-radius: 4px; padding: 0.1rem 0.5rem; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-left: 0.4rem; }
-  .badge.azure { background: var(--azure-light); color: var(--azure); }
-  .badge.new { background: #e8f5e9; color: #2e7d32; }
-  .badge.deprecated { background: #fce4ec; color: #c62828; }
-  .badge.preview { background: #fff3e0; color: #e65100; }
-
-  /* Exam weight bar */
-  .weight-bar { display: flex; align-items: center; gap: 0.75rem; margin: 0.4rem 0; font-size: 0.83rem; }
-  .weight-fill { height: 8px; border-radius: 4px; background: var(--azure); }
-  .weight-label { white-space: nowrap; color: var(--muted); min-width: 60px; }
-
-  /* Print */
-  @media print { .sidebar { display: none; } .main { margin-left: 0; } }
-  @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; padding: 1rem; } }
-
-  p { margin: 0.5rem 0; }
-</style>
+<title>AI-102: Azure AI Engineer Associate – Study Notes</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- SIDEBAR -->
 <div class="sidebar">
-  <div class="sidebar-header">
-    <span>AI-102</span>Azure AI Engineer Associate
-  </div>
+  <div class="sidebar-header"><span>AI-102</span>Azure AI Engineer Associate</div>
   <nav>
     <div class="section-label">Overview</div>
-    <a href="#overview">Exam Overview</a>
-    <a href="#domains">Skill Domains</a>
-
+    <a href="index.html">Exam Overview</a>
     <div class="section-label">Module 1</div>
-    <a href="#m1">Azure AI Services</a>
-
+    <a href="m1.html">Azure AI Services</a>
     <div class="section-label">Module 2</div>
-    <a href="#m2">Computer Vision</a>
-
+    <a href="m2.html">Computer Vision</a>
     <div class="section-label">Module 3</div>
-    <a href="#m3">Natural Language Processing</a>
-
+    <a href="m3.html">Azure AI Language</a>
+    <a href="translator.html">Azure AI Translator</a>
     <div class="section-label">Module 4</div>
-    <a href="#m4">Speech Services</a>
-
+    <a href="m4.html">Speech Services</a>
     <div class="section-label">Module 5</div>
-    <a href="#m5">Language Understanding (CLU)</a>
-
+    <a href="m5.html">Language Understanding (CLU)</a>
     <div class="section-label">Module 6</div>
-    <a href="#m6">Document Intelligence</a>
-
+    <a href="m6.html">Document Intelligence</a>
     <div class="section-label">Module 7</div>
-    <a href="#m7">Knowledge Mining &amp; AI Search</a>
-
+    <a href="m7.html">Knowledge Mining &amp; AI Search</a>
     <div class="section-label">Module 8</div>
-    <a href="#m8">Azure OpenAI &amp; Generative AI</a>
-
+    <a href="m8.html">Azure OpenAI &amp; Generative AI</a>
     <div class="section-label">Module 9</div>
-    <a href="#m9">Content Safety &amp; Responsible AI</a>
-
+    <a href="m9.html">Content Safety &amp; Responsible AI</a>
+    <div class="section-label">Platform</div>
+    <a href="foundry.html">Azure AI Foundry</a>
     <div class="section-label">Reference</div>
-    <a href="#pricing">Tiers &amp; Pricing</a>
-    <a href="#quickref">Quick Reference</a>
+    <a href="pricing.html">Tiers &amp; Pricing</a>
+    <a href="quickref.html">Quick Reference</a>
   </nav>
 </div>
 
-<!-- MAIN CONTENT -->
 <div class="main">
 
-  <!-- HERO -->
   <div class="hero">
     <h1>Azure AI Engineer Associate (AI-102)</h1>
-    <p>Complete study notes covering all exam domains — Azure AI Services, Computer Vision, NLP, Speech, Document Intelligence, Knowledge Mining, and Generative AI.</p>
+    <p>Complete study notes aligned with the Microsoft Learn AI-102 path — Azure AI Services, Computer Vision, NLP, Speech, Document Intelligence, Knowledge Mining, and Generative AI.</p>
     <div class="tags">
       <span class="tag">AI-102</span>
       <span class="tag">Exam: 180 min</span>
@@ -165,7 +54,6 @@
     </div>
   </div>
 
-  <!-- OVERVIEW -->
   <div class="module" id="overview">
     <div class="module-header">
       <div class="module-number">0</div>
@@ -173,1191 +61,114 @@
     </div>
 
     <h3>What is AI-102?</h3>
-    <p>The <strong>Azure AI Engineer Associate</strong> certification validates your ability to design, build, and deploy AI solutions using Azure Cognitive Services, Azure Machine Learning, and other Azure AI tools. Candidates typically have experience with C#, Python, or JavaScript and familiarity with Azure fundamentals.</p>
+    <p>The <strong>Azure AI Engineer Associate</strong> certification validates your ability to design, build, and deploy AI solutions on Azure using Azure AI Services, Azure OpenAI, and related tools. Candidates typically have C#, Python, or JavaScript experience and familiarity with Azure fundamentals.</p>
 
     <h3>Exam Skill Domains</h3>
-    <div id="domains">
     <table>
       <tr><th>Domain</th><th>Weight</th><th>Key Services</th></tr>
-      <tr><td>Plan and manage an Azure AI solution</td><td>15–20%</td><td>AI Services, Key Vault, Monitor, Containers</td></tr>
-      <tr><td>Implement content moderation solutions</td><td>10–15%</td><td>Content Safety, Content Moderator</td></tr>
-      <tr><td>Implement computer vision solutions</td><td>15–20%</td><td>Azure AI Vision, Video Indexer, Face API</td></tr>
-      <tr><td>Implement NLP solutions</td><td>30–35%</td><td>Language, Translator, CLU, Q&amp;A Maker</td></tr>
-      <tr><td>Implement knowledge mining solutions</td><td>10–15%</td><td>AI Search, Document Intelligence</td></tr>
-      <tr><td>Implement generative AI solutions</td><td>10–15%</td><td>Azure OpenAI, Prompt Engineering, RAG</td></tr>
+      <tr><td>Plan and manage an Azure AI solution</td><td>15–20%</td><td>AI Services, Key Vault, Monitor, Containers, Content Safety</td></tr>
+      <tr><td>Implement computer vision solutions</td><td>15–20%</td><td>Azure AI Vision, Custom Vision, Face API, Video Indexer</td></tr>
+      <tr><td>Implement natural language processing solutions</td><td>30–35%</td><td>Azure AI Language, Translator, CLU, Speech, Q&amp;A</td></tr>
+      <tr><td>Implement knowledge mining and document intelligence solutions</td><td>10–15%</td><td>Azure AI Search, Document Intelligence</td></tr>
+      <tr><td>Implement generative AI solutions</td><td>15–20%</td><td>Azure OpenAI, Prompt Engineering, RAG, Azure AI Foundry</td></tr>
     </table>
-    </div>
 
     <div class="callout exam">
       <strong>Exam Tip</strong>
-      NLP is the largest domain (30–35%). Focus on Azure AI Language, CLU, Translator, and Q&amp;A. Combined with Vision and Generative AI, these three domains make up ~60% of the exam.
+      NLP is the largest domain (30–35%). Focus on Azure AI Language, CLU, Translator, Speech, and Q&amp;A. Generative AI has grown to 15–20% — cover Azure OpenAI, RAG, and Azure AI Foundry thoroughly.
     </div>
   </div>
 
-  <!-- MODULE 1: Azure AI Services -->
-  <div class="module" id="m1">
+  <div class="module">
     <div class="module-header">
-      <div class="module-number">1</div>
-      <h2>Azure AI Services — Plan &amp; Manage</h2>
+      <div class="module-number">→</div>
+      <h2>Study Modules</h2>
     </div>
-
-    <h3>What are Azure AI Services?</h3>
-    <p>Azure AI Services (formerly <em>Cognitive Services</em>) are cloud-based REST APIs and SDKs that allow you to add AI capabilities to applications without needing ML expertise. They are organised into categories: Vision, Speech, Language, Decision, and Azure OpenAI.</p>
-
     <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Single-Service Resource</div>
-        <ul>
-          <li>One endpoint per service (e.g., Speech only)</li>
-          <li>Dedicated billing &amp; quota per service</li>
-          <li>Use when you need one specific AI service</li>
-        </ul>
-      </div>
-      <div class="card">
-        <div class="card-title">Multi-Service Resource</div>
-        <ul>
-          <li>Single endpoint for multiple services</li>
-          <li>Single key authenticates all services</li>
-          <li>Consolidated billing — easier to manage</li>
-          <li>Resource type: <code>CognitiveServices</code></li>
-        </ul>
-      </div>
-    </div>
-
-    <h3>Authentication</h3>
-    <p>Azure AI Services support two primary authentication methods:</p>
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Subscription Key (API Key)</div>
-        <p>Passed as <code>Ocp-Apim-Subscription-Key</code> header. Two keys provided — rotate without downtime.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Microsoft Entra ID (AAD)</div>
-        <p>Use service principals or managed identities. Preferred for production — no secrets in code.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Token-Based Auth</div>
-        <p>Exchange key for a 10-minute JWT token at <code>/sts/v1.0/issueToken</code>. Pass in <code>Authorization: Bearer {token}</code>.</p>
-      </div>
-    </div>
-
-    <pre><span class="cm">// Authenticate with API Key</span>
-<span class="kw">var</span> client = <span class="kw">new</span> <span class="cls">TextAnalyticsClient</span>(
-    <span class="kw">new</span> <span class="cls">Uri</span>(<span class="str">"https://&lt;endpoint&gt;.cognitiveservices.azure.com"</span>),
-    <span class="kw">new</span> <span class="cls">AzureKeyCredential</span>(<span class="str">"&lt;api-key&gt;"</span>)
-);
-
-<span class="cm">// Authenticate with Managed Identity</span>
-<span class="kw">var</span> credential = <span class="kw">new</span> <span class="cls">DefaultAzureCredential</span>();
-<span class="kw">var</span> client2 = <span class="kw">new</span> <span class="cls">TextAnalyticsClient</span>(endpoint, credential);</pre>
-
-    <h3>Securing AI Services</h3>
-    <ul>
-      <li><strong>Azure Key Vault</strong> — store API keys; grant access via managed identities, never hardcode secrets</li>
-      <li><strong>Network restrictions</strong> — limit access by virtual network or IP allowlists in the resource Networking tab</li>
-      <li><strong>Private Endpoints</strong> — traffic stays within Azure backbone; disable public access</li>
-      <li><strong>RBAC</strong> — assign <code>Cognitive Services User</code> to allow API calls; <code>Cognitive Services Contributor</code> to manage the resource</li>
-      <li><strong>Diagnostic logging</strong> — send to Log Analytics; query with KQL</li>
-    </ul>
-
-    <div class="callout tip">
-      <strong>Best Practice</strong>
-      Always use Managed Identity + Key Vault in production. For local dev, use <code>DefaultAzureCredential</code> which automatically picks up <code>az login</code> credentials.
-    </div>
-
-    <h3>Monitoring Azure AI Services</h3>
-    <table>
-      <tr><th>Tool</th><th>Purpose</th><th>Key Metrics</th></tr>
-      <tr><td>Azure Monitor Metrics</td><td>Real-time charts</td><td>TotalCalls, SuccessfulCalls, TotalErrors, Latency</td></tr>
-      <tr><td>Diagnostic Logs</td><td>Detailed request logs</td><td>Request headers, responses, durations</td></tr>
-      <tr><td>Alerts</td><td>Proactive notification</td><td>Alert when errors exceed threshold</td></tr>
-      <tr><td>Log Analytics (KQL)</td><td>Query &amp; analysis</td><td>Custom queries across all logs</td></tr>
-    </table>
-
-    <h3>Deploying in Containers</h3>
-    <p>Many AI Services can run in Docker containers for on-premises or edge scenarios.</p>
-    <div class="callout info">
-      <strong>Key Facts</strong>
-      Even in containers, the service must phone home to Azure for billing. Containers require <code>Billing</code> and <code>ApiKey</code> environment variables pointing to your Azure resource. The model is bundled in the container image — inference runs locally.
-    </div>
-    <pre><span class="cm"># Pull and run a Language Detection container</span>
-docker pull mcr.microsoft.com/azure-cognitive-services/textanalytics/language:latest
-
-docker run --rm -it -p 5000:5000 \
-  -e ApiKey=<span class="str">"&lt;key&gt;"</span> \
-  -e Billing=<span class="str">"https://&lt;resource&gt;.cognitiveservices.azure.com/"</span> \
-  -e Eula=accept \
-  mcr.microsoft.com/azure-cognitive-services/textanalytics/language:latest</pre>
-
-    <table>
-      <tr><th>Service</th><th>Container Available</th></tr>
-      <tr><td>Text Analytics (Language, Sentiment, NER)</td><td>Yes</td></tr>
-      <tr><td>Computer Vision (OCR, Read)</td><td>Yes</td></tr>
-      <tr><td>Speech (STT, TTS)</td><td>Yes</td></tr>
-      <tr><td>Form Recognizer / Document Intelligence</td><td>Yes</td></tr>
-      <tr><td>Face</td><td>Limited (gated)</td></tr>
-    </table>
-  </div>
-
-  <!-- MODULE 2: Computer Vision -->
-  <div class="module" id="m2">
-    <div class="module-header">
-      <div class="module-number">2</div>
-      <h2>Computer Vision</h2>
-    </div>
-
-    <h3>Azure AI Vision (Image Analysis)</h3>
-    <p>The <strong>Azure AI Vision</strong> service (v4.0 Image Analysis API) provides a unified endpoint for analysing images. It replaces earlier Computer Vision v3 endpoints.</p>
-
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Caption &amp; Dense Captions</div>
-        <p>Generates human-readable description of an image and per-region captions. Uses Florence foundation model.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Object Detection</div>
-        <p>Detects objects and returns bounding boxes with labels and confidence scores.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Smart Crop</div>
-        <p>Returns cropping coordinates that preserve the most visually interesting region.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Tags</div>
-        <p>Returns list of content tags with confidence scores (e.g., "outdoor", "sky", "person").</p>
-      </div>
-      <div class="card">
-        <div class="card-title">People Detection</div>
-        <p>Detects people in an image (bounding boxes). Does NOT identify individuals.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Background Removal</div>
-        <p>Segments the subject from background. Returns PNG with alpha channel.</p>
-      </div>
-    </div>
-
-    <h4>API Call (v4.0)</h4>
-    <pre>POST https://&lt;endpoint&gt;/computervision/imageanalysis:analyze
-    ?api-version=2023-02-01-preview
-    &features=Caption,Tags,Objects
-    &language=en
-
-Content-Type: application/json
-Ocp-Apim-Subscription-Key: &lt;key&gt;
-
-{ <span class="str">"url"</span>: <span class="str">"https://example.com/image.jpg"</span> }</pre>
-
-    <h3>OCR — Reading Text in Images</h3>
-    <p>Two options exist for reading text:</p>
-    <table>
-      <tr><th>Feature</th><th>Read API (recommended)</th><th>OCR API (legacy)</th></tr>
-      <tr><td>Best for</td><td>Dense text, documents, handwriting</td><td>Simple image text</td></tr>
-      <tr><td>Languages</td><td>73+</td><td>25</td></tr>
-      <tr><td>Async</td><td>Yes (operation ID polling)</td><td>No (synchronous)</td></tr>
-      <tr><td>Output structure</td><td>Page → Lines → Words</td><td>Regions → Lines → Words</td></tr>
-    </table>
-
-    <pre><span class="cm"># Submit Read operation</span>
-POST /computervision/imageanalysis:analyze?features=Read
-
-<span class="cm"># Python SDK example</span>
-<span class="kw">from</span> azure.ai.vision.imageanalysis <span class="kw">import</span> <span class="cls">ImageAnalysisClient</span>
-<span class="kw">from</span> azure.core.credentials <span class="kw">import</span> <span class="cls">AzureKeyCredential</span>
-
-client = <span class="cls">ImageAnalysisClient</span>(endpoint, <span class="cls">AzureKeyCredential</span>(key))
-result = client.analyze(image_url=url, visual_features=[<span class="cls">VisualFeatures</span>.READ])
-<span class="kw">for</span> line <span class="kw">in</span> result.read.blocks[<span class="num">0</span>].lines:
-    <span class="fn">print</span>(line.text)</pre>
-
-    <h3>Custom Vision</h3>
-    <p>Azure AI Custom Vision lets you train models for <strong>image classification</strong> and <strong>object detection</strong> on your own dataset without coding.</p>
-
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Image Classification</div>
-        <p>Assigns one or more labels to an entire image. Types: <strong>Multiclass</strong> (one label) or <strong>Multilabel</strong> (multiple labels). Min: 5 images per tag to train.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Object Detection</div>
-        <p>Identifies object locations with bounding boxes. Min: 15 images per tag. Labels must be drawn per image.</p>
-      </div>
-    </div>
-
-    <div class="callout exam">
-      <strong>Exam Tip</strong>
-      Custom Vision uses two separate resources: a <strong>Training</strong> resource and a <strong>Prediction</strong> resource. Training key is used to create/train; Prediction key is used for inference calls. You export models as ONNX, TensorFlow, CoreML, or Docker container for offline use.
-    </div>
-
-    <table>
-      <tr><th>Concept</th><th>Detail</th></tr>
-      <tr><td>Iteration</td><td>Each training run creates an iteration. Publish an iteration to make it available for prediction.</td></tr>
-      <tr><td>Domain</td><td>Compact domains (faster, exportable) vs. General domains (more accurate, cloud only)</td></tr>
-      <tr><td>Quick Test</td><td>Test an unpublished iteration within the portal</td></tr>
-      <tr><td>Performance metrics</td><td>Precision, Recall, AP (Average Precision) per tag</td></tr>
-    </table>
-
-    <h3>Face API</h3>
-    <p>The <strong>Face API</strong> detects, analyzes, and compares human faces.</p>
-    <div class="callout warn">
-      <strong>Responsible AI Note</strong>
-      Face identification, verification, and emotion detection features require Limited Access approval from Microsoft. Default capability is face detection only (locations, attributes).
-    </div>
-
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Face Detection</div>
-        <p>Returns face rectangles, age estimate, gender, emotion, accessories, blur, exposure, noise, occlusion, headPose, smile, glasses.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Face Verification</div>
-        <p>Compares two faces — are they the same person? Returns confidence 0–1.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Face Identification</div>
-        <p>Matches a face against a <strong>PersonGroup</strong> of known individuals. Requires training a PersonGroup first.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Find Similar</div>
-        <p>Finds similar faces from a FaceList without a PersonGroup.</p>
-      </div>
-    </div>
-
-    <h4>Face Identification Workflow</h4>
-    <pre><span class="num">1.</span> Create PersonGroup → <span class="num">2.</span> Add Persons → <span class="num">3.</span> Add Face images → <span class="num">4.</span> Train PersonGroup
-<span class="num">5.</span> Detect face in new image (get faceId) → <span class="num">6.</span> Identify faceId against PersonGroup</pre>
-
-    <h3>Video Indexer</h3>
-    <p>Extracts insights from video: transcripts, speaker identification, face detection, keyframes, labels, sentiments, brands, named entities, scene changes, and more.</p>
-    <table>
-      <tr><th>Insight Type</th><th>Description</th></tr>
-      <tr><td>Transcript &amp; OCR</td><td>Auto-captions and on-screen text</td></tr>
-      <tr><td>Faces</td><td>Celebrity recognition + custom people models</td></tr>
-      <tr><td>Labels</td><td>Objects, scenes, activities</td></tr>
-      <tr><td>Keywords</td><td>Key phrases from audio</td></tr>
-      <tr><td>Sentiments</td><td>Timeline of positive/neutral/negative sentiment</td></tr>
-      <tr><td>Topics</td><td>High-level topic classification</td></tr>
-      <tr><td>Shots &amp; Scenes</td><td>Shot detection, scene grouping</td></tr>
-    </table>
-  </div>
-
-  <!-- MODULE 3: NLP -->
-  <div class="module" id="m3">
-    <div class="module-header">
-      <div class="module-number">3</div>
-      <h2>Natural Language Processing (Azure AI Language)</h2>
-    </div>
-
-    <h3>Azure AI Language Overview</h3>
-    <p>Azure AI Language (unified service, formerly Text Analytics + LUIS + QnA Maker) provides pre-built and custom NLP capabilities through a single resource.</p>
-
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Sentiment Analysis</div>
-        <p>Returns document-level and sentence-level sentiment: <strong>positive</strong>, <strong>neutral</strong>, <strong>negative</strong>, <strong>mixed</strong>. Also returns confidence scores for each.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Key Phrase Extraction</div>
-        <p>Identifies the main talking points in text. No training needed. Returns a list of phrases.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Language Detection</div>
-        <p>Identifies the language of input text. Returns ISO 639-1 code + confidence. Handles mixed-language as "unknown".</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Named Entity Recognition (NER)</div>
-        <p>Extracts entities: Person, Location, Organization, Date, Quantity, Email, URL, Phone, IP address, etc. with confidence scores.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Entity Linking</div>
-        <p>Disambiguates entities and links to Wikipedia. E.g., "Mars" → planet vs. candy bar.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">PII Detection</div>
-        <p>Identifies and can redact Personally Identifiable Information (PII) like SSNs, credit card numbers, emails, phone numbers.</p>
-      </div>
-    </div>
-
-    <h4>REST API Example — Sentiment</h4>
-    <pre>POST https://&lt;endpoint&gt;.cognitiveservices.azure.com/language/:analyze-text?api-version=2023-04-01
-
-{
-  <span class="str">"kind"</span>: <span class="str">"SentimentAnalysis"</span>,
-  <span class="str">"analysisInput"</span>: {
-    <span class="str">"documents"</span>: [
-      { <span class="str">"id"</span>: <span class="str">"1"</span>, <span class="str">"language"</span>: <span class="str">"en"</span>, <span class="str">"text"</span>: <span class="str">"I love Azure AI services!"</span> }
-    ]
-  }
-}</pre>
-
-    <h3>Opinion Mining (Aspect-Based Sentiment)</h3>
-    <p>Extension of Sentiment Analysis. Extracts <strong>aspects</strong> (targets) and their <strong>opinions</strong> (sentiment) from text.</p>
-    <p>Example: "The room was clean but the service was slow" → <em>room: positive</em>, <em>service: negative</em></p>
-    <p>Enable by adding <code>"opinionMining": true</code> to the Sentiment Analysis request.</p>
-
-    <h3>Custom Text Classification</h3>
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Single-label Classification</div>
-        <p>Each document gets exactly one class. Use when categories are mutually exclusive (e.g., news category: Sports / Politics / Tech).</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Multi-label Classification</div>
-        <p>A document can belong to multiple classes simultaneously. Use when overlap is possible (e.g., a movie is both Action AND Comedy).</p>
-      </div>
-    </div>
-
-    <div class="callout info">
-      <strong>Workflow</strong>
-      Create project in Language Studio → Upload/label data → Train model → Evaluate → Deploy → Call prediction endpoint
-    </div>
-
-    <h3>Custom Named Entity Recognition (NER)</h3>
-    <p>Train a model to extract domain-specific entities not covered by pre-built NER. Examples: part numbers, medical codes, contract clauses.</p>
-    <p><strong>Minimum</strong>: ~10 labeled examples per entity type; recommended 50–200 for good accuracy.</p>
-
-    <h3>Question Answering</h3>
-    <p>Creates a knowledge base from FAQs, documents, or URLs. Answers natural language questions.</p>
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Custom Question Answering</div>
-        <p>Build KB from documents, URLs, Q&amp;A pairs. Supports follow-up prompts (multi-turn). Requires Azure AI Language resource + optional AI Search for larger KBs.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Pre-built Q&amp;A</div>
-        <p>Query a passage of text directly without a KB. One-shot extraction. No training needed.</p>
-      </div>
-    </div>
-
-    <div class="callout exam">
-      <strong>Exam Tip — QnA vs CLU</strong>
-      <strong>Q&amp;A</strong>: Best for FAQ-style knowledge base answering ("What are your hours?"). <strong>CLU</strong>: Best for understanding user intent and extracting entities to trigger actions ("Book a flight to Paris next Friday").
-    </div>
-
-    <h4>Multi-Turn Conversations (Follow-up Prompts)</h4>
-    <p>You can chain answers with follow-up prompts to guide users through a conversation tree. Each answer can have up to 5 follow-up prompts.</p>
-
-    <h3>Translator</h3>
-    <p><strong>Azure AI Translator</strong> is a cloud-based machine translation service supporting 100+ languages.</p>
-    <table>
-      <tr><th>Feature</th><th>Description</th></tr>
-      <tr><td>Text Translation</td><td>Translate text between languages</td></tr>
-      <tr><td>Transliteration</td><td>Convert text between scripts (e.g., Arabic → Latin)</td></tr>
-      <tr><td>Language Detection</td><td>Detect source language</td></tr>
-      <tr><td>Dictionary Lookup</td><td>Find alternate translations for a word</td></tr>
-      <tr><td>Custom Translator</td><td>Train custom translation models with domain-specific terminology</td></tr>
-      <tr><td>Document Translation</td><td>Async batch translation of entire files (PDF, DOCX, etc.)</td></tr>
-    </table>
-
-    <pre><span class="cm"># Translate text</span>
-POST https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=fr&to=de
-
-Headers:
-  Ocp-Apim-Subscription-Key: &lt;key&gt;
-  Ocp-Apim-Subscription-Region: &lt;region&gt;  <span class="cm"># Required for multi-service resource</span>
-
-[ { <span class="str">"text"</span>: <span class="str">"Hello, world!"</span> } ]</pre>
-
-    <div class="callout tip">
-      <strong>Note</strong>
-      The Translator endpoint is global (<code>api.cognitive.microsofttranslator.com</code>), NOT a regional endpoint. But when using a multi-service resource key, you MUST include the <code>Ocp-Apim-Subscription-Region</code> header.
-    </div>
-  </div>
-
-  <!-- MODULE 4: Speech -->
-  <div class="module" id="m4">
-    <div class="module-header">
-      <div class="module-number">4</div>
-      <h2>Azure AI Speech</h2>
-    </div>
-
-    <h3>Speech Service Capabilities</h3>
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Speech-to-Text (STT)</div>
-        <p>Converts spoken audio to text. Supports real-time and batch transcription. Can use custom acoustic/language models.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Text-to-Speech (TTS)</div>
-        <p>Converts text to natural-sounding audio. 400+ voices, 140+ languages. Supports SSML for customization.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Speech Translation</div>
-        <p>Real-time speech translation — transcribes and translates simultaneously. Uses Speech SDK.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Speaker Recognition</div>
-        <p>Identifies or verifies speakers by voice. Speaker Verification (1:1) and Speaker Identification (1:N).</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Intent Recognition</div>
-        <p>Combines STT with CLU to extract intent and entities from speech in one step.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Custom Neural Voice</div>
-        <p>Train a custom TTS voice model from voice samples. Requires Limited Access approval.</p>
-      </div>
-    </div>
-
-    <h3>Speech SDK Quickstart Pattern</h3>
-    <pre><span class="kw">import</span> azure.cognitiveservices.speech <span class="kw">as</span> speechsdk
-
-config = speechsdk.<span class="cls">SpeechConfig</span>(subscription=key, region=region)
-config.speech_recognition_language = <span class="str">"en-US"</span>
-
-<span class="cm"># From microphone</span>
-audio_config = speechsdk.<span class="cls">AudioConfig</span>(use_default_microphone=<span class="kw">True</span>)
-recognizer = speechsdk.<span class="cls">SpeechRecognizer</span>(speech_config=config, audio_config=audio_config)
-result = recognizer.<span class="fn">recognize_once_async</span>().get()
-
-<span class="kw">if</span> result.reason == speechsdk.<span class="cls">ResultReason</span>.RecognizedSpeech:
-    <span class="fn">print</span>(<span class="str">f"Recognized: </span>{result.text}<span class="str">"</span>)</pre>
-
-    <h3>SSML — Speech Synthesis Markup Language</h3>
-    <p>SSML lets you control pronunciation, speaking rate, pitch, pauses, and voice selection in TTS.</p>
-    <pre><span class="str">&lt;speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US"&gt;</span>
-  <span class="str">&lt;voice name="en-US-JennyNeural"&gt;</span>
-    <span class="str">&lt;prosody rate="slow" pitch="+5%"&gt;</span>
-      Welcome to <span class="str">&lt;emphasis level="strong"&gt;</span>Azure AI<span class="str">&lt;/emphasis&gt;</span> Speech services.
-    <span class="str">&lt;/prosody&gt;</span>
-    <span class="str">&lt;break time="500ms"/&gt;</span>
-    How can I help you today?
-  <span class="str">&lt;/voice&gt;</span>
-<span class="str">&lt;/speak&gt;</span></pre>
-
-    <h3>Custom Speech</h3>
-    <p>Improve STT accuracy for domain-specific terms, accents, and environments by providing custom training data:</p>
-    <ul>
-      <li><strong>Audio + Human-labeled transcripts</strong> — most accurate adaptation, needs 1–20 hrs audio</li>
-      <li><strong>Plain text</strong> — improves language model (words, phrases, n-grams)</li>
-      <li><strong>Pronunciation</strong> — add custom pronunciations for unusual words</li>
-    </ul>
-
-    <h3>Batch Transcription</h3>
-    <p>Transcribe large audio files asynchronously. Submit via REST API, audio must be in Azure Blob Storage.</p>
-    <pre>POST /speechtotext/v3.1/transcriptions
-{
-  <span class="str">"contentUrls"</span>: [<span class="str">"https://storage.blob.core.windows.net/.../audio.wav"</span>],
-  <span class="str">"locale"</span>: <span class="str">"en-US"</span>,
-  <span class="str">"displayName"</span>: <span class="str">"My batch transcription"</span>
-}</pre>
-  </div>
-
-  <!-- MODULE 5: CLU -->
-  <div class="module" id="m5">
-    <div class="module-header">
-      <div class="module-number">5</div>
-      <h2>Language Understanding — CLU (Conversational Language Understanding)</h2>
-    </div>
-
-    <h3>CLU Overview</h3>
-    <p>CLU (successor to LUIS) understands the <strong>intent</strong> behind natural language utterances and extracts <strong>entities</strong>. Used in chatbots, voice commands, and virtual assistants.</p>
-
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Intent</div>
-        <p>The goal or purpose of a user's utterance. Example: "Book a flight to Paris" → intent = <code>BookFlight</code>. Always include a <strong>None</strong> intent for utterances outside the app's scope.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Entity</div>
-        <p>Key information extracted from the utterance. Example: "Paris" → <code>Destination</code> entity. Types: Machine-learned, List, Regex, Prebuilt.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Utterance</div>
-        <p>A sample user input used to train the model. More diverse utterances per intent = better model. Minimum ~5 per intent; aim for 15–30+.</p>
-      </div>
-    </div>
-
-    <h3>Entity Types</h3>
-    <table>
-      <tr><th>Entity Type</th><th>When to Use</th><th>Example</th></tr>
-      <tr><td>Machine-learned</td><td>Flexible entities from context</td><td>Product names, descriptions</td></tr>
-      <tr><td>List</td><td>Fixed set of exact matches</td><td>Cities: ["New York", "London"]</td></tr>
-      <tr><td>Regex</td><td>Pattern-based matching</td><td>Flight numbers: [A-Z]{2}\d{4}</td></tr>
-      <tr><td>Prebuilt</td><td>Common types (numbers, dates, etc.)</td><td>datetimeV2, number, email, currency</td></tr>
-      <tr><td>Pattern.any</td><td>Variable-length entities at end of pattern</td><td>Book titles</td></tr>
-    </table>
-
-    <h3>CLU Development Workflow</h3>
-    <pre>Create Language resource → Create CLU project in Language Studio
-→ Define intents → Add utterances → Label entities
-→ Train → Evaluate (precision/recall/F1) → Deploy → Call prediction API</pre>
-
-    <h4>Prediction API</h4>
-    <pre>POST https://&lt;endpoint&gt;.cognitiveservices.azure.com/language/:analyze-conversations
-    ?api-version=2023-04-01
-
-{
-  <span class="str">"kind"</span>: <span class="str">"Conversation"</span>,
-  <span class="str">"analysisInput"</span>: {
-    <span class="str">"conversationItem"</span>: {
-      <span class="str">"text"</span>: <span class="str">"Book a flight to Paris next Friday"</span>,
-      <span class="str">"id"</span>: <span class="str">"1"</span>, <span class="str">"participantId"</span>: <span class="str">"user"</span>
-    }
-  },
-  <span class="str">"parameters"</span>: {
-    <span class="str">"projectName"</span>: <span class="str">"TravelBot"</span>,
-    <span class="str">"deploymentName"</span>: <span class="str">"production"</span>
-  }
-}</pre>
-
-    <h3>Orchestration Workflow</h3>
-    <p>An <strong>Orchestration project</strong> routes user input to multiple CLU projects or Q&amp;A knowledge bases. Acts as a dispatcher — ideal for complex bots with multiple domains.</p>
-    <div class="callout info">
-      <strong>Use case</strong>
-      A single bot that can answer HR questions (Q&amp;A KB), book meetings (CLU project A), and order supplies (CLU project B). The Orchestration project picks the right backend.
-    </div>
-
-    <h3>Bot Framework Integration</h3>
-    <p>CLU integrates with <strong>Azure Bot Service</strong> and <strong>Bot Framework SDK</strong>. The bot middleware calls the CLU prediction endpoint, then routes based on the top intent.</p>
-    <ul>
-      <li><strong>DirectLine channel</strong> — REST-based bot connection for custom clients</li>
-      <li><strong>Channels</strong> — Teams, Webchat, Slack, Facebook, etc.</li>
-      <li><strong>Bot Service</strong> — hosts and manages the bot; provides channel routing</li>
-    </ul>
-  </div>
-
-  <!-- MODULE 6: Document Intelligence -->
-  <div class="module" id="m6">
-    <div class="module-header">
-      <div class="module-number">6</div>
-      <h2>Azure AI Document Intelligence</h2>
-    </div>
-
-    <h3>Overview</h3>
-    <p>Azure AI Document Intelligence (formerly Form Recognizer) extracts text, key-value pairs, tables, and structured data from documents using AI models.</p>
-
-    <h3>Prebuilt Models</h3>
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Read</div>
-        <p>General OCR — extract text, handwriting, tables from any document. No field extraction.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">General Document</div>
-        <p>Extracts key-value pairs, tables, and text from general documents. No domain specificity.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Layout</div>
-        <p>Extracts text, tables, selection marks (checkboxes), and structural layout with bounding boxes.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Invoice</div>
-        <p>Extracts: VendorName, CustomerName, InvoiceId, InvoiceDate, DueDate, SubTotal, Tax, InvoiceTotal, LineItems.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Receipt</div>
-        <p>Extracts: MerchantName, TransactionDate, TransactionTime, Items, Subtotal, Tax, Tip, Total.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">ID Document</div>
-        <p>Extracts fields from passports and driver's licenses: FirstName, LastName, DateOfBirth, DocumentNumber, etc.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Business Card</div>
-        <p>Extracts: ContactNames, CompanyName, JobTitles, Emails, Websites, PhoneNumbers, Addresses.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">W-2 / Tax Forms</div>
-        <p>US tax form extraction with prebuilt field mappings.</p>
-      </div>
-    </div>
-
-    <h3>Custom Models</h3>
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Custom Template Model</div>
-        <p>For fixed-layout forms (same layout every time). Requires 5 labeled samples. Uses anchor patterns to locate fields.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Custom Neural Model</div>
-        <p>For variable layouts (same content, different formatting). Min 10 samples. More flexible, uses deep learning.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Composed Model</div>
-        <p>Combines multiple custom models into one endpoint. The service auto-routes documents to the best model.</p>
-      </div>
-    </div>
-
-    <div class="callout exam">
-      <strong>Exam Tip — Model Selection</strong>
-      <ul>
-        <li>Known, fixed form layout (tax forms, standardized contracts) → <strong>Custom Template</strong></li>
-        <li>Variable layout (different invoice designs) → <strong>Custom Neural</strong></li>
-        <li>Already looks like an invoice/receipt/ID → <strong>Prebuilt</strong></li>
-        <li>Just need all text → <strong>Read API</strong></li>
-      </ul>
-    </div>
-
-    <h3>Document Intelligence Studio &amp; Training</h3>
-    <ul>
-      <li>Upload 5+ labeled documents to Azure Blob Storage</li>
-      <li>Use <strong>Document Intelligence Studio</strong> to label fields</li>
-      <li>Labels stored as JSON in the same blob container</li>
-      <li>Train via Studio or REST API; deploy to a named model ID</li>
-    </ul>
-
-    <h4>Analyze API Pattern</h4>
-    <pre><span class="cm"># Async: Submit then poll</span>
-POST /documentintelligence/documentModels/invoice:analyze?api-version=2023-07-31
-→ Returns operation-location header URL
-
-GET &lt;operation-location&gt;
-→ Poll until status = "succeeded"
-→ Response contains extracted fields with values, confidence, bounding boxes</pre>
-
-    <pre><span class="kw">from</span> azure.ai.documentintelligence <span class="kw">import</span> <span class="cls">DocumentIntelligenceClient</span>
-<span class="kw">from</span> azure.core.credentials <span class="kw">import</span> <span class="cls">AzureKeyCredential</span>
-
-client = <span class="cls">DocumentIntelligenceClient</span>(endpoint, <span class="cls">AzureKeyCredential</span>(key))
-poller = client.<span class="fn">begin_analyze_document</span>(<span class="str">"prebuilt-invoice"</span>, analyze_request={<span class="str">"url"</span>: url})
-result = poller.<span class="fn">result</span>()
-
-<span class="kw">for</span> invoice <span class="kw">in</span> result.documents:
-    <span class="fn">print</span>(invoice.fields[<span class="str">"InvoiceTotal"</span>].value_currency.amount)</pre>
-  </div>
-
-  <!-- MODULE 7: Knowledge Mining & AI Search -->
-  <div class="module" id="m7">
-    <div class="module-header">
-      <div class="module-number">7</div>
-      <h2>Knowledge Mining &amp; Azure AI Search</h2>
-    </div>
-
-    <h3>Azure AI Search Overview</h3>
-    <p>Azure AI Search (formerly Cognitive Search) is a cloud search service. It ingests, enriches (via AI skillsets), indexes, and serves documents for full-text search.</p>
-
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Index</div>
-        <p>The searchable data store. Defines schema: fields, types, analyzers, suggesters, scoring profiles. Like a database table optimized for search.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Indexer</div>
-        <p>Crawls a data source and populates the index. Can run on a schedule. Applies optional skillset during indexing.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Data Source</div>
-        <p>Connection definition to the raw data: Azure Blob, SQL DB, Cosmos DB, Table Storage, ADLS Gen2.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Skillset</div>
-        <p>Pipeline of AI skills (OCR, NER, key phrases, etc.) applied to documents during indexing to enrich them.</p>
-      </div>
-    </div>
-
-    <h3>AI Enrichment Pipeline</h3>
-    <pre>Data Source → Indexer → [Skillset] → Enriched Document → Index
-                               ↓
-                          Knowledge Store (optional)</pre>
-
-    <h3>Built-in Skills</h3>
-    <table>
-      <tr><th>Skill</th><th>Purpose</th></tr>
-      <tr><td>OCR Skill</td><td>Extract text from images embedded in documents</td></tr>
-      <tr><td>Image Analysis Skill</td><td>Tags, captions, object detection on images</td></tr>
-      <tr><td>Merge Skill</td><td>Combine multiple text fields into one</td></tr>
-      <tr><td>Language Detection</td><td>Detect document language</td></tr>
-      <tr><td>Text Split</td><td>Chunk large documents into pages for processing</td></tr>
-      <tr><td>Entity Recognition</td><td>Extract persons, locations, organizations</td></tr>
-      <tr><td>Key Phrase Extraction</td><td>Extract key phrases</td></tr>
-      <tr><td>Sentiment Analysis</td><td>Score document sentiment</td></tr>
-      <tr><td>PII Detection</td><td>Find and optionally mask PII</td></tr>
-      <tr><td>Translation</td><td>Translate content into a target language</td></tr>
-      <tr><td>Shaper Skill</td><td>Restructure enrichment output for knowledge store</td></tr>
-    </table>
-
-    <h3>Custom Skills</h3>
-    <p>Extend the pipeline with your own logic via <strong>Azure Function</strong> or any HTTPS endpoint.</p>
-    <pre>{
-  <span class="str">"@odata.type"</span>: <span class="str">"#Microsoft.Skills.Custom.WebApiSkill"</span>,
-  <span class="str">"uri"</span>: <span class="str">"https://myfunction.azurewebsites.net/api/CustomSkill"</span>,
-  <span class="str">"httpMethod"</span>: <span class="str">"POST"</span>,
-  <span class="str">"inputs"</span>: [{ <span class="str">"name"</span>: <span class="str">"text"</span>, <span class="str">"source"</span>: <span class="str">"/document/content"</span> }],
-  <span class="str">"outputs"</span>: [{ <span class="str">"name"</span>: <span class="str">"myOutput"</span>, <span class="str">"targetName"</span>: <span class="str">"customField"</span> }]
-}</pre>
-
-    <h3>Knowledge Store</h3>
-    <p>Persists enriched data from the skillset to Azure Storage for downstream analysis (Power BI, ML, etc.).</p>
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Table Projections</div>
-        <p>Store enrichments as rows in Azure Table Storage. Good for structured, tabular data.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Object Projections</div>
-        <p>Store enriched documents as JSON in Azure Blob Storage. Full document with all enrichments.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">File Projections</div>
-        <p>Store extracted images/normalized images as files in Blob Storage.</p>
-      </div>
-    </div>
-
-    <h3>Search Query Types</h3>
-    <table>
-      <tr><th>Query Type</th><th>Description</th><th>Syntax</th></tr>
-      <tr><td>Simple</td><td>Default. Easy-to-use syntax, auto-match</td><td><code>search=azure AI</code></td></tr>
-      <tr><td>Full (Lucene)</td><td>Advanced features: fuzzy, regex, proximity, boosting</td><td><code>queryType=full&search=azure~</code></td></tr>
-      <tr><td>Semantic</td><td>Deep NLP re-ranking, captions, answers</td><td><code>queryType=semantic</code></td></tr>
-      <tr><td>Vector</td><td>Embedding similarity search</td><td><code>vectors=[...]</code></td></tr>
-      <tr><td>Hybrid</td><td>Combines keyword + vector search</td><td>Both vectors and search text</td></tr>
-    </table>
-
-    <h3>Index Fields Configuration</h3>
-    <table>
-      <tr><th>Attribute</th><th>Effect</th></tr>
-      <tr><td><code>searchable</code></td><td>Field is full-text indexed and can be searched</td></tr>
-      <tr><td><code>filterable</code></td><td>Field can be used in $filter expressions</td></tr>
-      <tr><td><code>sortable</code></td><td>Field can be used in $orderby</td></tr>
-      <tr><td><code>facetable</code></td><td>Field can be used for faceted navigation</td></tr>
-      <tr><td><code>retrievable</code></td><td>Field is returned in search results</td></tr>
-      <tr><td><code>key</code></td><td>Unique identifier for the document (required)</td></tr>
-    </table>
-
-    <h3>Semantic Search</h3>
-    <p>Semantic search uses deep language models to re-rank results and provide semantic captions and answers. Requires Standard tier or above.</p>
-    <ul>
-      <li><strong>Semantic ranking</strong>: re-scores BM25 results using ML model understanding context</li>
-      <li><strong>Semantic captions</strong>: extracted, highlighted passages that answer the query</li>
-      <li><strong>Semantic answers</strong>: direct answers extracted from top results (if query is a question)</li>
-    </ul>
-
-    <pre>POST /indexes/my-index/docs/search?api-version=2023-11-01
-{
-  <span class="str">"search"</span>: <span class="str">"What is the refund policy?"</span>,
-  <span class="str">"queryType"</span>: <span class="str">"semantic"</span>,
-  <span class="str">"semanticConfiguration"</span>: <span class="str">"my-semantic-config"</span>,
-  <span class="str">"answers"</span>: <span class="str">"extractive|count-3"</span>,
-  <span class="str">"captions"</span>: <span class="str">"extractive|highlight-true"</span>
-}</pre>
-
-    <h3>Vector Search</h3>
-    <p>Store embeddings as vector fields in the index. At query time, embed the query and find nearest neighbours.</p>
-    <ul>
-      <li>Algorithms: HNSW (Hierarchical Navigable Small World — recommended) and exhaustive KNN</li>
-      <li>Use Azure OpenAI Embeddings model to generate vectors</li>
-      <li>Hybrid = keyword BM25 + vector, merged with Reciprocal Rank Fusion (RRF)</li>
-    </ul>
-  </div>
-
-  <!-- MODULE 8: Azure OpenAI & Generative AI -->
-  <div class="module" id="m8">
-    <div class="module-header">
-      <div class="module-number">8</div>
-      <h2>Azure OpenAI Service &amp; Generative AI</h2>
-    </div>
-
-    <h3>Azure OpenAI Overview</h3>
-    <p>Azure OpenAI Service provides REST API access to OpenAI's models (GPT-4, GPT-3.5, DALL-E, Whisper, Embeddings) with Azure enterprise features: private networking, compliance, RBAC, and responsible AI guardrails.</p>
-
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">GPT-4 / GPT-4o</div>
-        <p>Most capable chat/completion models. Multimodal (GPT-4 Vision accepts images). Best for complex reasoning, code, analysis.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">GPT-3.5 Turbo</div>
-        <p>Fast and cost-effective chat model. Good for most conversational and completion tasks.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Embeddings</div>
-        <p>text-embedding-ada-002 / text-embedding-3-large. Converts text to numerical vectors for semantic search and similarity.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">DALL-E 3</div>
-        <p>Generate images from text prompts. Supports 1024×1024, 1792×1024, and 1024×1792 sizes.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Whisper</div>
-        <p>Audio transcription and translation model. High accuracy across many languages.</p>
-      </div>
-    </div>
-
-    <h3>Azure OpenAI Deployment</h3>
-    <p>Models are deployed to your Azure OpenAI resource as named <strong>deployments</strong>. You call your deployment by its custom name, not the model name.</p>
-    <div class="callout info">
-      <strong>Resource → Deployment → Model</strong>
-      One Azure OpenAI resource can host multiple deployments. E.g., resource <code>my-aoai</code> might have deployment <code>gpt4-prod</code> pointing to model <code>gpt-4</code>.
-    </div>
-
-    <h3>Chat Completions API</h3>
-    <pre><span class="kw">from</span> openai <span class="kw">import</span> <span class="cls">AzureOpenAI</span>
-
-client = <span class="cls">AzureOpenAI</span>(
-    azure_endpoint=<span class="str">"https://&lt;resource&gt;.openai.azure.com"</span>,
-    api_key=<span class="str">"&lt;key&gt;"</span>,
-    api_version=<span class="str">"2024-02-01"</span>
-)
-
-response = client.chat.completions.<span class="fn">create</span>(
-    model=<span class="str">"gpt4-prod"</span>,   <span class="cm"># deployment name</span>
-    messages=[
-        {<span class="str">"role"</span>: <span class="str">"system"</span>, <span class="str">"content"</span>: <span class="str">"You are a helpful assistant."</span>},
-        {<span class="str">"role"</span>: <span class="str">"user"</span>,   <span class="str">"content"</span>: <span class="str">"Explain Azure AI Search in 2 sentences."</span>}
-    ],
-    temperature=<span class="num">0.7</span>,
-    max_tokens=<span class="num">500</span>
-)
-<span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)</pre>
-
-    <h3>Prompt Engineering</h3>
-    <p>Craft inputs to guide model output quality and format without changing model weights.</p>
-
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Zero-shot</div>
-        <p>No examples. Just a clear instruction. Works for well-understood tasks: "Classify this review as positive or negative: …"</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Few-shot</div>
-        <p>Provide 2–5 input-output examples before the actual query. Steers format and behavior effectively.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Chain of Thought</div>
-        <p>Ask the model to reason step-by-step before answering. "Think step by step." Improves complex reasoning accuracy.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">System Message</div>
-        <p>Set persona, tone, constraints, and output format via the system role message. Applied to every turn.</p>
-      </div>
-    </div>
-
-    <div class="callout tip">
-      <strong>Key Parameters</strong>
-      <ul>
-        <li><code>temperature</code> (0–2): Higher = more random/creative. Lower = more deterministic. 0 = greedy decoding.</li>
-        <li><code>top_p</code> (0–1): Nucleus sampling. Use temperature OR top_p, not both.</li>
-        <li><code>max_tokens</code>: Max tokens in completion (not including prompt).</li>
-        <li><code>stop</code>: Sequences where the model stops generating.</li>
-        <li><code>frequency_penalty</code>: Penalizes repeated tokens (reduces repetition).</li>
-        <li><code>presence_penalty</code>: Penalizes tokens already present (increases topic diversity).</li>
-      </ul>
-    </div>
-
-    <h3>Retrieval-Augmented Generation (RAG)</h3>
-    <p>RAG grounds the model's response in your own data by retrieving relevant chunks and injecting them into the prompt.</p>
-    <pre><span class="cm"># RAG Pattern</span>
-User Query
-    ↓
-<span class="num">1.</span> Embed query → vector
-<span class="num">2.</span> Search AI Search index (hybrid) → top-K chunks
-<span class="num">3.</span> Build prompt:
-   System: "Answer only from the provided context."
-   Context: [retrieved chunks]
-   User: [original query]
-<span class="num">4.</span> Send to GPT-4 → grounded answer
-<span class="num">5.</span> Optionally include citations from search results</pre>
-
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">On Your Data (Built-in RAG)</div>
-        <p>Azure OpenAI "On Your Data" feature auto-connects to AI Search, Blob Storage, or Cosmos DB. Handled by the service — no custom code for simple use cases.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Custom RAG</div>
-        <p>Implement with your own pipeline: embed documents → AI Search vector index → retrieval + prompt construction → GPT call. Full control over chunking, retrieval, and prompting.</p>
-      </div>
-    </div>
-
-    <h3>Fine-tuning</h3>
-    <p>Adapt a base model with your own training data (JSONL format with prompt/completion pairs). Use when prompt engineering alone is insufficient.</p>
-    <div class="callout warn">
-      <strong>Fine-tuning vs RAG</strong>
-      Fine-tuning bakes knowledge/style into model weights — expensive to retrain when data changes. RAG is cheaper and keeps knowledge up-to-date. Prefer RAG; use fine-tuning only for style adaptation or highly repetitive task patterns.
-    </div>
-
-    <table>
-      <tr><th>Approach</th><th>Use when</th><th>Cost</th></tr>
-      <tr><td>Prompt engineering</td><td>Most cases — start here</td><td>Only inference cost</td></tr>
-      <tr><td>RAG</td><td>Need current/private knowledge</td><td>Inference + search</td></tr>
-      <tr><td>Fine-tuning</td><td>Consistent format/style, insufficient via prompting</td><td>Training + higher inference</td></tr>
-    </table>
-
-    <h3>DALL-E Image Generation</h3>
-    <pre><span class="kw">from</span> openai <span class="kw">import</span> <span class="cls">AzureOpenAI</span>
-
-client = <span class="cls">AzureOpenAI</span>(azure_endpoint=endpoint, api_key=key, api_version=<span class="str">"2024-02-01"</span>)
-result = client.images.<span class="fn">generate</span>(
-    model=<span class="str">"dall-e-3"</span>,          <span class="cm"># deployment name</span>
-    prompt=<span class="str">"A futuristic Azure datacenter in space"</span>,
-    n=<span class="num">1</span>,
-    size=<span class="str">"1024x1024"</span>,
-    quality=<span class="str">"hd"</span>             <span class="cm"># standard or hd</span>
-)
-image_url = result.data[<span class="num">0</span>].url</pre>
-
-    <h3>Azure AI Studio / Azure AI Foundry</h3>
-    <p>Azure AI Foundry (previously AI Studio) is the unified portal for building AI solutions. It provides:</p>
-    <ul>
-      <li>Model catalog — explore and deploy OpenAI, Hugging Face, Mistral, and other models</li>
-      <li>Prompt flow — visual LLM workflow builder for RAG and multi-step pipelines</li>
-      <li>Evaluations — measure model accuracy, groundedness, relevance, fluency</li>
-      <li>Safety evaluations — detect harmful content in model outputs</li>
-      <li>Fine-tuning UI — train models without custom code</li>
-    </ul>
-  </div>
-
-  <!-- MODULE 9: Content Safety & Responsible AI -->
-  <div class="module" id="m9">
-    <div class="module-header">
-      <div class="module-number">9</div>
-      <h2>Content Safety &amp; Responsible AI</h2>
-    </div>
-
-    <h3>Azure AI Content Safety</h3>
-    <p>Detects harmful content in text and images across four harm categories:</p>
-
-    <table>
-      <tr><th>Category</th><th>Description</th><th>Severity (0–6)</th></tr>
-      <tr><td>Hate</td><td>Discrimination, prejudice based on identity</td><td>0 = safe, 6 = severe</td></tr>
-      <tr><td>Violence</td><td>Physical harm, weapons, gore</td><td>0–6</td></tr>
-      <tr><td>Sexual</td><td>Sexually explicit content</td><td>0–6</td></tr>
-      <tr><td>Self-Harm</td><td>Suicide, eating disorders, self-injury</td><td>0–6</td></tr>
-    </table>
-
-    <div class="callout info">
-      <strong>Content Safety Features</strong>
-      <ul>
-        <li><strong>Prompt Shields</strong> — detect jailbreak attempts and indirect prompt injection attacks</li>
-        <li><strong>Groundedness Detection</strong> — check if model output is grounded in provided context</li>
-        <li><strong>Protected Material Detection</strong> — detect copyrighted text/lyrics/code in outputs</li>
-        <li><strong>Custom Blocklists</strong> — block domain-specific terms</li>
-      </ul>
-    </div>
-
-    <h3>Responsible AI Principles (Microsoft)</h3>
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Fairness</div>
-        <p>AI systems should treat all people fairly, avoid creating or amplifying bias across groups.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Reliability &amp; Safety</div>
-        <p>Perform reliably and safely under normal and unexpected conditions. Fail gracefully.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Privacy &amp; Security</div>
-        <p>Respect privacy, protect sensitive data, secure against adversarial attack.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Inclusiveness</div>
-        <p>Empower everyone, including people with disabilities. Accessible design.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Transparency</div>
-        <p>Systems should be understandable. Users should know when they're interacting with AI.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Accountability</div>
-        <p>Humans should remain accountable for AI decisions. Human oversight mechanisms.</p>
-      </div>
-    </div>
-
-    <h3>Azure AI Content Moderator (Legacy)</h3>
-    <p>Older service (being replaced by Content Safety) for moderating text, images, and videos. Still may appear on exam.</p>
-    <ul>
-      <li><strong>Text Moderation</strong>: profanity, PII, classification (adult/racy/offensive)</li>
-      <li><strong>Image Moderation</strong>: adult/racy content scoring</li>
-      <li><strong>Human Review Tool</strong>: workflow for human-in-the-loop review</li>
-    </ul>
-
-    <h3>Transparency &amp; Explainability Tools</h3>
-    <table>
-      <tr><th>Tool</th><th>Purpose</th></tr>
-      <tr><td>Azure AI Fairness Dashboard</td><td>Measure disparate impact across demographic groups</td></tr>
-      <tr><td>Responsible AI Dashboard (Azure ML)</td><td>Error analysis, model explainability, fairness, causal analysis</td></tr>
-      <tr><td>Interpretability (SHAP, LIME)</td><td>Feature importance for individual predictions</td></tr>
-    </table>
-
-    <h3>Limited Access AI Features</h3>
-    <p>The following require Microsoft approval before use:</p>
-    <ul>
-      <li>Face Identification &amp; Verification</li>
-      <li>Custom Neural Voice (TTS)</li>
-      <li>Speaker Recognition</li>
-      <li>Emotion recognition (Face API)</li>
-      <li>Celebrity recognition (Video Indexer)</li>
-    </ul>
-  </div>
-
-  <!-- PRICING REFERENCE -->
-  <div class="module" id="pricing">
-    <div class="module-header">
-      <div class="module-number">R</div>
-      <h2>Service Tiers &amp; Pricing Reference</h2>
-    </div>
-
-    <h3>Azure AI Services Tiers</h3>
-    <table>
-      <tr><th>Service</th><th>Free Tier</th><th>Paid Tier</th><th>Notes</th></tr>
-      <tr><td>Azure AI Language</td><td>5,000 text records/month</td><td>S0 — per 1K records</td><td>Custom features require S0</td></tr>
-      <tr><td>Azure AI Vision</td><td>5,000 transactions/month</td><td>S1 — per 1K calls</td><td>Custom Vision has separate free tier (5K images)</td></tr>
-      <tr><td>Azure AI Speech</td><td>5 hrs audio/month</td><td>S0 — per hour of audio</td><td>Custom Neural Voice requires approval</td></tr>
-      <tr><td>Azure AI Translator</td><td>2M chars/month</td><td>S1 — per million chars</td><td>Document Translation billed per character</td></tr>
-      <tr><td>Azure AI Search</td><td>F (3 indexes, 50MB)</td><td>Basic, S1, S2, S3</td><td>Semantic search: S1+ only</td></tr>
-      <tr><td>Document Intelligence</td><td>500 pages/month</td><td>S0 — per page</td><td>Custom models: 500 train pages free</td></tr>
-      <tr><td>Azure OpenAI</td><td>None (request access)</td><td>Per 1K tokens (varies by model)</td><td>GPT-4 significantly more expensive than GPT-3.5</td></tr>
-    </table>
-
-    <h3>Azure AI Search Tier Comparison</h3>
-    <table>
-      <tr><th>Tier</th><th>Max Indexes</th><th>Max Storage</th><th>Replicas</th><th>Semantic Search</th></tr>
-      <tr><td>Free (F)</td><td>3</td><td>50 MB</td><td>1</td><td>No</td></tr>
-      <tr><td>Basic</td><td>15</td><td>2 GB</td><td>3</td><td>No</td></tr>
-      <tr><td>S1</td><td>50</td><td>25 GB/partition</td><td>12</td><td>Yes</td></tr>
-      <tr><td>S2</td><td>200</td><td>100 GB/partition</td><td>12</td><td>Yes</td></tr>
-      <tr><td>S3</td><td>200</td><td>200 GB/partition</td><td>12</td><td>Yes</td></tr>
-    </table>
-  </div>
-
-  <!-- QUICK REFERENCE -->
-  <div class="module" id="quickref">
-    <div class="module-header">
-      <div class="module-number">Q</div>
-      <h2>Quick Reference — Exam Cheat Sheet</h2>
-    </div>
-
-    <h3>Service → Use Case Mapping</h3>
-    <table>
-      <tr><th>Scenario</th><th>Service to Use</th></tr>
-      <tr><td>Extract text from scanned PDF</td><td>Document Intelligence (Read/Layout model) or AI Vision OCR</td></tr>
-      <tr><td>Extract specific fields from invoices</td><td>Document Intelligence (prebuilt-invoice)</td></tr>
-      <tr><td>Train custom field extraction from your forms</td><td>Document Intelligence Custom Model</td></tr>
-      <tr><td>Classify images with your own categories</td><td>Custom Vision (Image Classification)</td></tr>
-      <tr><td>Detect objects with bounding boxes in images</td><td>Custom Vision (Object Detection) or AI Vision v4</td></tr>
-      <tr><td>Identify people in video</td><td>Video Indexer</td></tr>
-      <tr><td>Verify if two photos are the same person</td><td>Face API (Verify)</td></tr>
-      <tr><td>Detect language of input text</td><td>Azure AI Language (Language Detection)</td></tr>
-      <tr><td>Translate between 100+ languages</td><td>Azure AI Translator</td></tr>
-      <tr><td>Convert speech to text</td><td>Azure AI Speech (Speech-to-Text)</td></tr>
-      <tr><td>Build a Q&amp;A bot from a website/FAQ</td><td>Azure AI Language (Custom Question Answering)</td></tr>
-      <tr><td>Understand user intents in a chatbot</td><td>Azure AI Language (CLU)</td></tr>
-      <tr><td>Extract named entities (people, orgs, places)</td><td>Azure AI Language (NER)</td></tr>
-      <tr><td>Find relevant documents from a corpus</td><td>Azure AI Search</td></tr>
-      <tr><td>Generate text with a large language model</td><td>Azure OpenAI (GPT-4)</td></tr>
-      <tr><td>Generate images from text</td><td>Azure OpenAI (DALL-E 3)</td></tr>
-      <tr><td>Answer questions from your private documents</td><td>Azure OpenAI + AI Search (RAG)</td></tr>
-      <tr><td>Detect harmful content in user input</td><td>Azure AI Content Safety</td></tr>
-      <tr><td>Run AI services offline in Docker</td><td>Cognitive Services Containers</td></tr>
-    </table>
-
-    <h3>Key Numbers to Remember</h3>
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Custom Vision</div>
-        <ul>
-          <li>Classification: min 5 images/tag</li>
-          <li>Object Detection: min 15 images/tag</li>
-          <li>Max 50 tags (free), 500 tags (paid)</li>
-        </ul>
-      </div>
-      <div class="card">
-        <div class="card-title">CLU / Language Understanding</div>
-        <ul>
-          <li>Aim for 15–30+ utterances/intent</li>
-          <li>Always include None intent</li>
-          <li>Max 500 intents per project</li>
-        </ul>
-      </div>
-      <div class="card">
-        <div class="card-title">Custom Q&amp;A</div>
-        <ul>
-          <li>Up to 5 follow-up prompts per answer</li>
-          <li>Active learning improves over time</li>
-          <li>Linked to AI Search for large KBs</li>
-        </ul>
-      </div>
-      <div class="card">
+      <a href="m1.html" class="card module-card">
+        <div class="module-number">1</div>
+        <div class="card-title">Azure AI Services</div>
+        <p>Authentication, securing, monitoring, deploying in containers.</p>
+      </a>
+      <a href="m2.html" class="card module-card">
+        <div class="module-number">2</div>
+        <div class="card-title">Computer Vision</div>
+        <p>Image Analysis v4, OCR, Custom Vision, Face API, Video Indexer.</p>
+      </a>
+      <a href="m3.html" class="card module-card">
+        <div class="module-number">3</div>
+        <div class="card-title">Azure AI Language</div>
+        <p>Sentiment, NER, PII, summarization, custom text classification, Q&amp;A.</p>
+      </a>
+      <a href="translator.html" class="card module-card">
+        <div class="module-number">3b</div>
+        <div class="card-title">Azure AI Translator</div>
+        <p>Text &amp; document translation, transliteration, custom MT models.</p>
+      </a>
+      <a href="m4.html" class="card module-card">
+        <div class="module-number">4</div>
+        <div class="card-title">Speech Services</div>
+        <p>STT, TTS, SSML, Custom Speech, Batch Transcription, Speaker Recognition.</p>
+      </a>
+      <a href="m5.html" class="card module-card">
+        <div class="module-number">5</div>
+        <div class="card-title">Language Understanding (CLU)</div>
+        <p>Intents, entities, utterances, orchestration, Bot Framework.</p>
+      </a>
+      <a href="m6.html" class="card module-card">
+        <div class="module-number">6</div>
         <div class="card-title">Document Intelligence</div>
-        <ul>
-          <li>Template model: min 5 samples</li>
-          <li>Neural model: min 10 samples</li>
-          <li>Async: poll operation-location URL</li>
-        </ul>
-      </div>
-      <div class="card">
-        <div class="card-title">AI Speech</div>
-        <ul>
-          <li>Token validity: 10 minutes</li>
-          <li>Batch: audio in Blob Storage</li>
-          <li>SSML controls voice prosody</li>
-        </ul>
-      </div>
-      <div class="card">
-        <div class="card-title">Azure AI Search</div>
-        <ul>
-          <li>Semantic search: S1+ tier only</li>
-          <li>HNSW: recommended vector algorithm</li>
-          <li>Hybrid = keyword + vector + RRF</li>
-        </ul>
-      </div>
+        <p>Prebuilt models (invoice, receipt, ID), custom template &amp; neural models.</p>
+      </a>
+      <a href="m7.html" class="card module-card">
+        <div class="module-number">7</div>
+        <div class="card-title">Knowledge Mining &amp; AI Search</div>
+        <p>Indexes, indexers, skillsets, knowledge store, semantic &amp; vector search.</p>
+      </a>
+      <a href="m8.html" class="card module-card">
+        <div class="module-number">8</div>
+        <div class="card-title">Azure OpenAI &amp; Generative AI</div>
+        <p>GPT-4o, o1, embeddings, DALL-E, RAG, fine-tuning, prompt engineering.</p>
+      </a>
+      <a href="m9.html" class="card module-card">
+        <div class="module-number">9</div>
+        <div class="card-title">Content Safety &amp; Responsible AI</div>
+        <p>Harm categories, prompt shields, content filters, RAI principles.</p>
+      </a>
+      <a href="foundry.html" class="card module-card">
+        <div class="module-number">F</div>
+        <div class="card-title">Azure AI Foundry</div>
+        <p>Hub/project architecture, model catalog, Prompt Flow, evaluation, SDK.</p>
+      </a>
+      <a href="pricing.html" class="card module-card">
+        <div class="module-number">R</div>
+        <div class="card-title">Tiers &amp; Pricing</div>
+        <p>Free vs. paid tiers, AI Search tier comparison, quota limits.</p>
+      </a>
+      <a href="quickref.html" class="card module-card">
+        <div class="module-number">Q</div>
+        <div class="card-title">Quick Reference</div>
+        <p>Service → use-case mapping, key numbers, auth cheat sheet, SDK packages.</p>
+      </a>
     </div>
+  </div>
 
-    <h3>Authentication Quick Reference</h3>
-    <table>
-      <tr><th>Method</th><th>Header/Mechanism</th><th>Best For</th></tr>
-      <tr><td>API Key</td><td><code>Ocp-Apim-Subscription-Key: &lt;key&gt;</code></td><td>Development, testing</td></tr>
-      <tr><td>Token</td><td><code>Authorization: Bearer &lt;token&gt;</code></td><td>Short-lived sessions</td></tr>
-      <tr><td>Managed Identity</td><td>DefaultAzureCredential (no secrets)</td><td>Production / Azure-hosted apps</td></tr>
-      <tr><td>Service Principal</td><td>AAD client_id + client_secret</td><td>Non-Azure-hosted apps</td></tr>
-    </table>
-
-    <h3>Common SDK Packages</h3>
-    <table>
-      <tr><th>Python Package</th><th>Service</th></tr>
-      <tr><td><code>azure-ai-textanalytics</code></td><td>Azure AI Language (Text Analytics API)</td></tr>
-      <tr><td><code>azure-ai-language-conversations</code></td><td>CLU (Conversational Language Understanding)</td></tr>
-      <tr><td><code>azure-ai-vision-imageanalysis</code></td><td>Azure AI Vision v4</td></tr>
-      <tr><td><code>azure-cognitiveservices-vision-customvision</code></td><td>Custom Vision</td></tr>
-      <tr><td><code>azure-cognitiveservices-vision-face</code></td><td>Face API</td></tr>
-      <tr><td><code>azure-cognitiveservices-speech</code></td><td>Azure AI Speech</td></tr>
-      <tr><td><code>azure-ai-translation-text</code></td><td>Azure AI Translator</td></tr>
-      <tr><td><code>azure-ai-documentintelligence</code></td><td>Document Intelligence</td></tr>
-      <tr><td><code>azure-search-documents</code></td><td>Azure AI Search</td></tr>
-      <tr><td><code>openai</code></td><td>Azure OpenAI Service</td></tr>
-      <tr><td><code>azure-ai-contentsafety</code></td><td>Azure AI Content Safety</td></tr>
-    </table>
-
-    <div class="callout exam">
-      <strong>Last-Minute Exam Tips</strong>
-      <ul>
-        <li><strong>Multi-service resource</strong> key works for most services but NOT Azure OpenAI — OpenAI needs its own resource.</li>
-        <li><strong>Containers</strong> always need to phone home to Azure (Billing + ApiKey env vars).</li>
-        <li><strong>Custom Vision prediction key ≠ training key</strong> — two separate keys.</li>
-        <li><strong>CLU replaces LUIS</strong> — if you see LUIS in answers, it's likely outdated but still appears on exams.</li>
-        <li><strong>Translator</strong> has a GLOBAL endpoint, not per-region — but region header required with multi-service key.</li>
-        <li><strong>Document Intelligence Async</strong>: Submit → get operation URL → GET until "succeeded".</li>
-        <li><strong>AI Search Semantic</strong>: Not available on Free or Basic tier.</li>
-        <li><strong>Face Identification</strong>: Requires Limited Access — can only detect without approval.</li>
-        <li><strong>RAG vs Fine-tuning</strong>: Prefer RAG for live/private data; fine-tune only for style/format.</li>
-        <li><strong>Responsible AI</strong>: 6 principles — Fairness, Reliability &amp; Safety, Privacy &amp; Security, Inclusiveness, Transparency, Accountability.</li>
-      </ul>
-    </div>
+  <div class="page-nav">
+    <span></span>
+    <a href="m1.html" class="page-nav-btn">Next: Azure AI Services →</a>
   </div>
 
   <footer style="text-align:center; color: var(--muted); font-size:0.8rem; padding: 2rem 0; border-top: 1px solid var(--border); margin-top: 2rem;">
-    AI-102 Study Notes &mdash; Azure AI Engineer Associate &mdash; Generated 2026 &mdash; Always verify against the official Microsoft Learn documentation.
+    AI-102 Study Notes &mdash; Azure AI Engineer Associate &mdash; Always verify against the official Microsoft Learn documentation.
   </footer>
 
 </div>
 
 <script>
-  // Highlight active nav link on scroll
-  const sections = document.querySelectorAll('.module');
-  const navLinks = document.querySelectorAll('.sidebar nav a');
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        navLinks.forEach(link => link.classList.remove('active'));
-        const id = entry.target.id;
-        const active = document.querySelector(`.sidebar nav a[href="#${id}"]`);
-        if (active) active.classList.add('active');
-      }
-    });
-  }, { rootMargin: '-20% 0px -70% 0px' });
-
-  sections.forEach(s => observer.observe(s));
+const cur = window.location.pathname.split('/').pop() || 'index.html';
+document.querySelectorAll('.sidebar nav a').forEach(a => {
+  if (a.getAttribute('href').split('#')[0] === cur) a.classList.add('active');
+});
 </script>
 </body>
 </html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 7: Knowledge Mining &amp; AI Search – AI-102</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header"><span>AI-102</span>Azure AI Engineer Associate</div>
+  <nav>
+    <div class="section-label">Overview</div>
+    <a href="index.html">Exam Overview</a>
+    <div class="section-label">Module 1</div>
+    <a href="m1.html">Azure AI Services</a>
+    <div class="section-label">Module 2</div>
+    <a href="m2.html">Computer Vision</a>
+    <div class="section-label">Module 3</div>
+    <a href="m3.html">Azure AI Language</a>
+    <a href="translator.html">Azure AI Translator</a>
+    <div class="section-label">Module 4</div>
+    <a href="m4.html">Speech Services</a>
+    <div class="section-label">Module 5</div>
+    <a href="m5.html">Language Understanding (CLU)</a>
+    <div class="section-label">Module 6</div>
+    <a href="m6.html">Document Intelligence</a>
+    <div class="section-label">Module 7</div>
+    <a href="m7.html">Knowledge Mining &amp; AI Search</a>
+    <div class="section-label">Module 8</div>
+    <a href="m8.html">Azure OpenAI &amp; Generative AI</a>
+    <div class="section-label">Module 9</div>
+    <a href="m9.html">Content Safety &amp; Responsible AI</a>
+    <div class="section-label">Platform</div>
+    <a href="foundry.html">Azure AI Foundry</a>
+    <div class="section-label">Reference</div>
+    <a href="pricing.html">Tiers &amp; Pricing</a>
+    <a href="quickref.html">Quick Reference</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <div class="module" id="m7">
+    <div class="module-header">
+      <div class="module-number">7</div>
+      <h2>Knowledge Mining &amp; Azure AI Search</h2>
+    </div>
+
+    <h3>Azure AI Search Overview</h3>
+    <p>Azure AI Search (formerly Cognitive Search) is a cloud search service. It ingests, enriches (via AI skillsets), indexes, and serves documents for full-text search.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Index</div>
+        <p>The searchable data store. Defines schema: fields, types, analyzers, suggesters, scoring profiles. Like a database table optimized for search.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Indexer</div>
+        <p>Crawls a data source and populates the index. Can run on a schedule. Applies optional skillset during indexing.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Data Source</div>
+        <p>Connection definition to the raw data: Azure Blob, SQL DB, Cosmos DB, Table Storage, ADLS Gen2.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Skillset</div>
+        <p>Pipeline of AI skills (OCR, NER, key phrases, etc.) applied to documents during indexing to enrich them.</p>
+      </div>
+    </div>
+
+    <h3>AI Enrichment Pipeline</h3>
+    <pre>Data Source → Indexer → [Skillset] → Enriched Document → Index
+                               ↓
+                          Knowledge Store (optional)</pre>
+
+    <h3>Built-in Skills</h3>
+    <table>
+      <tr><th>Skill</th><th>Purpose</th></tr>
+      <tr><td>OCR Skill</td><td>Extract text from images embedded in documents</td></tr>
+      <tr><td>Image Analysis Skill</td><td>Tags, captions, object detection on images</td></tr>
+      <tr><td>Merge Skill</td><td>Combine multiple text fields into one</td></tr>
+      <tr><td>Language Detection</td><td>Detect document language</td></tr>
+      <tr><td>Text Split</td><td>Chunk large documents into pages for processing</td></tr>
+      <tr><td>Entity Recognition</td><td>Extract persons, locations, organizations</td></tr>
+      <tr><td>Key Phrase Extraction</td><td>Extract key phrases</td></tr>
+      <tr><td>Sentiment Analysis</td><td>Score document sentiment</td></tr>
+      <tr><td>PII Detection</td><td>Find and optionally mask PII</td></tr>
+      <tr><td>Translation</td><td>Translate content into a target language</td></tr>
+      <tr><td>Shaper Skill</td><td>Restructure enrichment output for knowledge store</td></tr>
+    </table>
+
+    <h3>Custom Skills</h3>
+    <p>Extend the pipeline with your own logic via <strong>Azure Function</strong> or any HTTPS endpoint.</p>
+    <pre>{
+  <span class="str">"@odata.type"</span>: <span class="str">"#Microsoft.Skills.Custom.WebApiSkill"</span>,
+  <span class="str">"uri"</span>: <span class="str">"https://myfunction.azurewebsites.net/api/CustomSkill"</span>,
+  <span class="str">"httpMethod"</span>: <span class="str">"POST"</span>,
+  <span class="str">"inputs"</span>: [{ <span class="str">"name"</span>: <span class="str">"text"</span>, <span class="str">"source"</span>: <span class="str">"/document/content"</span> }],
+  <span class="str">"outputs"</span>: [{ <span class="str">"name"</span>: <span class="str">"myOutput"</span>, <span class="str">"targetName"</span>: <span class="str">"customField"</span> }]
+}</pre>
+
+    <h3>Knowledge Store</h3>
+    <p>Persists enriched data from the skillset to Azure Storage for downstream analysis (Power BI, ML, etc.).</p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Table Projections</div>
+        <p>Store enrichments as rows in Azure Table Storage. Good for structured, tabular data.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Object Projections</div>
+        <p>Store enriched documents as JSON in Azure Blob Storage. Full document with all enrichments.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">File Projections</div>
+        <p>Store extracted images/normalized images as files in Blob Storage.</p>
+      </div>
+    </div>
+
+    <h3>Search Query Types</h3>
+    <table>
+      <tr><th>Query Type</th><th>Description</th><th>Syntax</th></tr>
+      <tr><td>Simple</td><td>Default. Easy-to-use syntax, auto-match</td><td><code>search=azure AI</code></td></tr>
+      <tr><td>Full (Lucene)</td><td>Advanced features: fuzzy, regex, proximity, boosting</td><td><code>queryType=full&search=azure~</code></td></tr>
+      <tr><td>Semantic</td><td>Deep NLP re-ranking, captions, answers</td><td><code>queryType=semantic</code></td></tr>
+      <tr><td>Vector</td><td>Embedding similarity search</td><td><code>vectors=[...]</code></td></tr>
+      <tr><td>Hybrid</td><td>Combines keyword + vector search</td><td>Both vectors and search text</td></tr>
+    </table>
+
+    <h3>Index Fields Configuration</h3>
+    <table>
+      <tr><th>Attribute</th><th>Effect</th></tr>
+      <tr><td><code>searchable</code></td><td>Field is full-text indexed and can be searched</td></tr>
+      <tr><td><code>filterable</code></td><td>Field can be used in $filter expressions</td></tr>
+      <tr><td><code>sortable</code></td><td>Field can be used in $orderby</td></tr>
+      <tr><td><code>facetable</code></td><td>Field can be used for faceted navigation</td></tr>
+      <tr><td><code>retrievable</code></td><td>Field is returned in search results</td></tr>
+      <tr><td><code>key</code></td><td>Unique identifier for the document (required)</td></tr>
+    </table>
+
+    <h3>Semantic Search</h3>
+    <p>Semantic search uses deep language models to re-rank results and provide semantic captions and answers. Requires Standard tier or above.</p>
+    <ul>
+      <li><strong>Semantic ranking</strong>: re-scores BM25 results using ML model understanding context</li>
+      <li><strong>Semantic captions</strong>: extracted, highlighted passages that answer the query</li>
+      <li><strong>Semantic answers</strong>: direct answers extracted from top results (if query is a question)</li>
+    </ul>
+
+    <pre>POST /indexes/my-index/docs/search?api-version=2023-11-01
+{
+  <span class="str">"search"</span>: <span class="str">"What is the refund policy?"</span>,
+  <span class="str">"queryType"</span>: <span class="str">"semantic"</span>,
+  <span class="str">"semanticConfiguration"</span>: <span class="str">"my-semantic-config"</span>,
+  <span class="str">"answers"</span>: <span class="str">"extractive|count-3"</span>,
+  <span class="str">"captions"</span>: <span class="str">"extractive|highlight-true"</span>
+}</pre>
+
+    <h3>Vector Search</h3>
+    <p>Store embeddings as vector fields in the index. At query time, embed the query and find nearest neighbours.</p>
+    <ul>
+      <li>Algorithms: HNSW (Hierarchical Navigable Small World — recommended) and exhaustive KNN</li>
+      <li>Use Azure OpenAI Embeddings model to generate vectors</li>
+      <li>Hybrid = keyword BM25 + vector, merged with Reciprocal Rank Fusion (RRF)</li>
+    </ul>
+  </div>
+
+  <div class="page-nav">
+    <a href="m6.html" class="page-nav-btn">← Document Intelligence</a>
+    <a href="m8.html" class="page-nav-btn">Next: Azure OpenAI &amp; Generative AI →</a>
+  </div>
+
+  <footer style="text-align:center; color: var(--muted); font-size:0.8rem; padding: 2rem 0; border-top: 1px solid var(--border); margin-top: 2rem;">
+    AI-102 Study Notes &mdash; Azure AI Engineer Associate &mdash; Always verify against the official Microsoft Learn documentation.
+  </footer>
+
+</div>
+
+<script>
+const cur = window.location.pathname.split('/').pop() || 'index.html';
+document.querySelectorAll('.sidebar nav a').forEach(a => {
+  if (a.getAttribute('href').split('#')[0] === cur) a.classList.add('active');
+});
+</script>
+</body>
+</html>

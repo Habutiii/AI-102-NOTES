@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 1: Azure AI Services – AI-102</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header"><span>AI-102</span>Azure AI Engineer Associate</div>
+  <nav>
+    <div class="section-label">Overview</div>
+    <a href="index.html">Exam Overview</a>
+    <div class="section-label">Module 1</div>
+    <a href="m1.html">Azure AI Services</a>
+    <div class="section-label">Module 2</div>
+    <a href="m2.html">Computer Vision</a>
+    <div class="section-label">Module 3</div>
+    <a href="m3.html">Azure AI Language</a>
+    <a href="translator.html">Azure AI Translator</a>
+    <div class="section-label">Module 4</div>
+    <a href="m4.html">Speech Services</a>
+    <div class="section-label">Module 5</div>
+    <a href="m5.html">Language Understanding (CLU)</a>
+    <div class="section-label">Module 6</div>
+    <a href="m6.html">Document Intelligence</a>
+    <div class="section-label">Module 7</div>
+    <a href="m7.html">Knowledge Mining &amp; AI Search</a>
+    <div class="section-label">Module 8</div>
+    <a href="m8.html">Azure OpenAI &amp; Generative AI</a>
+    <div class="section-label">Module 9</div>
+    <a href="m9.html">Content Safety &amp; Responsible AI</a>
+    <div class="section-label">Platform</div>
+    <a href="foundry.html">Azure AI Foundry</a>
+    <div class="section-label">Reference</div>
+    <a href="pricing.html">Tiers &amp; Pricing</a>
+    <a href="quickref.html">Quick Reference</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <div class="module" id="m1">
+    <div class="module-header">
+      <div class="module-number">1</div>
+      <h2>Azure AI Services — Plan &amp; Manage</h2>
+    </div>
+
+    <h3>What are Azure AI Services?</h3>
+    <p>Azure AI Services (formerly <em>Cognitive Services</em>) are cloud-based REST APIs and SDKs that allow you to add AI capabilities to applications without needing ML expertise. They are organised into categories: Vision, Speech, Language, Decision, and Azure OpenAI.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Single-Service Resource</div>
+        <ul>
+          <li>One endpoint per service (e.g., Speech only)</li>
+          <li>Dedicated billing &amp; quota per service</li>
+          <li>Use when you need one specific AI service</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Multi-Service Resource</div>
+        <ul>
+          <li>Single endpoint for multiple services</li>
+          <li>Single key authenticates all services</li>
+          <li>Consolidated billing — easier to manage</li>
+          <li>Resource type: <code>CognitiveServices</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Authentication</h3>
+    <p>Azure AI Services support two primary authentication methods:</p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Subscription Key (API Key)</div>
+        <p>Passed as <code>Ocp-Apim-Subscription-Key</code> header. Two keys provided — rotate without downtime.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Microsoft Entra ID (AAD)</div>
+        <p>Use service principals or managed identities. Preferred for production — no secrets in code.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Token-Based Auth</div>
+        <p>Exchange key for a 10-minute JWT token at <code>/sts/v1.0/issueToken</code>. Pass in <code>Authorization: Bearer {token}</code>.</p>
+      </div>
+    </div>
+
+    <pre><span class="cm">// Authenticate with API Key</span>
+<span class="kw">var</span> client = <span class="kw">new</span> <span class="cls">TextAnalyticsClient</span>(
+    <span class="kw">new</span> <span class="cls">Uri</span>(<span class="str">"https://&lt;endpoint&gt;.cognitiveservices.azure.com"</span>),
+    <span class="kw">new</span> <span class="cls">AzureKeyCredential</span>(<span class="str">"&lt;api-key&gt;"</span>)
+);
+
+<span class="cm">// Authenticate with Managed Identity</span>
+<span class="kw">var</span> credential = <span class="kw">new</span> <span class="cls">DefaultAzureCredential</span>();
+<span class="kw">var</span> client2 = <span class="kw">new</span> <span class="cls">TextAnalyticsClient</span>(endpoint, credential);</pre>
+
+    <h3>Securing AI Services</h3>
+    <ul>
+      <li><strong>Azure Key Vault</strong> — store API keys; grant access via managed identities, never hardcode secrets</li>
+      <li><strong>Network restrictions</strong> — limit access by virtual network or IP allowlists in the resource Networking tab</li>
+      <li><strong>Private Endpoints</strong> — traffic stays within Azure backbone; disable public access</li>
+      <li><strong>RBAC</strong> — assign <code>Cognitive Services User</code> to allow API calls; <code>Cognitive Services Contributor</code> to manage the resource</li>
+      <li><strong>Diagnostic logging</strong> — send to Log Analytics; query with KQL</li>
+    </ul>
+
+    <div class="callout tip">
+      <strong>Best Practice</strong>
+      Always use Managed Identity + Key Vault in production. For local dev, use <code>DefaultAzureCredential</code> which automatically picks up <code>az login</code> credentials.
+    </div>
+
+    <h3>Monitoring Azure AI Services</h3>
+    <table>
+      <tr><th>Tool</th><th>Purpose</th><th>Key Metrics</th></tr>
+      <tr><td>Azure Monitor Metrics</td><td>Real-time charts</td><td>TotalCalls, SuccessfulCalls, TotalErrors, Latency</td></tr>
+      <tr><td>Diagnostic Logs</td><td>Detailed request logs</td><td>Request headers, responses, durations</td></tr>
+      <tr><td>Alerts</td><td>Proactive notification</td><td>Alert when errors exceed threshold</td></tr>
+      <tr><td>Log Analytics (KQL)</td><td>Query &amp; analysis</td><td>Custom queries across all logs</td></tr>
+    </table>
+
+    <h3>Deploying in Containers</h3>
+    <p>Many AI Services can run in Docker containers for on-premises or edge scenarios.</p>
+    <div class="callout info">
+      <strong>Key Facts</strong>
+      Even in containers, the service must phone home to Azure for billing. Containers require <code>Billing</code> and <code>ApiKey</code> environment variables pointing to your Azure resource. The model is bundled in the container image — inference runs locally.
+    </div>
+    <pre><span class="cm"># Pull and run a Language Detection container</span>
+docker pull mcr.microsoft.com/azure-cognitive-services/textanalytics/language:latest
+
+docker run --rm -it -p 5000:5000 \
+  -e ApiKey=<span class="str">"&lt;key&gt;"</span> \
+  -e Billing=<span class="str">"https://&lt;resource&gt;.cognitiveservices.azure.com/"</span> \
+  -e Eula=accept \
+  mcr.microsoft.com/azure-cognitive-services/textanalytics/language:latest</pre>
+
+    <table>
+      <tr><th>Service</th><th>Container Available</th></tr>
+      <tr><td>Text Analytics (Language, Sentiment, NER)</td><td>Yes</td></tr>
+      <tr><td>Computer Vision (OCR, Read)</td><td>Yes</td></tr>
+      <tr><td>Speech (STT, TTS)</td><td>Yes</td></tr>
+      <tr><td>Document Intelligence</td><td>Yes</td></tr>
+      <tr><td>Face</td><td>Limited (gated)</td></tr>
+    </table>
+  </div>
+
+  <div class="page-nav">
+    <a href="index.html" class="page-nav-btn">← Overview</a>
+    <a href="m2.html" class="page-nav-btn">Next: Computer Vision →</a>
+  </div>
+
+  <footer style="text-align:center; color: var(--muted); font-size:0.8rem; padding: 2rem 0; border-top: 1px solid var(--border); margin-top: 2rem;">
+    AI-102 Study Notes &mdash; Azure AI Engineer Associate &mdash; Always verify against the official Microsoft Learn documentation.
+  </footer>
+
+</div>
+
+<script>
+const cur = window.location.pathname.split('/').pop() || 'index.html';
+document.querySelectorAll('.sidebar nav a').forEach(a => {
+  if (a.getAttribute('href').split('#')[0] === cur) a.classList.add('active');
+});
+</script>
+</body>
+</html>

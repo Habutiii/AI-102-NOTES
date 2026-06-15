@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Azure AI Translator – AI-102</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header"><span>AI-102</span>Azure AI Engineer Associate</div>
+  <nav>
+    <div class="section-label">Overview</div>
+    <a href="index.html">Exam Overview</a>
+    <div class="section-label">Module 1</div>
+    <a href="m1.html">Azure AI Services</a>
+    <div class="section-label">Module 2</div>
+    <a href="m2.html">Computer Vision</a>
+    <div class="section-label">Module 3</div>
+    <a href="m3.html">Azure AI Language</a>
+    <a href="translator.html">Azure AI Translator</a>
+    <div class="section-label">Module 4</div>
+    <a href="m4.html">Speech Services</a>
+    <div class="section-label">Module 5</div>
+    <a href="m5.html">Language Understanding (CLU)</a>
+    <div class="section-label">Module 6</div>
+    <a href="m6.html">Document Intelligence</a>
+    <div class="section-label">Module 7</div>
+    <a href="m7.html">Knowledge Mining &amp; AI Search</a>
+    <div class="section-label">Module 8</div>
+    <a href="m8.html">Azure OpenAI &amp; Generative AI</a>
+    <div class="section-label">Module 9</div>
+    <a href="m9.html">Content Safety &amp; Responsible AI</a>
+    <div class="section-label">Platform</div>
+    <a href="foundry.html">Azure AI Foundry</a>
+    <div class="section-label">Reference</div>
+    <a href="pricing.html">Tiers &amp; Pricing</a>
+    <a href="quickref.html">Quick Reference</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <div class="module" id="translator">
+    <div class="module-header">
+      <div class="module-number">3b</div>
+      <h2>Azure AI Translator</h2>
+    </div>
+
+    <h3>Overview</h3>
+    <p><strong>Azure AI Translator</strong> is a cloud-based neural machine translation service supporting 100+ languages and scripts. It is distinct from the Azure AI Language service and uses a <strong>global endpoint</strong>.</p>
+
+    <div class="callout warn">
+      <strong>Global Endpoint — Exam Trap</strong>
+      Translator uses <code>api.cognitive.microsofttranslator.com</code> — a global, non-regional URL. When using a <strong>multi-service resource key</strong>, you <em>must</em> also send the <code>Ocp-Apim-Subscription-Region</code> header. Single-service Translator keys do not require this header.
+    </div>
+
+    <h3>Text Translation Features</h3>
+    <table>
+      <tr><th>Feature</th><th>Endpoint</th><th>Description</th></tr>
+      <tr><td>Translate</td><td><code>/translate</code></td><td>Translate text into one or more target languages</td></tr>
+      <tr><td>Transliterate</td><td><code>/transliterate</code></td><td>Convert text between scripts (e.g., Arabic → Latin)</td></tr>
+      <tr><td>Detect Language</td><td><code>/detect</code></td><td>Identify the source language of input text</td></tr>
+      <tr><td>Dictionary Lookup</td><td><code>/dictionary/lookup</code></td><td>Return alternative translations for a word with POS tags</td></tr>
+      <tr><td>Dictionary Examples</td><td><code>/dictionary/examples</code></td><td>Show contextual usage examples for a translation pair</td></tr>
+      <tr><td>Break Sentence</td><td><code>/breaksentence</code></td><td>Detect sentence boundaries in text</td></tr>
+      <tr><td>Languages</td><td><code>/languages</code></td><td>List supported languages and scripts</td></tr>
+    </table>
+
+    <h4>Text Translation Request</h4>
+    <pre><span class="cm"># Translate to French and German simultaneously</span>
+POST https://api.cognitive.microsofttranslator.com/translate
+    ?api-version=3.0
+    &to=fr
+    &to=de
+    &from=en           <span class="cm"># optional; auto-detected if omitted</span>
+
+Headers:
+  Ocp-Apim-Subscription-Key: &lt;key&gt;
+  Ocp-Apim-Subscription-Region: eastus    <span class="cm"># required for multi-service key</span>
+  Content-Type: application/json
+
+[ { <span class="str">"text"</span>: <span class="str">"Hello, world!"</span> } ]</pre>
+
+    <pre><span class="cm"># Response</span>
+[{
+  <span class="str">"detectedLanguage"</span>: { <span class="str">"language"</span>: <span class="str">"en"</span>, <span class="str">"score"</span>: <span class="num">1.0</span> },
+  <span class="str">"translations"</span>: [
+    { <span class="str">"text"</span>: <span class="str">"Bonjour le monde!"</span>, <span class="str">"to"</span>: <span class="str">"fr"</span> },
+    { <span class="str">"text"</span>: <span class="str">"Hallo Welt!"</span>, <span class="str">"to"</span>: <span class="str">"de"</span> }
+  ]
+}]</pre>
+
+    <h4>Transliteration Request</h4>
+    <pre><span class="cm"># Convert Japanese hiragana to Latin</span>
+POST /transliterate?api-version=3.0&language=ja&fromScript=jpan&toScript=latn
+
+[ { <span class="str">"text"</span>: <span class="str">"こんにちは"</span> } ]</pre>
+
+    <h3>Document Translation</h3>
+    <p><strong>Document Translation</strong> is an asynchronous batch operation that translates entire documents while preserving formatting and structure.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Supported Formats</div>
+        <p>PDF, DOCX, PPTX, XLSX, HTML, TXT, Markdown, RTF, XLIFF, CSV, and more.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Storage Requirement</div>
+        <p>Source and target documents must be in <strong>Azure Blob Storage</strong> containers. The service reads source and writes translated output to the target container.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Async Pattern</div>
+        <p>Submit a batch job → poll the operation URL → retrieve results when status is <code>Succeeded</code>.</p>
+      </div>
+    </div>
+
+    <pre><span class="cm"># Submit a document translation batch</span>
+POST https://&lt;resource&gt;.cognitiveservices.azure.com/translator/text/batch/v1.1/batches
+
+{
+  <span class="str">"inputs"</span>: [{
+    <span class="str">"source"</span>: {
+      <span class="str">"sourceUrl"</span>: <span class="str">"https://&lt;storage&gt;.blob.core.windows.net/source?&lt;SAS&gt;"</span>,
+      <span class="str">"language"</span>: <span class="str">"en"</span>
+    },
+    <span class="str">"targets"</span>: [{
+      <span class="str">"language"</span>: <span class="str">"fr"</span>,
+      <span class="str">"targetUrl"</span>: <span class="str">"https://&lt;storage&gt;.blob.core.windows.net/target-fr?&lt;SAS&gt;"</span>
+    }]
+  }]
+}</pre>
+
+    <h3>Custom Translator</h3>
+    <p>Train domain-specific translation models to improve accuracy for specialised terminology.</p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Training Data</div>
+        <p>Upload <strong>parallel corpora</strong> — matched source and target language document pairs. Minimum: 10,000 parallel sentences per language pair.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Using a Custom Model</div>
+        <p>Add the <code>category</code> query parameter with your custom model ID to the <code>/translate</code> endpoint. Falls back to generic model if custom model fails.</p>
+      </div>
+    </div>
+
+    <pre>POST /translate?api-version=3.0&to=de&category=<span class="str">&lt;customModelId&gt;</span>
+[ { <span class="str">"text"</span>: <span class="str">"Apply torque to the crankshaft assembly."</span> } ]</pre>
+
+    <h3>Python SDK</h3>
+    <pre><span class="kw">from</span> azure.ai.translation.text <span class="kw">import</span> <span class="cls">TextTranslationClient</span>
+<span class="kw">from</span> azure.core.credentials <span class="kw">import</span> <span class="cls">AzureKeyCredential</span>
+
+client = <span class="cls">TextTranslationClient</span>(
+    endpoint=<span class="str">"https://api.cognitive.microsofttranslator.com"</span>,
+    credential=<span class="cls">AzureKeyCredential</span>(key),
+    region=<span class="str">"eastus"</span>
+)
+
+result = client.translate(
+    body=[<span class="str">"Hello, world!"</span>],
+    to_language=[<span class="str">"fr"</span>, <span class="str">"ja"</span>]
+)
+
+<span class="kw">for</span> translation <span class="kw">in</span> result[<span class="num">0</span>].translations:
+    <span class="fn">print</span>(<span class="str">f"</span>{translation.to}<span class="str">: </span>{translation.text}<span class="str">"</span>)</pre>
+
+    <div class="callout exam">
+      <strong>Exam Tips — Translator</strong>
+      <ul>
+        <li>Global endpoint — not regional like most Cognitive Services</li>
+        <li>Multi-service key: must send <code>Ocp-Apim-Subscription-Region</code> header</li>
+        <li>Document Translation uses Azure Blob Storage — not inline content</li>
+        <li>Custom Translator improves domain vocabulary; supply parallel corpora</li>
+        <li>Language auto-detection is built into the translate call (no separate step needed)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-nav">
+    <a href="m3.html" class="page-nav-btn">← Azure AI Language</a>
+    <a href="m4.html" class="page-nav-btn">Next: Speech Services →</a>
+  </div>
+
+  <footer style="text-align:center; color: var(--muted); font-size:0.8rem; padding: 2rem 0; border-top: 1px solid var(--border); margin-top: 2rem;">
+    AI-102 Study Notes &mdash; Azure AI Engineer Associate &mdash; Always verify against the official Microsoft Learn documentation.
+  </footer>
+
+</div>
+
+<script>
+const cur = window.location.pathname.split('/').pop() || 'index.html';
+document.querySelectorAll('.sidebar nav a').forEach(a => {
+  if (a.getAttribute('href').split('#')[0] === cur) a.classList.add('active');
+});
+</script>
+</body>
+</html>

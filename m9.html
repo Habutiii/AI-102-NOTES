@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 9: Content Safety &amp; Responsible AI – AI-102</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header"><span>AI-102</span>Azure AI Engineer Associate</div>
+  <nav>
+    <div class="section-label">Overview</div>
+    <a href="index.html">Exam Overview</a>
+    <div class="section-label">Module 1</div>
+    <a href="m1.html">Azure AI Services</a>
+    <div class="section-label">Module 2</div>
+    <a href="m2.html">Computer Vision</a>
+    <div class="section-label">Module 3</div>
+    <a href="m3.html">Azure AI Language</a>
+    <a href="translator.html">Azure AI Translator</a>
+    <div class="section-label">Module 4</div>
+    <a href="m4.html">Speech Services</a>
+    <div class="section-label">Module 5</div>
+    <a href="m5.html">Language Understanding (CLU)</a>
+    <div class="section-label">Module 6</div>
+    <a href="m6.html">Document Intelligence</a>
+    <div class="section-label">Module 7</div>
+    <a href="m7.html">Knowledge Mining &amp; AI Search</a>
+    <div class="section-label">Module 8</div>
+    <a href="m8.html">Azure OpenAI &amp; Generative AI</a>
+    <div class="section-label">Module 9</div>
+    <a href="m9.html">Content Safety &amp; Responsible AI</a>
+    <div class="section-label">Platform</div>
+    <a href="foundry.html">Azure AI Foundry</a>
+    <div class="section-label">Reference</div>
+    <a href="pricing.html">Tiers &amp; Pricing</a>
+    <a href="quickref.html">Quick Reference</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <div class="module" id="m9">
+    <div class="module-header">
+      <div class="module-number">9</div>
+      <h2>Content Safety &amp; Responsible AI</h2>
+    </div>
+
+    <h3>Azure AI Content Safety</h3>
+    <p>Azure AI Content Safety detects harmful content in both <strong>text</strong> and <strong>images</strong>, returning a severity score for each harm category.</p>
+
+    <h4>Harm Categories</h4>
+    <table>
+      <tr><th>Category</th><th>Description</th><th>Severity Scale</th></tr>
+      <tr><td>Hate</td><td>Discrimination or derogatory content targeting identity groups</td><td>0, 2, 4, 6 (safe → severe)</td></tr>
+      <tr><td>Violence</td><td>Physical harm, weapons, gore</td><td>0, 2, 4, 6</td></tr>
+      <tr><td>Sexual</td><td>Sexually explicit or suggestive content</td><td>0, 2, 4, 6</td></tr>
+      <tr><td>Self-Harm</td><td>Suicide, self-injury, eating disorders</td><td>0, 2, 4, 6</td></tr>
+    </table>
+
+    <div class="callout info">
+      <strong>Severity levels</strong>
+      0 = safe. 2 = low. 4 = medium. 6 = high/severe. You configure <strong>thresholds</strong> per category to decide when to block content. Threshold of 2 means any score ≥ 2 is rejected.
+    </div>
+
+    <h4>Content Safety API — Text Analysis</h4>
+    <pre>POST https://&lt;resource&gt;.cognitiveservices.azure.com/contentsafety/text:analyze?api-version=2024-09-01
+
+{
+  <span class="str">"text"</span>: <span class="str">"User message to analyze"</span>,
+  <span class="str">"categories"</span>: [<span class="str">"Hate"</span>, <span class="str">"Violence"</span>, <span class="str">"Sexual"</span>, <span class="str">"SelfHarm"</span>],
+  <span class="str">"outputType"</span>: <span class="str">"FourSeverityLevels"</span>
+}</pre>
+
+    <h3>Advanced Content Safety Features</h3>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Prompt Shields</div>
+        <p>Detects two types of attacks: <strong>Direct jailbreaks</strong> (user tries to override system instructions) and <strong>Indirect prompt injection</strong> (malicious instructions embedded in documents or web pages fed to the model).</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Groundedness Detection</div>
+        <p>Checks whether a model's response is factually supported by the supplied context/sources. Flags hallucinations where the model makes claims not found in the grounding documents.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Protected Material Detection</div>
+        <p>Identifies copyrighted text (e.g., song lyrics, book passages, code with restrictive licences) in model outputs to help avoid IP infringement.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Custom Blocklists</div>
+        <p>Add domain-specific terms that must always be blocked regardless of severity score. Applied on top of built-in harm detection.</p>
+      </div>
+    </div>
+
+    <h3>Content Filtering in Azure OpenAI</h3>
+    <p>Azure OpenAI includes a <strong>default content filter</strong> applied to all inputs and outputs. It uses the same four harm categories with configurable severity thresholds.</p>
+
+    <table>
+      <tr><th>Filter Policy</th><th>Default Threshold</th><th>Description</th></tr>
+      <tr><td>Hate</td><td>Medium (≥ 4 blocked)</td><td>Applies to both prompt and completion</td></tr>
+      <tr><td>Violence</td><td>Medium</td><td>Applies to both prompt and completion</td></tr>
+      <tr><td>Sexual</td><td>Medium</td><td>Applies to both prompt and completion</td></tr>
+      <tr><td>Self-Harm</td><td>Medium</td><td>Applies to both prompt and completion</td></tr>
+    </table>
+
+    <div class="callout tip">
+      <strong>Custom filter policies</strong>
+      You can create custom content filter configurations in Azure AI Foundry to lower or raise thresholds per category, or add blocklists. Requires applying to Microsoft for some threshold changes.
+    </div>
+
+    <h3>Responsible AI Principles (Microsoft)</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Fairness</div>
+        <p>AI systems should treat all people fairly and not create or reinforce unfair bias. Monitor for disparate impact across demographic groups.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Reliability &amp; Safety</div>
+        <p>AI must behave reliably under expected and unexpected conditions. It should fail gracefully without causing harm.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Privacy &amp; Security</div>
+        <p>Protect personal data, comply with privacy regulations, and defend against adversarial inputs. Data used to train should be handled with appropriate consent.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Inclusiveness</div>
+        <p>AI should empower everyone, including people with disabilities. Accessible design and attention to underrepresented groups.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Transparency</div>
+        <p>People should know when they're interacting with AI. Model behaviour should be understandable and explainable where possible.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Accountability</div>
+        <p>Humans must remain accountable for AI decisions. Include human-in-the-loop oversight for high-stakes decisions.</p>
+      </div>
+    </div>
+
+    <h3>Responsible AI Tooling</h3>
+    <table>
+      <tr><th>Tool</th><th>Purpose</th></tr>
+      <tr><td>Responsible AI Dashboard (Azure ML)</td><td>Unified view of model errors, fairness, explainability (SHAP), causal analysis, and counterfactuals</td></tr>
+      <tr><td>Fairness Assessment</td><td>Measures performance disparities across groups (e.g., gender, age) using metrics like accuracy parity</td></tr>
+      <tr><td>Error Analysis</td><td>Identifies data cohorts where the model underperforms — helps prioritise training data improvements</td></tr>
+      <tr><td>Model Interpretability (SHAP)</td><td>Feature importance scores per prediction — explains <em>why</em> a model made a decision</td></tr>
+      <tr><td>Azure AI Foundry Evaluation</td><td>Automated safety and quality metrics (groundedness, coherence, violence, hate) for generative AI outputs</td></tr>
+    </table>
+
+    <h3>Limited Access Features</h3>
+    <p>The following AI capabilities require explicit Microsoft approval before use:</p>
+    <ul>
+      <li>Face Identification &amp; Verification (PersonGroup-based)</li>
+      <li>Face emotion detection attributes</li>
+      <li>Celebrity recognition in Video Indexer</li>
+      <li>Custom Neural Voice (TTS)</li>
+      <li>Speaker diarization for third-party call centres</li>
+    </ul>
+
+
+  </div>
+
+  <div class="page-nav">
+    <a href="m8.html" class="page-nav-btn">← Azure OpenAI &amp; Generative AI</a>
+    <a href="foundry.html" class="page-nav-btn">Next: Azure AI Foundry →</a>
+  </div>
+
+  <footer style="text-align:center; color: var(--muted); font-size:0.8rem; padding: 2rem 0; border-top: 1px solid var(--border); margin-top: 2rem;">
+    AI-102 Study Notes &mdash; Azure AI Engineer Associate &mdash; Always verify against the official Microsoft Learn documentation.
+  </footer>
+
+</div>
+
+<script>
+const cur = window.location.pathname.split('/').pop() || 'index.html';
+document.querySelectorAll('.sidebar nav a').forEach(a => {
+  if (a.getAttribute('href').split('#')[0] === cur) a.classList.add('active');
+});
+</script>
+</body>
+</html>

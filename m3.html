@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 3: Azure AI Language – AI-102</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header"><span>AI-102</span>Azure AI Engineer Associate</div>
+  <nav>
+    <div class="section-label">Overview</div>
+    <a href="index.html">Exam Overview</a>
+    <div class="section-label">Module 1</div>
+    <a href="m1.html">Azure AI Services</a>
+    <div class="section-label">Module 2</div>
+    <a href="m2.html">Computer Vision</a>
+    <div class="section-label">Module 3</div>
+    <a href="m3.html">Azure AI Language</a>
+    <a href="translator.html">Azure AI Translator</a>
+    <div class="section-label">Module 4</div>
+    <a href="m4.html">Speech Services</a>
+    <div class="section-label">Module 5</div>
+    <a href="m5.html">Language Understanding (CLU)</a>
+    <div class="section-label">Module 6</div>
+    <a href="m6.html">Document Intelligence</a>
+    <div class="section-label">Module 7</div>
+    <a href="m7.html">Knowledge Mining &amp; AI Search</a>
+    <div class="section-label">Module 8</div>
+    <a href="m8.html">Azure OpenAI &amp; Generative AI</a>
+    <div class="section-label">Module 9</div>
+    <a href="m9.html">Content Safety &amp; Responsible AI</a>
+    <div class="section-label">Platform</div>
+    <a href="foundry.html">Azure AI Foundry</a>
+    <div class="section-label">Reference</div>
+    <a href="pricing.html">Tiers &amp; Pricing</a>
+    <a href="quickref.html">Quick Reference</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <div class="module" id="m3">
+    <div class="module-header">
+      <div class="module-number">3</div>
+      <h2>Azure AI Language</h2>
+    </div>
+
+    <h3>Overview</h3>
+    <p>Azure AI Language is the unified NLP service providing pre-built and custom language capabilities through a single endpoint. All features are accessed via the <code>/language/:analyze-text</code> REST endpoint or the <code>azure-ai-textanalytics</code> SDK.</p>
+
+    <div class="callout info">
+      <strong>Single endpoint, many features</strong>
+      All pre-built features use the same base URL: <code>POST /language/:analyze-text?api-version=2023-04-01</code> with a <code>"kind"</code> field in the body selecting the feature.
+    </div>
+
+    <h3>Pre-built Features</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Sentiment Analysis</div>
+        <p>Document-level and sentence-level sentiment: <strong>positive</strong>, <strong>neutral</strong>, <strong>negative</strong>, <strong>mixed</strong> with confidence scores.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Opinion Mining</div>
+        <p>Aspect-based sentiment. Extracts <em>target</em> aspects and their opinions. E.g., "room: positive, service: negative". Enable with <code>"opinionMining": true</code>.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Key Phrase Extraction</div>
+        <p>Returns main talking points from text. No training needed. Useful for summarising large volumes of text.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Language Detection</div>
+        <p>Returns ISO 639-1 language code + confidence score. Returns <code>(Unknown)</code> for mixed-language or ambiguous text.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Named Entity Recognition (NER)</div>
+        <p>Extracts typed entities: Person, Location, Organization, Date, Quantity, URL, Email, IP, Phone, etc.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Entity Linking</div>
+        <p>Disambiguates entities by linking to Wikipedia. E.g., "Mars" → Mars (planet) vs. Mars (candy bar) with confidence score.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">PII Detection</div>
+        <p>Identifies and optionally redacts Personally Identifiable Information: SSNs, credit card numbers, emails, phone numbers, addresses.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Text Summarization</div>
+        <p>Two modes: <strong>extractive</strong> (selects key sentences verbatim) and <strong>abstractive</strong> (generates new summary text). Both are async operations.</p>
+      </div>
+    </div>
+
+    <h4>REST API — Sentiment Analysis</h4>
+    <pre>POST https://&lt;endpoint&gt;.cognitiveservices.azure.com/language/:analyze-text?api-version=2023-04-01
+
+{
+  <span class="str">"kind"</span>: <span class="str">"SentimentAnalysis"</span>,
+  <span class="str">"analysisInput"</span>: {
+    <span class="str">"documents"</span>: [
+      { <span class="str">"id"</span>: <span class="str">"1"</span>, <span class="str">"language"</span>: <span class="str">"en"</span>, <span class="str">"text"</span>: <span class="str">"I love Azure AI services!"</span> }
+    ]
+  }
+}</pre>
+
+    <h3>Text Summarization</h3>
+    <p>Both summarization types use an <strong>async long-running operation</strong> pattern (submit → poll → retrieve).</p>
+
+    <table>
+      <tr><th>Type</th><th>How It Works</th><th>Output</th></tr>
+      <tr><td><strong>Extractive</strong></td><td>Scores each sentence by importance and selects the top N. Sentences are verbatim from the original text.</td><td>List of sentences with rank score, offset, length</td></tr>
+      <tr><td><strong>Abstractive</strong></td><td>Generates new summary text using a generative model. May not match exact phrases in the source.</td><td>Generated summary paragraph(s)</td></tr>
+    </table>
+
+    <pre><span class="kw">from</span> azure.ai.textanalytics <span class="kw">import</span> <span class="cls">TextAnalyticsClient</span>
+<span class="kw">from</span> azure.core.credentials <span class="kw">import</span> <span class="cls">AzureKeyCredential</span>
+
+client = <span class="cls">TextAnalyticsClient</span>(endpoint, <span class="cls">AzureKeyCredential</span>(key))
+
+<span class="cm"># Extractive summarization — returns key sentences verbatim</span>
+poller = client.<span class="fn">begin_extract_summary</span>(
+    [<span class="str">"Long article text..."</span>],
+    max_sentence_count=<span class="num">3</span>
+)
+<span class="kw">for</span> doc <span class="kw">in</span> poller.<span class="fn">result</span>():
+    <span class="kw">for</span> sentence <span class="kw">in</span> doc.sentences:
+        <span class="fn">print</span>(sentence.text, <span class="str">f"(rank: </span>{sentence.rank_score:.2f}<span class="str">)"</span>)
+
+<span class="cm"># Abstractive summarization — generates new summary text</span>
+poller = client.<span class="fn">begin_abstract_summary</span>(
+    [<span class="str">"Long article text..."</span>],
+    sentence_count=<span class="num">2</span>
+)
+<span class="kw">for</span> doc <span class="kw">in</span> poller.<span class="fn">result</span>():
+    <span class="fn">print</span>(doc.summaries[<span class="num">0</span>].text)</pre>
+
+    <h3>Custom Text Classification</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Single-label Classification</div>
+        <p>Each document gets exactly <strong>one</strong> class. Use when categories are mutually exclusive (e.g., Sports / Politics / Technology).</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Multi-label Classification</div>
+        <p>A document can belong to <strong>multiple</strong> classes. Use when overlap is possible (e.g., a film that is both Action and Comedy).</p>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <strong>Workflow — Custom Features (Classification, NER, Q&amp;A)</strong>
+      Language Studio → Create project → Upload &amp; label data → Train → Evaluate (precision / recall / F1) → Deploy → Call prediction endpoint
+    </div>
+
+    <h3>Custom Named Entity Recognition</h3>
+    <p>Extend pre-built NER with domain-specific entity types. Examples: part numbers, medical procedure codes, legal clause references.</p>
+    <ul>
+      <li><strong>Minimum</strong>: ~10 labeled examples per entity type</li>
+      <li><strong>Recommended</strong>: 50–200 examples for production accuracy</li>
+      <li>Labels are applied at the character span level in Language Studio</li>
+    </ul>
+
+    <h3>Question Answering</h3>
+    <p>Builds a knowledge base (KB) from FAQs, documents, or URLs and answers natural language questions.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Custom Question Answering</div>
+        <p>Build KB from documents, URLs, or Q&amp;A pairs. Supports <strong>multi-turn conversations</strong> (follow-up prompts, up to 5 per answer). Requires Azure AI Language resource; uses Azure AI Search for large KBs.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Pre-built Q&amp;A</div>
+        <p>Query a passage of text directly — no KB, no training. One-shot extraction. Useful for reading comprehension tasks.</p>
+      </div>
+    </div>
+
+    <div class="callout exam">
+      <strong>Exam Tip — Q&amp;A vs CLU</strong>
+      <strong>Q&amp;A</strong>: FAQ-style knowledge retrieval ("What are your opening hours?"). <strong>CLU</strong>: Intent understanding to trigger app actions ("Book me a flight to Paris next Friday"). If the question has a document/KB answer → Q&amp;A. If you need to extract slots and route to an action → CLU.
+    </div>
+  </div>
+
+  <div class="page-nav">
+    <a href="m2.html" class="page-nav-btn">← Computer Vision</a>
+    <a href="translator.html" class="page-nav-btn">Next: Azure AI Translator →</a>
+  </div>
+
+  <footer style="text-align:center; color: var(--muted); font-size:0.8rem; padding: 2rem 0; border-top: 1px solid var(--border); margin-top: 2rem;">
+    AI-102 Study Notes &mdash; Azure AI Engineer Associate &mdash; Always verify against the official Microsoft Learn documentation.
+  </footer>
+
+</div>
+
+<script>
+const cur = window.location.pathname.split('/').pop() || 'index.html';
+document.querySelectorAll('.sidebar nav a').forEach(a => {
+  if (a.getAttribute('href').split('#')[0] === cur) a.classList.add('active');
+});
+</script>
+</body>
+</html>

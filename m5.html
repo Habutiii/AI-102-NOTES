@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 5: Language Understanding (CLU) – AI-102</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header"><span>AI-102</span>Azure AI Engineer Associate</div>
+  <nav>
+    <div class="section-label">Overview</div>
+    <a href="index.html">Exam Overview</a>
+    <div class="section-label">Module 1</div>
+    <a href="m1.html">Azure AI Services</a>
+    <div class="section-label">Module 2</div>
+    <a href="m2.html">Computer Vision</a>
+    <div class="section-label">Module 3</div>
+    <a href="m3.html">Azure AI Language</a>
+    <a href="translator.html">Azure AI Translator</a>
+    <div class="section-label">Module 4</div>
+    <a href="m4.html">Speech Services</a>
+    <div class="section-label">Module 5</div>
+    <a href="m5.html">Language Understanding (CLU)</a>
+    <div class="section-label">Module 6</div>
+    <a href="m6.html">Document Intelligence</a>
+    <div class="section-label">Module 7</div>
+    <a href="m7.html">Knowledge Mining &amp; AI Search</a>
+    <div class="section-label">Module 8</div>
+    <a href="m8.html">Azure OpenAI &amp; Generative AI</a>
+    <div class="section-label">Module 9</div>
+    <a href="m9.html">Content Safety &amp; Responsible AI</a>
+    <div class="section-label">Platform</div>
+    <a href="foundry.html">Azure AI Foundry</a>
+    <div class="section-label">Reference</div>
+    <a href="pricing.html">Tiers &amp; Pricing</a>
+    <a href="quickref.html">Quick Reference</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <div class="module" id="m5">
+    <div class="module-header">
+      <div class="module-number">5</div>
+      <h2>Language Understanding — CLU (Conversational Language Understanding)</h2>
+    </div>
+
+    <h3>CLU Overview</h3>
+    <p>CLU (successor to LUIS) understands the <strong>intent</strong> behind natural language utterances and extracts <strong>entities</strong>. Used in chatbots, voice commands, and virtual assistants.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Intent</div>
+        <p>The goal or purpose of a user's utterance. Example: "Book a flight to Paris" → intent = <code>BookFlight</code>. Always include a <strong>None</strong> intent for utterances outside the app's scope.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Entity</div>
+        <p>Key information extracted from the utterance. Example: "Paris" → <code>Destination</code> entity. Types: Machine-learned, List, Regex, Prebuilt.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Utterance</div>
+        <p>A sample user input used to train the model. More diverse utterances per intent = better model. Minimum ~5 per intent; aim for 15–30+.</p>
+      </div>
+    </div>
+
+    <h3>Entity Types</h3>
+    <table>
+      <tr><th>Entity Type</th><th>When to Use</th><th>Example</th></tr>
+      <tr><td>Machine-learned</td><td>Flexible entities from context</td><td>Product names, descriptions</td></tr>
+      <tr><td>List</td><td>Fixed set of exact matches</td><td>Cities: ["New York", "London"]</td></tr>
+      <tr><td>Regex</td><td>Pattern-based matching</td><td>Flight numbers: [A-Z]{2}\d{4}</td></tr>
+      <tr><td>Prebuilt</td><td>Common types (numbers, dates, etc.)</td><td>datetimeV2, number, email, currency</td></tr>
+
+    </table>
+
+    <h3>CLU Development Workflow</h3>
+    <pre>Create Language resource → Create CLU project in Language Studio
+→ Define intents → Add utterances → Label entities
+→ Train → Evaluate (precision/recall/F1) → Deploy → Call prediction API</pre>
+
+    <h4>Prediction API</h4>
+    <pre>POST https://&lt;endpoint&gt;.cognitiveservices.azure.com/language/:analyze-conversations
+    ?api-version=2023-04-01
+
+{
+  <span class="str">"kind"</span>: <span class="str">"Conversation"</span>,
+  <span class="str">"analysisInput"</span>: {
+    <span class="str">"conversationItem"</span>: {
+      <span class="str">"text"</span>: <span class="str">"Book a flight to Paris next Friday"</span>,
+      <span class="str">"id"</span>: <span class="str">"1"</span>, <span class="str">"participantId"</span>: <span class="str">"user"</span>
+    }
+  },
+  <span class="str">"parameters"</span>: {
+    <span class="str">"projectName"</span>: <span class="str">"TravelBot"</span>,
+    <span class="str">"deploymentName"</span>: <span class="str">"production"</span>
+  }
+}</pre>
+
+    <h3>Orchestration Workflow</h3>
+    <p>An <strong>Orchestration project</strong> routes user input to multiple CLU projects or Q&amp;A knowledge bases. Acts as a dispatcher — ideal for complex bots with multiple domains.</p>
+    <div class="callout info">
+      <strong>Use case</strong>
+      A single bot that can answer HR questions (Q&amp;A KB), book meetings (CLU project A), and order supplies (CLU project B). The Orchestration project picks the right backend.
+    </div>
+
+    <h3>Bot Framework Integration</h3>
+    <p>CLU integrates with <strong>Azure Bot Service</strong> and <strong>Bot Framework SDK</strong>. The bot middleware calls the CLU prediction endpoint, then routes based on the top intent.</p>
+    <ul>
+      <li><strong>DirectLine channel</strong> — REST-based bot connection for custom clients</li>
+      <li><strong>Channels</strong> — Teams, Webchat, Slack, Facebook, etc.</li>
+      <li><strong>Bot Service</strong> — hosts and manages the bot; provides channel routing</li>
+    </ul>
+  </div>
+
+  <div class="page-nav">
+    <a href="m4.html" class="page-nav-btn">← Speech Services</a>
+    <a href="m6.html" class="page-nav-btn">Next: Document Intelligence →</a>
+  </div>
+
+  <footer style="text-align:center; color: var(--muted); font-size:0.8rem; padding: 2rem 0; border-top: 1px solid var(--border); margin-top: 2rem;">
+    AI-102 Study Notes &mdash; Azure AI Engineer Associate &mdash; Always verify against the official Microsoft Learn documentation.
+  </footer>
+
+</div>
+
+<script>
+const cur = window.location.pathname.split('/').pop() || 'index.html';
+document.querySelectorAll('.sidebar nav a').forEach(a => {
+  if (a.getAttribute('href').split('#')[0] === cur) a.classList.add('active');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tiers &amp; Pricing Reference – AI-102</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header"><span>AI-102</span>Azure AI Engineer Associate</div>
+  <nav>
+    <div class="section-label">Overview</div>
+    <a href="index.html">Exam Overview</a>
+    <div class="section-label">Module 1</div>
+    <a href="m1.html">Azure AI Services</a>
+    <div class="section-label">Module 2</div>
+    <a href="m2.html">Computer Vision</a>
+    <div class="section-label">Module 3</div>
+    <a href="m3.html">Azure AI Language</a>
+    <a href="translator.html">Azure AI Translator</a>
+    <div class="section-label">Module 4</div>
+    <a href="m4.html">Speech Services</a>
+    <div class="section-label">Module 5</div>
+    <a href="m5.html">Language Understanding (CLU)</a>
+    <div class="section-label">Module 6</div>
+    <a href="m6.html">Document Intelligence</a>
+    <div class="section-label">Module 7</div>
+    <a href="m7.html">Knowledge Mining &amp; AI Search</a>
+    <div class="section-label">Module 8</div>
+    <a href="m8.html">Azure OpenAI &amp; Generative AI</a>
+    <div class="section-label">Module 9</div>
+    <a href="m9.html">Content Safety &amp; Responsible AI</a>
+    <div class="section-label">Platform</div>
+    <a href="foundry.html">Azure AI Foundry</a>
+    <div class="section-label">Reference</div>
+    <a href="pricing.html">Tiers &amp; Pricing</a>
+    <a href="quickref.html">Quick Reference</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <div class="module" id="pricing">
+    <div class="module-header">
+      <div class="module-number">R</div>
+      <h2>Service Tiers &amp; Pricing Reference</h2>
+    </div>
+
+    <h3>Azure AI Services Tiers</h3>
+    <table>
+      <tr><th>Service</th><th>Free Tier</th><th>Paid Tier</th><th>Notes</th></tr>
+      <tr><td>Azure AI Language</td><td>5,000 text records/month</td><td>S0 — per 1K records</td><td>Custom features require S0</td></tr>
+      <tr><td>Azure AI Vision</td><td>5,000 transactions/month</td><td>S1 — per 1K calls</td><td>Custom Vision has separate free tier (5K images)</td></tr>
+      <tr><td>Azure AI Speech</td><td>5 hrs audio/month</td><td>S0 — per hour of audio</td><td>Custom Neural Voice requires approval</td></tr>
+      <tr><td>Azure AI Translator</td><td>2M chars/month</td><td>S1 — per million chars</td><td>Document Translation billed per character</td></tr>
+      <tr><td>Azure AI Search</td><td>F (3 indexes, 50MB)</td><td>Basic, S1, S2, S3</td><td>Semantic search: S1+ only</td></tr>
+      <tr><td>Document Intelligence</td><td>500 pages/month</td><td>S0 — per page</td><td>Custom models: 500 train pages free</td></tr>
+      <tr><td>Azure OpenAI</td><td>None (request access)</td><td>Per 1K tokens (varies by model)</td><td>GPT-4 significantly more expensive than GPT-3.5</td></tr>
+    </table>
+
+    <h3>Azure AI Search Tier Comparison</h3>
+    <table>
+      <tr><th>Tier</th><th>Max Indexes</th><th>Max Storage</th><th>Replicas</th><th>Semantic Search</th></tr>
+      <tr><td>Free (F)</td><td>3</td><td>50 MB</td><td>1</td><td>No</td></tr>
+      <tr><td>Basic</td><td>15</td><td>2 GB</td><td>3</td><td>No</td></tr>
+      <tr><td>S1</td><td>50</td><td>25 GB/partition</td><td>12</td><td>Yes</td></tr>
+      <tr><td>S2</td><td>200</td><td>100 GB/partition</td><td>12</td><td>Yes</td></tr>
+      <tr><td>S3</td><td>200</td><td>200 GB/partition</td><td>12</td><td>Yes</td></tr>
+    </table>
+  </div>
+
+  <div class="page-nav">
+    <a href="m9.html" class="page-nav-btn">← Content Safety &amp; Responsible AI</a>
+    <a href="quickref.html" class="page-nav-btn">Next: Quick Reference →</a>
+  </div>
+
+  <footer style="text-align:center; color: var(--muted); font-size:0.8rem; padding: 2rem 0; border-top: 1px solid var(--border); margin-top: 2rem;">
+    AI-102 Study Notes &mdash; Azure AI Engineer Associate &mdash; Always verify against the official Microsoft Learn documentation.
+  </footer>
+
+</div>
+
+<script>
+const cur = window.location.pathname.split('/').pop() || 'index.html';
+document.querySelectorAll('.sidebar nav a').forEach(a => {
+  if (a.getAttribute('href').split('#')[0] === cur) a.classList.add('active');
+});
+</script>
+</body>
+</html>

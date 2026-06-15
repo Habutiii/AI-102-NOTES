@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quick Reference – AI-102</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header"><span>AI-102</span>Azure AI Engineer Associate</div>
+  <nav>
+    <div class="section-label">Overview</div>
+    <a href="index.html">Exam Overview</a>
+    <div class="section-label">Module 1</div>
+    <a href="m1.html">Azure AI Services</a>
+    <div class="section-label">Module 2</div>
+    <a href="m2.html">Computer Vision</a>
+    <div class="section-label">Module 3</div>
+    <a href="m3.html">Azure AI Language</a>
+    <a href="translator.html">Azure AI Translator</a>
+    <div class="section-label">Module 4</div>
+    <a href="m4.html">Speech Services</a>
+    <div class="section-label">Module 5</div>
+    <a href="m5.html">Language Understanding (CLU)</a>
+    <div class="section-label">Module 6</div>
+    <a href="m6.html">Document Intelligence</a>
+    <div class="section-label">Module 7</div>
+    <a href="m7.html">Knowledge Mining &amp; AI Search</a>
+    <div class="section-label">Module 8</div>
+    <a href="m8.html">Azure OpenAI &amp; Generative AI</a>
+    <div class="section-label">Module 9</div>
+    <a href="m9.html">Content Safety &amp; Responsible AI</a>
+    <div class="section-label">Platform</div>
+    <a href="foundry.html">Azure AI Foundry</a>
+    <div class="section-label">Reference</div>
+    <a href="pricing.html">Tiers &amp; Pricing</a>
+    <a href="quickref.html">Quick Reference</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <div class="module" id="quickref">
+    <div class="module-header">
+      <div class="module-number">Q</div>
+      <h2>Quick Reference — Exam Cheat Sheet</h2>
+    </div>
+
+    <h3>Service → Use Case Mapping</h3>
+    <table>
+      <tr><th>Scenario</th><th>Service to Use</th></tr>
+      <tr><td>Extract text from scanned PDF</td><td>Document Intelligence (Read/Layout model) or AI Vision OCR</td></tr>
+      <tr><td>Extract specific fields from invoices</td><td>Document Intelligence (prebuilt-invoice)</td></tr>
+      <tr><td>Train custom field extraction from your forms</td><td>Document Intelligence Custom Model</td></tr>
+      <tr><td>Classify images with your own categories</td><td>Custom Vision (Image Classification)</td></tr>
+      <tr><td>Detect objects with bounding boxes in images</td><td>Custom Vision (Object Detection) or AI Vision v4</td></tr>
+      <tr><td>Identify people in video</td><td>Video Indexer</td></tr>
+      <tr><td>Verify if two photos are the same person</td><td>Face API (Verify)</td></tr>
+      <tr><td>Detect language of input text</td><td>Azure AI Language (Language Detection)</td></tr>
+      <tr><td>Translate between 100+ languages</td><td>Azure AI Translator</td></tr>
+      <tr><td>Convert speech to text</td><td>Azure AI Speech (Speech-to-Text)</td></tr>
+      <tr><td>Build a Q&amp;A bot from a website/FAQ</td><td>Azure AI Language (Custom Question Answering)</td></tr>
+      <tr><td>Understand user intents in a chatbot</td><td>Azure AI Language (CLU)</td></tr>
+      <tr><td>Extract named entities (people, orgs, places)</td><td>Azure AI Language (NER)</td></tr>
+      <tr><td>Find relevant documents from a corpus</td><td>Azure AI Search</td></tr>
+      <tr><td>Generate text with a large language model</td><td>Azure OpenAI (GPT-4)</td></tr>
+      <tr><td>Generate images from text</td><td>Azure OpenAI (DALL-E 3)</td></tr>
+      <tr><td>Answer questions from your private documents</td><td>Azure OpenAI + AI Search (RAG)</td></tr>
+      <tr><td>Detect harmful content in user input</td><td>Azure AI Content Safety</td></tr>
+      <tr><td>Run AI services offline in Docker</td><td>Azure AI Services Containers</td></tr>
+    </table>
+
+    <h3>Key Numbers to Remember</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Custom Vision</div>
+        <ul>
+          <li>Classification: min 5 images/tag</li>
+          <li>Object Detection: min 15 images/tag</li>
+          <li>Max 50 tags (free), 500 tags (paid)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">CLU / Language Understanding</div>
+        <ul>
+          <li>Aim for 15–30+ utterances/intent</li>
+          <li>Always include None intent</li>
+          <li>Max 500 intents per project</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Custom Q&amp;A</div>
+        <ul>
+          <li>Up to 5 follow-up prompts per answer</li>
+          <li>Active learning improves over time</li>
+          <li>Linked to AI Search for large KBs</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Document Intelligence</div>
+        <ul>
+          <li>Template model: min 5 samples</li>
+          <li>Neural model: min 10 samples</li>
+          <li>Async: poll operation-location URL</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">AI Speech</div>
+        <ul>
+          <li>Token validity: 10 minutes</li>
+          <li>Batch: audio in Blob Storage</li>
+          <li>SSML controls voice prosody</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Azure AI Search</div>
+        <ul>
+          <li>Semantic search: S1+ tier only</li>
+          <li>HNSW: recommended vector algorithm</li>
+          <li>Hybrid = keyword + vector + RRF</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Authentication Quick Reference</h3>
+    <table>
+      <tr><th>Method</th><th>Header/Mechanism</th><th>Best For</th></tr>
+      <tr><td>API Key</td><td><code>Ocp-Apim-Subscription-Key: &lt;key&gt;</code></td><td>Development, testing</td></tr>
+      <tr><td>Token</td><td><code>Authorization: Bearer &lt;token&gt;</code></td><td>Short-lived sessions</td></tr>
+      <tr><td>Managed Identity</td><td>DefaultAzureCredential (no secrets)</td><td>Production / Azure-hosted apps</td></tr>
+      <tr><td>Service Principal</td><td>AAD client_id + client_secret</td><td>Non-Azure-hosted apps</td></tr>
+    </table>
+
+    <h3>Common SDK Packages</h3>
+    <table>
+      <tr><th>Python Package</th><th>Service</th></tr>
+      <tr><td><code>azure-ai-textanalytics</code></td><td>Azure AI Language (Text Analytics API)</td></tr>
+      <tr><td><code>azure-ai-language-conversations</code></td><td>CLU (Conversational Language Understanding)</td></tr>
+      <tr><td><code>azure-ai-vision-imageanalysis</code></td><td>Azure AI Vision v4</td></tr>
+      <tr><td><code>azure-cognitiveservices-vision-customvision</code></td><td>Custom Vision</td></tr>
+      <tr><td><code>azure-cognitiveservices-vision-face</code></td><td>Face API</td></tr>
+      <tr><td><code>azure-cognitiveservices-speech</code></td><td>Azure AI Speech</td></tr>
+      <tr><td><code>azure-ai-translation-text</code></td><td>Azure AI Translator</td></tr>
+      <tr><td><code>azure-ai-documentintelligence</code></td><td>Document Intelligence</td></tr>
+      <tr><td><code>azure-search-documents</code></td><td>Azure AI Search</td></tr>
+      <tr><td><code>openai</code></td><td>Azure OpenAI Service</td></tr>
+      <tr><td><code>azure-ai-contentsafety</code></td><td>Azure AI Content Safety</td></tr>
+    </table>
+
+    <div class="callout exam">
+      <strong>Last-Minute Exam Tips</strong>
+      <ul>
+        <li><strong>Multi-service resource</strong> key works for most services but NOT Azure OpenAI — OpenAI needs its own resource.</li>
+        <li><strong>Containers</strong> always need to phone home to Azure (Billing + ApiKey env vars).</li>
+        <li><strong>Custom Vision prediction key ≠ training key</strong> — two separate keys.</li>
+        <li><strong>CLU replaces LUIS</strong> — if you see LUIS in answers, it's likely outdated but still appears on exams.</li>
+        <li><strong>Translator</strong> has a GLOBAL endpoint, not per-region — but region header required with multi-service key.</li>
+        <li><strong>Document Intelligence Async</strong>: Submit → get operation URL → GET until "succeeded".</li>
+        <li><strong>AI Search Semantic</strong>: Not available on Free or Basic tier.</li>
+        <li><strong>Face Identification</strong>: Requires Limited Access — can only detect without approval.</li>
+        <li><strong>RAG vs Fine-tuning</strong>: Prefer RAG for live/private data; fine-tune only for style/format.</li>
+        <li><strong>Responsible AI</strong>: 6 principles — Fairness, Reliability &amp; Safety, Privacy &amp; Security, Inclusiveness, Transparency, Accountability.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-nav">
+    <a href="pricing.html" class="page-nav-btn">← Tiers &amp; Pricing</a>
+    <a href="index.html" class="page-nav-btn">↑ Back to Overview</a>
+  </div>
+
+  <footer style="text-align:center; color: var(--muted); font-size:0.8rem; padding: 2rem 0; border-top: 1px solid var(--border); margin-top: 2rem;">
+    AI-102 Study Notes &mdash; Azure AI Engineer Associate &mdash; Always verify against the official Microsoft Learn documentation.
+  </footer>
+
+</div>
+
+<script>
+const cur = window.location.pathname.split('/').pop() || 'index.html';
+document.querySelectorAll('.sidebar nav a').forEach(a => {
+  if (a.getAttribute('href').split('#')[0] === cur) a.classList.add('active');
+});
+</script>
+</body>
+</html>

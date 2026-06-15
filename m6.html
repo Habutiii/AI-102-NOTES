@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 6: Document Intelligence – AI-102</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header"><span>AI-102</span>Azure AI Engineer Associate</div>
+  <nav>
+    <div class="section-label">Overview</div>
+    <a href="index.html">Exam Overview</a>
+    <div class="section-label">Module 1</div>
+    <a href="m1.html">Azure AI Services</a>
+    <div class="section-label">Module 2</div>
+    <a href="m2.html">Computer Vision</a>
+    <div class="section-label">Module 3</div>
+    <a href="m3.html">Azure AI Language</a>
+    <a href="translator.html">Azure AI Translator</a>
+    <div class="section-label">Module 4</div>
+    <a href="m4.html">Speech Services</a>
+    <div class="section-label">Module 5</div>
+    <a href="m5.html">Language Understanding (CLU)</a>
+    <div class="section-label">Module 6</div>
+    <a href="m6.html">Document Intelligence</a>
+    <div class="section-label">Module 7</div>
+    <a href="m7.html">Knowledge Mining &amp; AI Search</a>
+    <div class="section-label">Module 8</div>
+    <a href="m8.html">Azure OpenAI &amp; Generative AI</a>
+    <div class="section-label">Module 9</div>
+    <a href="m9.html">Content Safety &amp; Responsible AI</a>
+    <div class="section-label">Platform</div>
+    <a href="foundry.html">Azure AI Foundry</a>
+    <div class="section-label">Reference</div>
+    <a href="pricing.html">Tiers &amp; Pricing</a>
+    <a href="quickref.html">Quick Reference</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <div class="module" id="m6">
+    <div class="module-header">
+      <div class="module-number">6</div>
+      <h2>Azure AI Document Intelligence</h2>
+    </div>
+
+    <h3>Overview</h3>
+    <p>Azure AI Document Intelligence extracts text, key-value pairs, tables, and structured data from documents using AI models.</p>
+
+    <h3>Prebuilt Models</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Read</div>
+        <p>General OCR — extract text, handwriting, tables from any document. No field extraction.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">General Document</div>
+        <p>Extracts key-value pairs, tables, and text from general documents. No domain specificity.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Layout</div>
+        <p>Extracts text, tables, selection marks (checkboxes), and structural layout with bounding boxes.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Invoice</div>
+        <p>Extracts: VendorName, CustomerName, InvoiceId, InvoiceDate, DueDate, SubTotal, Tax, InvoiceTotal, LineItems.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Receipt</div>
+        <p>Extracts: MerchantName, TransactionDate, TransactionTime, Items, Subtotal, Tax, Tip, Total.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">ID Document</div>
+        <p>Extracts fields from passports and driver's licenses: FirstName, LastName, DateOfBirth, DocumentNumber, etc.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Business Card</div>
+        <p>Extracts: ContactNames, CompanyName, JobTitles, Emails, Websites, PhoneNumbers, Addresses.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">W-2 / Tax Forms</div>
+        <p>US tax form extraction with prebuilt field mappings.</p>
+      </div>
+    </div>
+
+    <h3>Custom Models</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Custom Template Model</div>
+        <p>For fixed-layout forms (same layout every time). Requires 5 labeled samples. Uses anchor patterns to locate fields.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Custom Neural Model</div>
+        <p>For variable layouts (same content, different formatting). Min 10 samples. More flexible, uses deep learning.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Composed Model</div>
+        <p>Combines multiple custom models into one endpoint. The service auto-routes documents to the best model.</p>
+      </div>
+    </div>
+
+    <div class="callout exam">
+      <strong>Exam Tip — Model Selection</strong>
+      <ul>
+        <li>Known, fixed form layout (tax forms, standardized contracts) → <strong>Custom Template</strong></li>
+        <li>Variable layout (different invoice designs) → <strong>Custom Neural</strong></li>
+        <li>Already looks like an invoice/receipt/ID → <strong>Prebuilt</strong></li>
+        <li>Just need all text → <strong>Read API</strong></li>
+      </ul>
+    </div>
+
+    <h3>Document Intelligence Studio &amp; Training</h3>
+    <ul>
+      <li>Upload 5+ labeled documents to Azure Blob Storage</li>
+      <li>Use <strong>Document Intelligence Studio</strong> to label fields</li>
+      <li>Labels stored as JSON in the same blob container</li>
+      <li>Train via Studio or REST API; deploy to a named model ID</li>
+    </ul>
+
+    <h4>Analyze API Pattern</h4>
+    <pre><span class="cm"># Async: Submit then poll</span>
+POST /documentintelligence/documentModels/invoice:analyze?api-version=2023-07-31
+→ Returns operation-location header URL
+
+GET &lt;operation-location&gt;
+→ Poll until status = "succeeded"
+→ Response contains extracted fields with values, confidence, bounding boxes</pre>
+
+    <pre><span class="kw">from</span> azure.ai.documentintelligence <span class="kw">import</span> <span class="cls">DocumentIntelligenceClient</span>
+<span class="kw">from</span> azure.core.credentials <span class="kw">import</span> <span class="cls">AzureKeyCredential</span>
+
+client = <span class="cls">DocumentIntelligenceClient</span>(endpoint, <span class="cls">AzureKeyCredential</span>(key))
+poller = client.<span class="fn">begin_analyze_document</span>(<span class="str">"prebuilt-invoice"</span>, analyze_request={<span class="str">"url"</span>: url})
+result = poller.<span class="fn">result</span>()
+
+<span class="kw">for</span> invoice <span class="kw">in</span> result.documents:
+    <span class="fn">print</span>(invoice.fields[<span class="str">"InvoiceTotal"</span>].value_currency.amount)</pre>
+  </div>
+
+  <div class="page-nav">
+    <a href="m5.html" class="page-nav-btn">← Language Understanding (CLU)</a>
+    <a href="m7.html" class="page-nav-btn">Next: Knowledge Mining &amp; AI Search →</a>
+  </div>
+
+  <footer style="text-align:center; color: var(--muted); font-size:0.8rem; padding: 2rem 0; border-top: 1px solid var(--border); margin-top: 2rem;">
+    AI-102 Study Notes &mdash; Azure AI Engineer Associate &mdash; Always verify against the official Microsoft Learn documentation.
+  </footer>
+
+</div>
+
+<script>
+const cur = window.location.pathname.split('/').pop() || 'index.html';
+document.querySelectorAll('.sidebar nav a').forEach(a => {
+  if (a.getAttribute('href').split('#')[0] === cur) a.classList.add('active');
+});
+</script>
+</body>
+</html>

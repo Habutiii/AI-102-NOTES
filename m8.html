@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 8: Azure OpenAI &amp; Generative AI – AI-102</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header"><span>AI-102</span>Azure AI Engineer Associate</div>
+  <nav>
+    <div class="section-label">Overview</div>
+    <a href="index.html">Exam Overview</a>
+    <div class="section-label">Module 1</div>
+    <a href="m1.html">Azure AI Services</a>
+    <div class="section-label">Module 2</div>
+    <a href="m2.html">Computer Vision</a>
+    <div class="section-label">Module 3</div>
+    <a href="m3.html">Azure AI Language</a>
+    <a href="translator.html">Azure AI Translator</a>
+    <div class="section-label">Module 4</div>
+    <a href="m4.html">Speech Services</a>
+    <div class="section-label">Module 5</div>
+    <a href="m5.html">Language Understanding (CLU)</a>
+    <div class="section-label">Module 6</div>
+    <a href="m6.html">Document Intelligence</a>
+    <div class="section-label">Module 7</div>
+    <a href="m7.html">Knowledge Mining &amp; AI Search</a>
+    <div class="section-label">Module 8</div>
+    <a href="m8.html">Azure OpenAI &amp; Generative AI</a>
+    <div class="section-label">Module 9</div>
+    <a href="m9.html">Content Safety &amp; Responsible AI</a>
+    <div class="section-label">Platform</div>
+    <a href="foundry.html">Azure AI Foundry</a>
+    <div class="section-label">Reference</div>
+    <a href="pricing.html">Tiers &amp; Pricing</a>
+    <a href="quickref.html">Quick Reference</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <div class="module" id="m8">
+    <div class="module-header">
+      <div class="module-number">8</div>
+      <h2>Azure OpenAI Service &amp; Generative AI</h2>
+    </div>
+
+    <h3>Azure OpenAI Service Overview</h3>
+    <p>Azure OpenAI Service provides access to OpenAI models with Azure enterprise features: private networking, RBAC, compliance, content filtering, and responsible AI guardrails. Models are accessed through <strong>named deployments</strong> within an Azure OpenAI resource.</p>
+
+    <div class="callout info">
+      <strong>Resource → Deployment → Model</strong>
+      You deploy a model to your resource as a named deployment (e.g., <code>gpt-4o-prod</code>) and then reference that deployment name in API calls — not the model name directly.
+    </div>
+
+    <h3>Available Models</h3>
+    <table>
+      <tr><th>Model</th><th>Type</th><th>Key Capabilities</th></tr>
+      <tr><td><strong>GPT-4o</strong></td><td>Chat / multimodal</td><td>Accepts text + images. Best overall capability. Faster and cheaper than GPT-4.</td></tr>
+      <tr><td><strong>GPT-4o mini</strong></td><td>Chat / multimodal</td><td>Fast, low-cost multimodal. Good for most tasks where top capability isn't needed.</td></tr>
+      <tr><td><strong>o1 / o3-mini</strong></td><td>Reasoning</td><td>"Think before responding" models. Superior at math, coding, complex logic. Higher latency by design.</td></tr>
+      <tr><td><strong>GPT-3.5 Turbo</strong></td><td>Chat</td><td>Fast, economical. Legacy; prefer GPT-4o mini for new work.</td></tr>
+      <tr><td><strong>text-embedding-3-large</strong></td><td>Embeddings</td><td>Highest quality text embeddings for RAG and semantic search.</td></tr>
+      <tr><td><strong>text-embedding-3-small</strong></td><td>Embeddings</td><td>Efficient, lower-dimension embeddings for high-throughput scenarios.</td></tr>
+      <tr><td><strong>DALL-E 3</strong></td><td>Image generation</td><td>Text → image. Sizes: 1024×1024, 1792×1024, 1024×1792.</td></tr>
+      <tr><td><strong>Whisper</strong></td><td>Audio transcription</td><td>Speech → text transcription and translation across many languages.</td></tr>
+    </table>
+
+    <h3>Deployment Types</h3>
+    <table>
+      <tr><th>Type</th><th>Description</th><th>Best For</th></tr>
+      <tr><td>Standard</td><td>Shared compute. Pay per 1K tokens from a regional quota pool.</td><td>Development, variable workloads</td></tr>
+      <tr><td>Global Standard</td><td>Routes to available region globally for higher quota and availability.</td><td>High-volume, latency-tolerant apps</td></tr>
+      <tr><td>Provisioned (PTU)</td><td>Reserved compute capacity (Provisioned Throughput Units). Billed per PTU-hour regardless of usage.</td><td>Production with steady, predictable load</td></tr>
+      <tr><td>Global Provisioned</td><td>PTU capacity spread across global regions.</td><td>Global production deployments</td></tr>
+    </table>
+
+    <h3>Chat Completions API</h3>
+    <pre><span class="kw">from</span> openai <span class="kw">import</span> <span class="cls">AzureOpenAI</span>
+
+client = <span class="cls">AzureOpenAI</span>(
+    azure_endpoint=<span class="str">"https://&lt;resource&gt;.openai.azure.com"</span>,
+    api_key=<span class="str">"&lt;key&gt;"</span>,
+    api_version=<span class="str">"2024-12-01-preview"</span>
+)
+
+response = client.chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o-prod"</span>,        <span class="cm"># deployment name, not model name</span>
+    messages=[
+        {<span class="str">"role"</span>: <span class="str">"system"</span>, <span class="str">"content"</span>: <span class="str">"You are a helpful assistant."</span>},
+        {<span class="str">"role"</span>: <span class="str">"user"</span>,   <span class="str">"content"</span>: <span class="str">"Summarise Azure AI Search in 2 sentences."</span>}
+    ],
+    temperature=<span class="num">0.7</span>,
+    max_tokens=<span class="num">500</span>
+)
+<span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)</pre>
+
+    <h3>Multimodal — GPT-4o Vision</h3>
+    <p>GPT-4o accepts both text and images in the same request. Pass images as URLs or base64-encoded data.</p>
+    <pre>response = client.chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o-prod"</span>,
+    messages=[{
+        <span class="str">"role"</span>: <span class="str">"user"</span>,
+        <span class="str">"content"</span>: [
+            {<span class="str">"type"</span>: <span class="str">"text"</span>,      <span class="str">"text"</span>: <span class="str">"What does this diagram show?"</span>},
+            {<span class="str">"type"</span>: <span class="str">"image_url"</span>, <span class="str">"image_url"</span>: {<span class="str">"url"</span>: <span class="str">"https://example.com/arch.png"</span>}}
+        ]
+    }]
+)</pre>
+
+    <h3>Prompt Engineering</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Zero-shot</div>
+        <p>Instruction only, no examples. Works for well-known tasks: "Classify this review as positive or negative."</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Few-shot</div>
+        <p>Provide 2–5 input/output examples before the real query. Steers the model's output format and style.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Chain of Thought</div>
+        <p>Instruct the model to reason step-by-step. Add "Think step by step." Improves accuracy on multi-step reasoning tasks.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">System Message</div>
+        <p>Sets the model's persona, tone, and constraints for the entire conversation. Applied before any user message.</p>
+      </div>
+    </div>
+
+    <div class="callout tip">
+      <strong>Key Parameters</strong>
+      <ul>
+        <li><code>temperature</code> (0–2): 0 = deterministic greedy. Higher = more creative/random. Use low values for factual tasks.</li>
+        <li><code>top_p</code> (0–1): Nucleus sampling. Use either <code>temperature</code> <em>or</em> <code>top_p</code>, not both.</li>
+        <li><code>max_tokens</code>: Max output tokens (input tokens not included).</li>
+        <li><code>frequency_penalty</code>: Reduces repeated phrases.</li>
+        <li><code>presence_penalty</code>: Increases topic diversity.</li>
+        <li><code>stop</code>: One or more strings that stop generation when produced.</li>
+      </ul>
+    </div>
+
+    <h3>Retrieval-Augmented Generation (RAG)</h3>
+    <p>RAG grounds model responses in your private/current data without fine-tuning. The model is restricted to answer only from retrieved context.</p>
+    <pre><span class="cm"># RAG pattern</span>
+User query
+  ↓
+<span class="num">1.</span> Embed query with text-embedding-3-large
+<span class="num">2.</span> Hybrid search Azure AI Search → top-K chunks
+<span class="num">3.</span> Build prompt:
+     System: <span class="str">"Answer using only the sources below. If unsure, say so."</span>
+     Context: [retrieved chunks with source citations]
+     User: [original query]
+<span class="num">4.</span> Call GPT-4o → grounded, cited answer</pre>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Azure OpenAI On Your Data</div>
+        <p>Built-in RAG that connects Azure OpenAI directly to Azure AI Search, Blob Storage, or Cosmos DB. No custom retrieval pipeline needed for simple scenarios.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Custom RAG Pipeline</div>
+        <p>Full control: embed documents → AI Search index → retrieval → prompt construction → GPT call. Use when you need custom chunking, hybrid search, or re-ranking.</p>
+      </div>
+    </div>
+
+    <h3>Fine-tuning</h3>
+    <p>Adapt a base model on domain-specific training examples (JSONL format). Supported models include GPT-4o mini and GPT-3.5 Turbo.</p>
+
+    <table>
+      <tr><th>Approach</th><th>Use when</th><th>Cost</th></tr>
+      <tr><td>Prompt engineering</td><td>Start here — works for most cases</td><td>Inference only</td></tr>
+      <tr><td>RAG</td><td>Answers need private or up-to-date knowledge</td><td>Inference + search</td></tr>
+      <tr><td>Fine-tuning</td><td>Specific output style/format that prompting can't achieve</td><td>Training + higher inference</td></tr>
+    </table>
+
+    <h3>DALL-E 3 Image Generation</h3>
+    <pre>result = client.images.<span class="fn">generate</span>(
+    model=<span class="str">"dall-e-3"</span>,
+    prompt=<span class="str">"A photorealistic Azure datacenter surrounded by arctic landscape"</span>,
+    n=<span class="num">1</span>,
+    size=<span class="str">"1792x1024"</span>,
+    quality=<span class="str">"hd"</span>,          <span class="cm"># "standard" or "hd"</span>
+    style=<span class="str">"vivid"</span>          <span class="cm"># "vivid" or "natural"</span>
+)
+image_url = result.data[<span class="num">0</span>].url</pre>
+
+    <div class="callout info">
+      <strong>Azure AI Foundry</strong>
+      For managing deployments, running evaluations, building prompt flows, and accessing the full model catalog (including Phi, Llama, Mistral), use <strong>Azure AI Foundry</strong> — see the dedicated <a href="foundry.html">Azure AI Foundry page</a>.
+    </div>
+  </div>
+
+  <div class="page-nav">
+    <a href="m7.html" class="page-nav-btn">← Knowledge Mining &amp; AI Search</a>
+    <a href="m9.html" class="page-nav-btn">Next: Content Safety &amp; Responsible AI →</a>
+  </div>
+
+  <footer style="text-align:center; color: var(--muted); font-size:0.8rem; padding: 2rem 0; border-top: 1px solid var(--border); margin-top: 2rem;">
+    AI-102 Study Notes &mdash; Azure AI Engineer Associate &mdash; Always verify against the official Microsoft Learn documentation.
+  </footer>
+
+</div>
+
+<script>
+const cur = window.location.pathname.split('/').pop() || 'index.html';
+document.querySelectorAll('.sidebar nav a').forEach(a => {
+  if (a.getAttribute('href').split('#')[0] === cur) a.classList.add('active');
+});
+</script>
+</body>
+</html>

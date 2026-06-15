@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 4: Speech Services – AI-102</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header"><span>AI-102</span>Azure AI Engineer Associate</div>
+  <nav>
+    <div class="section-label">Overview</div>
+    <a href="index.html">Exam Overview</a>
+    <div class="section-label">Module 1</div>
+    <a href="m1.html">Azure AI Services</a>
+    <div class="section-label">Module 2</div>
+    <a href="m2.html">Computer Vision</a>
+    <div class="section-label">Module 3</div>
+    <a href="m3.html">Azure AI Language</a>
+    <a href="translator.html">Azure AI Translator</a>
+    <div class="section-label">Module 4</div>
+    <a href="m4.html">Speech Services</a>
+    <div class="section-label">Module 5</div>
+    <a href="m5.html">Language Understanding (CLU)</a>
+    <div class="section-label">Module 6</div>
+    <a href="m6.html">Document Intelligence</a>
+    <div class="section-label">Module 7</div>
+    <a href="m7.html">Knowledge Mining &amp; AI Search</a>
+    <div class="section-label">Module 8</div>
+    <a href="m8.html">Azure OpenAI &amp; Generative AI</a>
+    <div class="section-label">Module 9</div>
+    <a href="m9.html">Content Safety &amp; Responsible AI</a>
+    <div class="section-label">Platform</div>
+    <a href="foundry.html">Azure AI Foundry</a>
+    <div class="section-label">Reference</div>
+    <a href="pricing.html">Tiers &amp; Pricing</a>
+    <a href="quickref.html">Quick Reference</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <div class="module" id="m4">
+    <div class="module-header">
+      <div class="module-number">4</div>
+      <h2>Azure AI Speech</h2>
+    </div>
+
+    <h3>Speech Service Capabilities</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Speech-to-Text (STT)</div>
+        <p>Converts spoken audio to text. Supports real-time and batch transcription. Can use custom acoustic/language models.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Text-to-Speech (TTS)</div>
+        <p>Converts text to natural-sounding audio. 400+ voices, 140+ languages. Supports SSML for customization.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Speech Translation</div>
+        <p>Real-time speech translation — transcribes and translates simultaneously. Uses Speech SDK.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Speaker Recognition</div>
+        <p>Identifies or verifies speakers by voice. Speaker Verification (1:1) and Speaker Identification (1:N).</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Intent Recognition</div>
+        <p>Combines STT with CLU to extract intent and entities from speech in one step.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Custom Neural Voice</div>
+        <p>Train a custom TTS voice model from voice samples. Requires Limited Access approval.</p>
+      </div>
+    </div>
+
+    <h3>Speech SDK Quickstart Pattern</h3>
+    <pre><span class="kw">import</span> azure.cognitiveservices.speech <span class="kw">as</span> speechsdk
+
+config = speechsdk.<span class="cls">SpeechConfig</span>(subscription=key, region=region)
+config.speech_recognition_language = <span class="str">"en-US"</span>
+
+<span class="cm"># From microphone</span>
+audio_config = speechsdk.<span class="cls">AudioConfig</span>(use_default_microphone=<span class="kw">True</span>)
+recognizer = speechsdk.<span class="cls">SpeechRecognizer</span>(speech_config=config, audio_config=audio_config)
+result = recognizer.<span class="fn">recognize_once_async</span>().get()
+
+<span class="kw">if</span> result.reason == speechsdk.<span class="cls">ResultReason</span>.RecognizedSpeech:
+    <span class="fn">print</span>(<span class="str">f"Recognized: </span>{result.text}<span class="str">"</span>)</pre>
+
+    <h3>SSML — Speech Synthesis Markup Language</h3>
+    <p>SSML lets you control pronunciation, speaking rate, pitch, pauses, and voice selection in TTS.</p>
+    <pre><span class="str">&lt;speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US"&gt;</span>
+  <span class="str">&lt;voice name="en-US-JennyNeural"&gt;</span>
+    <span class="str">&lt;prosody rate="slow" pitch="+5%"&gt;</span>
+      Welcome to <span class="str">&lt;emphasis level="strong"&gt;</span>Azure AI<span class="str">&lt;/emphasis&gt;</span> Speech services.
+    <span class="str">&lt;/prosody&gt;</span>
+    <span class="str">&lt;break time="500ms"/&gt;</span>
+    How can I help you today?
+  <span class="str">&lt;/voice&gt;</span>
+<span class="str">&lt;/speak&gt;</span></pre>
+
+    <h3>Custom Speech</h3>
+    <p>Improve STT accuracy for domain-specific terms, accents, and environments by providing custom training data:</p>
+    <ul>
+      <li><strong>Audio + Human-labeled transcripts</strong> — most accurate adaptation, needs 1–20 hrs audio</li>
+      <li><strong>Plain text</strong> — improves language model (words, phrases, n-grams)</li>
+      <li><strong>Pronunciation</strong> — add custom pronunciations for unusual words</li>
+    </ul>
+
+    <h3>Batch Transcription</h3>
+    <p>Transcribe large audio files asynchronously. Submit via REST API, audio must be in Azure Blob Storage.</p>
+    <pre>POST /speechtotext/v3.1/transcriptions
+{
+  <span class="str">"contentUrls"</span>: [<span class="str">"https://storage.blob.core.windows.net/.../audio.wav"</span>],
+  <span class="str">"locale"</span>: <span class="str">"en-US"</span>,
+  <span class="str">"displayName"</span>: <span class="str">"My batch transcription"</span>
+}</pre>
+  </div>
+
+  <div class="page-nav">
+    <a href="m3.html" class="page-nav-btn">← Natural Language Processing</a>
+    <a href="m5.html" class="page-nav-btn">Next: Language Understanding (CLU) →</a>
+  </div>
+
+  <footer style="text-align:center; color: var(--muted); font-size:0.8rem; padding: 2rem 0; border-top: 1px solid var(--border); margin-top: 2rem;">
+    AI-102 Study Notes &mdash; Azure AI Engineer Associate &mdash; Always verify against the official Microsoft Learn documentation.
+  </footer>
+
+</div>
+
+<script>
+const cur = window.location.pathname.split('/').pop() || 'index.html';
+document.querySelectorAll('.sidebar nav a').forEach(a => {
+  if (a.getAttribute('href').split('#')[0] === cur) a.classList.add('active');
+});
+</script>
+</body>
+</html>
