@@ -36,6 +36,10 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 /* Sections */
 .module { margin-bottom: 3.5rem; scroll-margin-top: 1.5rem; }
 .module-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 3px solid var(--azure); }
+.learning-points { background: var(--azure-light); border: 1px solid var(--azure); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+.learning-points strong { color: var(--azure); display: block; margin-bottom: 0.5rem; font-size: 0.9rem; }
+.learning-points ul { margin: 0.5rem 0 0; padding-left: 1.4rem; }
+.learning-points li { margin-bottom: 0.4rem; font-size: 0.9rem; color: var(--azure-dark); }
 .module-number { background: var(--azure); color: #fff; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
 .module h2 { font-size: 1.5rem; font-weight: 700; color: var(--azure-dark); }
 .module h3 { font-size: 1.1rem; font-weight: 700; color: var(--azure-dark); margin: 1.5rem 0 0.6rem; padding-left: 0.75rem; border-left: 4px solid var(--accent); }

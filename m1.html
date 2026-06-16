@@ -48,6 +48,17 @@
       <h2>Azure AI Services — Plan &amp; Manage</h2>
     </div>
 
+    <div class="learning-points">
+      <strong>Key Takeaways:</strong>
+      <ul>
+        <li>Understand the difference between Single-Service and Multi-Service resources</li>
+        <li>Authenticate using API keys, Managed Identity, or token-based auth</li>
+        <li>Secure resources with Key Vault, network restrictions, and RBAC</li>
+        <li>Monitor performance using Azure Monitor, Diagnostics, and Log Analytics</li>
+        <li>Deploy AI Services in Docker containers for on-premises scenarios</li>
+      </ul>
+    </div>
+
     <h3>What are Azure AI Services?</h3>
     <p>Azure AI Services (formerly <em>Cognitive Services</em>) are cloud-based REST APIs and SDKs that allow you to add AI capabilities to applications without needing ML expertise. They are organised into categories: Vision, Speech, Language, Decision, and Azure OpenAI.</p>
 
@@ -158,10 +169,52 @@ docker run --rm -it -p 5000:5000 \
 </div>
 
 <script>
-const cur = window.location.pathname.split('/').pop() || 'index.html';
-document.querySelectorAll('.sidebar nav a').forEach(a => {
-  if (a.getAttribute('href').split('#')[0] === cur) a.classList.add('active');
-});
+(function () {
+  const pages = [
+    { file: 'index.html',      title: 'Exam Overview' },
+    { file: 'm1.html',         title: 'Azure AI Services' },
+    { file: 'm2.html',         title: 'Computer Vision' },
+    { file: 'm3.html',         title: 'Azure AI Language' },
+    { file: 'translator.html', title: 'Azure AI Translator' },
+    { file: 'm4.html',         title: 'Speech Services' },
+    { file: 'm5.html',         title: 'Language Understanding (CLU)' },
+    { file: 'm6.html',         title: 'Document Intelligence' },
+    { file: 'm7.html',         title: 'Knowledge Mining & AI Search' },
+    { file: 'm8.html',         title: 'Azure OpenAI & Generative AI' },
+    { file: 'm9.html',         title: 'Content Safety & Responsible AI' },
+    { file: 'foundry.html',    title: 'Azure AI Foundry' },
+    { file: 'pricing.html',    title: 'Tiers & Pricing' },
+    { file: 'quickref.html',   title: 'Quick Reference' },
+  ];
+  const cur = window.location.pathname.split('/').pop() || 'index.html';
+  const idx = pages.findIndex(p => p.file === cur);
+  const prev = pages[idx - 1];
+  const next = pages[idx + 1];
+  const pct = Math.round((idx + 1) / pages.length * 100);
+
+  document.querySelectorAll('.sidebar nav a').forEach(a => {
+    if (a.getAttribute('href').split('#')[0] === cur) a.classList.add('active');
+  });
+
+  function buildNav(isTop) {
+    const prevBtn = prev
+      ? `<a href="${prev.file}" class="page-nav-btn">← ${prev.title}</a>`
+      : `<span style="min-width:80px"></span>`;
+    const nextBtn = next
+      ? `<a href="${next.file}" class="page-nav-btn">${next.title} →</a>`
+      : `<span style="min-width:80px"></span>`;
+    const prog = `<div class="page-nav-progress"><div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div><span class="progress-label">${idx + 1} / ${pages.length}</span></div>`;
+    return `<div class="page-nav${isTop ? ' page-nav-top' : ''}">${prevBtn}${prog}${nextBtn}</div>`;
+  }
+
+  const main = document.querySelector('.main');
+  if (!main) return;
+  const existing = main.querySelector('.page-nav');
+  if (existing) existing.outerHTML = buildNav(false);
+  const firstModule = main.querySelector('.module');
+  if (firstModule) firstModule.insertAdjacentHTML('beforebegin', buildNav(true));
+  else main.insertAdjacentHTML('afterbegin', buildNav(true));
+})();
 </script>
 </body>
 </html>

@@ -169,10 +169,52 @@
 </div>
 
 <script>
-const cur = window.location.pathname.split('/').pop() || 'index.html';
-document.querySelectorAll('.sidebar nav a').forEach(a => {
-  if (a.getAttribute('href').split('#')[0] === cur) a.classList.add('active');
-});
+(function () {
+  const pages = [
+    { file: 'index.html',      title: 'Exam Overview' },
+    { file: 'm1.html',         title: 'Azure AI Services' },
+    { file: 'm2.html',         title: 'Computer Vision' },
+    { file: 'm3.html',         title: 'Azure AI Language' },
+    { file: 'translator.html', title: 'Azure AI Translator' },
+    { file: 'm4.html',         title: 'Speech Services' },
+    { file: 'm5.html',         title: 'Language Understanding (CLU)' },
+    { file: 'm6.html',         title: 'Document Intelligence' },
+    { file: 'm7.html',         title: 'Knowledge Mining & AI Search' },
+    { file: 'm8.html',         title: 'Azure OpenAI & Generative AI' },
+    { file: 'm9.html',         title: 'Content Safety & Responsible AI' },
+    { file: 'foundry.html',    title: 'Azure AI Foundry' },
+    { file: 'pricing.html',    title: 'Tiers & Pricing' },
+    { file: 'quickref.html',   title: 'Quick Reference' },
+  ];
+  const cur = window.location.pathname.split('/').pop() || 'index.html';
+  const idx = pages.findIndex(p => p.file === cur);
+  const prev = pages[idx - 1];
+  const next = pages[idx + 1];
+  const pct = Math.round((idx + 1) / pages.length * 100);
+
+  document.querySelectorAll('.sidebar nav a').forEach(a => {
+    if (a.getAttribute('href').split('#')[0] === cur) a.classList.add('active');
+  });
+
+  function buildNav(isTop) {
+    const prevBtn = prev
+      ? `<a href="${prev.file}" class="page-nav-btn">← ${prev.title}</a>`
+      : `<span style="min-width:80px"></span>`;
+    const nextBtn = next
+      ? `<a href="${next.file}" class="page-nav-btn">${next.title} →</a>`
+      : `<span style="min-width:80px"></span>`;
+    const prog = `<div class="page-nav-progress"><div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div><span class="progress-label">${idx + 1} / ${pages.length}</span></div>`;
+    return `<div class="page-nav${isTop ? ' page-nav-top' : ''}">${prevBtn}${prog}${nextBtn}</div>`;
+  }
+
+  const main = document.querySelector('.main');
+  if (!main) return;
+  const existing = main.querySelector('.page-nav');
+  if (existing) existing.outerHTML = buildNav(false);
+  const firstModule = main.querySelector('.module');
+  if (firstModule) firstModule.insertAdjacentHTML('beforebegin', buildNav(true));
+  else main.insertAdjacentHTML('afterbegin', buildNav(true));
+})();
 </script>
 </body>
 </html>
