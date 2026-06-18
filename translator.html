@@ -67,12 +67,23 @@
       Translator uses <code>api.cognitive.microsofttranslator.com</code> — a global, non-regional URL. When using a <strong>multi-service resource key</strong>, you <em>must</em> also send the <code>Ocp-Apim-Subscription-Region</code> header. Single-service Translator keys do not require this header.
     </div>
 
+    <div class="callout exam">
+      <strong>Exam Tip — Three Core Translator Features (Q31)</strong>
+      The three primary features of Azure AI Translator are:
+      <ol>
+        <li><strong>Text Translation</strong> — translate text between 100+ languages using neural machine translation</li>
+        <li><strong>Transliteration</strong> — convert text from one script to another (e.g., Japanese Hiragana → Latin). Changes the script/phonetics only — does NOT translate the meaning.</li>
+        <li><strong>Language Detection</strong> — identify which language a piece of text is written in, returning a language code and confidence score</li>
+      </ol>
+      Dictionary lookup, Dictionary examples, and Document Translation are additional features but not the core three.
+    </div>
+
     <h3>Text Translation Features</h3>
     <table>
       <tr><th>Feature</th><th>Endpoint</th><th>Description</th></tr>
-      <tr><td>Translate</td><td><code>/translate</code></td><td>Translate text into one or more target languages</td></tr>
-      <tr><td>Transliterate</td><td><code>/transliterate</code></td><td>Convert text between scripts (e.g., Arabic → Latin)</td></tr>
-      <tr><td>Detect Language</td><td><code>/detect</code></td><td>Identify the source language of input text</td></tr>
+      <tr><td><strong>Translate</strong></td><td><code>/translate</code></td><td>Translate text into one or more target languages</td></tr>
+      <tr><td><strong>Transliterate</strong></td><td><code>/transliterate</code></td><td>Convert text between scripts (e.g., Arabic → Latin)</td></tr>
+      <tr><td><strong>Detect Language</strong></td><td><code>/detect</code></td><td>Identify the source language of input text</td></tr>
       <tr><td>Dictionary Lookup</td><td><code>/dictionary/lookup</code></td><td>Return alternative translations for a word with POS tags</td></tr>
       <tr><td>Dictionary Examples</td><td><code>/dictionary/examples</code></td><td>Show contextual usage examples for a translation pair</td></tr>
       <tr><td>Break Sentence</td><td><code>/breaksentence</code></td><td>Detect sentence boundaries in text</td></tr>

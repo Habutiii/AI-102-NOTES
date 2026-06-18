@@ -95,12 +95,18 @@
       <tr><td>Language Detection</td><td>Detect document language</td></tr>
       <tr><td>Text Split</td><td>Chunk large documents into pages for processing</td></tr>
       <tr><td>Entity Recognition</td><td>Extract persons, locations, organizations</td></tr>
+      <tr><td><strong>Entity Linking Skill</strong></td><td>Identifies entities and returns <strong>Wikipedia/Bing knowledge base URLs</strong> — use this to generate links to Wikipedia articles (Q30)</td></tr>
       <tr><td>Key Phrase Extraction</td><td>Extract key phrases</td></tr>
       <tr><td>Sentiment Analysis</td><td>Score document sentiment</td></tr>
       <tr><td>PII Detection</td><td>Find and optionally mask PII</td></tr>
       <tr><td>Translation</td><td>Translate content into a target language</td></tr>
       <tr><td>Shaper Skill</td><td>Restructure enrichment output for knowledge store</td></tr>
     </table>
+
+    <div class="callout exam">
+      <strong>Exam Tip — Wikipedia Links (Q30)</strong>
+      To generate links to Wikipedia articles as part of AI enrichment, use the <strong>Entity Linking Skill</strong> (<code>#Microsoft.Skills.Text.V3.EntityLinkingSkill</code>). It outputs entity name, Wikipedia URL, and confidence score. The Entity Recognition skill extracts entity text but does NOT provide Wikipedia URLs.
+    </div>
 
     <h3>Custom Skills</h3>
     <p>Extend the pipeline with your own logic via <strong>Azure Function</strong> or any HTTPS endpoint.</p>
@@ -125,19 +131,59 @@
       </div>
       <div class="card">
         <div class="card-title">File Projections</div>
-        <p>Store extracted images/normalized images as files in Blob Storage.</p>
+        <p>Store <strong>normalized binary files</strong> (extracted images, PDFs) in Azure Blob Storage. Use this for binary content extracted during indexing.</p>
       </div>
+    </div>
+    <div class="callout exam">
+      <strong>Exam Tip — Binary File Projections (Q52)</strong>
+      To save <strong>normalized binary files</strong> as projections in the knowledge store, use <strong>File projections</strong>. Table projections are for structured row data; Object projections are for JSON documents.
+    </div>
+
+    <h3>Skillset Definition — Minimum Required Sections</h3>
+    <p>When creating a skillset via the REST API, the only <strong>required</strong> field is the <code>skills</code> array. All other fields (name, description, cognitiveServices, knowledgeStore) are optional.</p>
+    <pre>{
+  <span class="str">"skills"</span>: [
+    {
+      <span class="str">"@odata.type"</span>: <span class="str">"#Microsoft.Skills.Text.V3.EntityLinkingSkill"</span>,
+      <span class="str">"inputs"</span>: [{ <span class="str">"name"</span>: <span class="str">"text"</span>, <span class="str">"source"</span>: <span class="str">"/document/content"</span> }],
+      <span class="str">"outputs"</span>: [{ <span class="str">"name"</span>: <span class="str">"entities"</span>, <span class="str">"targetName"</span>: <span class="str">"linkedEntities"</span> }]
+    }
+  ]
+}</pre>
+    <div class="callout exam">
+      <strong>Exam Tip — Skillset Minimum (Q17)</strong>
+      A valid skillset definition requires only the <strong>"skills" array</strong>. Name and description are optional. The cognitiveServices key is needed only for billable skills; the knowledgeStore block is needed only if you want projections.
+    </div>
+
+    <h3>Indexing Pipeline Stages</h3>
+    <p>The indexer processes documents through these stages in order:</p>
+    <table>
+      <tr><th>Stage</th><th>What Happens</th></tr>
+      <tr><td><strong>1. Document Cracking</strong></td><td>Opens and reads source files — extracts raw text and binary content. This is the <strong>first stage</strong>.</td></tr>
+      <tr><td>2. Field Mapping</td><td>Maps source document fields to index fields as defined in the indexer configuration.</td></tr>
+      <tr><td>3. Skillset Execution</td><td>Runs AI enrichment skills on the extracted content to add new fields (entities, key phrases, captions, etc.).</td></tr>
+      <tr><td>4. Output Field Mapping</td><td>Maps skill output values to index fields.</td></tr>
+      <tr><td>5. Indexing</td><td>Writes the final enriched document to the search index.</td></tr>
+    </table>
+    <div class="callout exam">
+      <strong>Exam Tip — First Indexing Stage (Q42)</strong>
+      The <strong>first</strong> stage of the indexing process is <strong>Document Cracking</strong> — opening and reading the source document to extract its raw content.
     </div>
 
     <h3>Search Query Types</h3>
     <table>
       <tr><th>Query Type</th><th>Description</th><th>Syntax</th></tr>
       <tr><td>Simple</td><td>Default. Easy-to-use syntax, auto-match</td><td><code>search=azure AI</code></td></tr>
-      <tr><td>Full (Lucene)</td><td>Advanced features: fuzzy, regex, proximity, boosting</td><td><code>queryType=full&search=azure~</code></td></tr>
+      <tr><td>Full (Lucene)</td><td>Advanced features: <strong>wildcards (*,?)</strong>, fuzzy, regex, proximity, boosting. Requires <code>queryType=full</code>.</td><td><code>queryType=full&amp;search=az*</code></td></tr>
       <tr><td>Semantic</td><td>Deep NLP re-ranking, captions, answers</td><td><code>queryType=semantic</code></td></tr>
       <tr><td>Vector</td><td>Embedding similarity search</td><td><code>vectors=[...]</code></td></tr>
       <tr><td>Hybrid</td><td>Combines keyword + vector search</td><td>Both vectors and search text</td></tr>
     </table>
+
+    <div class="callout exam">
+      <strong>Exam Tip — Wildcard Queries (Q37)</strong>
+      Wildcard queries (<code>*</code> and <code>?</code>) require <strong>Lucene query syntax</strong>. You must set <code>queryType=full</code> in the REST API request. The default <code>queryType=simple</code> does <strong>not</strong> support wildcards.
+    </div>
 
     <h3>Index Fields Configuration</h3>
     <table>

@@ -124,6 +124,21 @@
       </ul>
     </div>
 
+    <h3>Service Tiers — S0 vs S1</h3>
+    <p>Document Intelligence has two pricing tiers with significantly different limits. The exam tests knowledge of what causes processing failures on the S0 tier.</p>
+    <table>
+      <tr><th>Limit</th><th>S0 (Free)</th><th>S1 (Standard)</th></tr>
+      <tr><td>Pages per document</td><td><strong>2 pages max</strong></td><td>2,000 pages</td></tr>
+      <tr><td>Monthly page allowance</td><td>500 pages/month</td><td>Pay-per-page, no cap</td></tr>
+      <tr><td>Max file size</td><td>50 MB</td><td>500 MB</td></tr>
+      <tr><td>Transactions per second</td><td>1 TPS</td><td>15 TPS</td></tr>
+    </table>
+
+    <div class="callout exam">
+      <strong>Exam Tip — S0 Page Limit (Q15)</strong>
+      If an app on the <strong>S0 (Free) tier</strong> is failing to process some documents, the most likely cause is the <strong>2-page limit per API call</strong>. A PDF with 10 pages will fail — only the first 2 pages are processed; additional pages cause an error or are silently ignored. Fix: upgrade to <strong>S1 (Standard)</strong>.
+    </div>
+
     <h3>Document Intelligence Studio &amp; Training</h3>
     <ul>
       <li>Upload 5+ labeled documents to Azure Blob Storage</li>

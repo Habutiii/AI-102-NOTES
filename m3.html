@@ -189,6 +189,145 @@ poller = client.<span class="fn">begin_abstract_summary</span>(
       <strong>Exam Tip — Q&amp;A vs CLU</strong>
       <strong>Q&amp;A</strong>: FAQ-style knowledge retrieval ("What are your opening hours?"). <strong>CLU</strong>: Intent understanding to trigger app actions ("Book me a flight to Paris next Friday"). If the question has a document/KB answer → Q&amp;A. If you need to extract slots and route to an action → CLU.
     </div>
+
+    <h4>Active Learning</h4>
+    <p><strong>Active learning</strong> suggests new Q&amp;A pairs based on user queries that did not match any existing answer in the knowledge base. The service collects real traffic queries and surfaces them as suggestions once a minimum traffic threshold is reached.</p>
+    <ul>
+      <li>To enable: open the project in <strong>Language Studio → Settings</strong> and set <strong>Active learning</strong> to <strong>Enabled</strong>.</li>
+      <li>Active learning is <strong>OFF by default</strong> — you must explicitly turn it on.</li>
+      <li>If no suggestions appear after enabling, it means not enough queries have been logged yet — wait for more traffic.</li>
+    </ul>
+
+    <div class="callout exam">
+      <strong>Exam Tip — Active Learning</strong>
+      Active learning is <strong>OFF by default</strong>. You must explicitly enable it in project settings before any suggestions will appear. If you see no suggestions, check that active learning is enabled <em>first</em> before assuming there is a traffic problem.
+    </div>
+
+    <h4>FAQ Import — What Gets Extracted</h4>
+    <p>When importing an FAQ document or URL into a Custom Question Answering knowledge base, the service extracts only <strong>Question/Answer text pairs</strong>. It does <strong>not</strong> extract images, tables, or text formatting — only plain text Q&amp;A content is ingested.</p>
+
+    <h4>Synonym API Format</h4>
+    <p>Synonyms are defined using the <strong>"alterations"</strong> array in the API. Each alteration string must be a <strong>plain phrase</strong> with no special characters.</p>
+
+    <div class="callout warn">
+      <strong>Invalid synonym strings</strong>: strings that start with <code>#</code>, <code>&amp;</code>, <code>&lt;</code>, or <code>&gt;</code> are invalid and will cause the API call to fail. For example, <code>"#troubleshoot"</code> is not a valid alteration value.
+    </div>
+
+    <pre>{
+  <span class="str">"synonyms"</span>: [
+    {
+      <span class="str">"alterations"</span>: [
+        <span class="str">"fix problems"</span>,
+        <span class="str">"troubleshoot"</span>,
+        <span class="str">"resolve issues"</span>
+      ]
+    }
+  ]
+}</pre>
+
+    <h4>Question Answering — Costs</h4>
+    <p>Costs for Custom Question Answering depend on:</p>
+    <ul>
+      <li><strong>Number of transactions</strong> (API calls made to the prediction endpoint)</li>
+      <li><strong>Hosting tier</strong> of the Azure AI Language resource (Free F0 vs Standard S)</li>
+      <li>Text record volume and associated Azure AI Search storage for large knowledge bases</li>
+    </ul>
+
+    <h4>Suitable Scenarios for Question Answering</h4>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Good fit</div>
+        <ul>
+          <li>Structured FAQ-style documents</li>
+          <li>Customer support knowledge bases</li>
+          <li>HR policy or internal helpdesk chatbots</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Not suited for</div>
+        <ul>
+          <li>Open-domain text generation</li>
+          <li>Complex multi-step reasoning tasks</li>
+          <li>Real-time data lookup or live information retrieval</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>PII Detection</h3>
+    <p>The <strong>PII Detection</strong> feature identifies and can redact Personally Identifiable Information from text. It is available as a pre-built task in Azure AI Language with no training required.</p>
+
+    <h4>PII Entity Categories</h4>
+    <table>
+      <tr><th>Category</th><th>Examples</th></tr>
+      <tr><td><strong>Person</strong></td><td>Individual names (e.g., "John Smith")</td></tr>
+      <tr><td><strong>Address</strong></td><td>Street addresses, postal codes</td></tr>
+      <tr><td><strong>PhoneNumber</strong></td><td>Mobile and landline numbers</td></tr>
+      <tr><td><strong>Email</strong></td><td>Email addresses</td></tr>
+      <tr><td><strong>IPAddress</strong></td><td>IPv4 and IPv6 addresses</td></tr>
+      <tr><td><strong>CreditCardNumber</strong></td><td>Payment card numbers</td></tr>
+      <tr><td><strong>SSN</strong></td><td>Social Security Numbers (US)</td></tr>
+      <tr><td><strong>Passport</strong></td><td>Passport numbers</td></tr>
+      <tr><td><strong>DriversLicense</strong></td><td>Driving licence numbers</td></tr>
+    </table>
+
+    <div class="callout exam">
+      <strong>Exam Tips — PII Categories</strong>
+      <ul>
+        <li>To flag staff names in documents → use the <strong>"Person"</strong> category.</li>
+        <li>To remove both names and addresses from resumes → specify <strong>"Person"</strong> and <strong>"Address"</strong> in the <code>categories</code> parameter.</li>
+      </ul>
+    </div>
+
+    <h4>REST API — PII Entity Recognition</h4>
+    <pre>POST https://&lt;endpoint&gt;.cognitiveservices.azure.com/language/:analyze-text?api-version=2023-04-01
+
+{
+  <span class="str">"kind"</span>: <span class="str">"PiiEntityRecognition"</span>,
+  <span class="str">"analysisInput"</span>: {
+    <span class="str">"documents"</span>: [
+      { <span class="str">"id"</span>: <span class="str">"1"</span>, <span class="str">"language"</span>: <span class="str">"en"</span>, <span class="str">"text"</span>: <span class="str">"John Smith lives at 42 Main Street."</span> }
+    ]
+  },
+  <span class="str">"parameters"</span>: {
+    <span class="str">"piiCategories"</span>: [<span class="str">"Person"</span>, <span class="str">"Address"</span>],
+    <span class="str">"redactionCharacter"</span>: <span class="str">"*"</span>
+  }
+}</pre>
+
+    <h3>Key Phrase Extraction vs Summarization</h3>
+    <p>These three features are often confused in exam questions. Choose the right one based on what the output should be.</p>
+
+    <table>
+      <tr><th>Feature</th><th>Output</th><th>Task Kind</th><th>Use When</th></tr>
+      <tr>
+        <td><strong>Key Phrase Extraction</strong></td>
+        <td>List of important <strong>words and short phrases</strong> from the document</td>
+        <td><code>KeyPhraseExtraction</code></td>
+        <td>You need key concepts or topic tags — "summarize into key phrases"</td>
+      </tr>
+      <tr>
+        <td><strong>Extractive Summarization</strong></td>
+        <td>The most important <strong>full sentences</strong> copied verbatim from the document</td>
+        <td><code>ExtractiveSummarization</code></td>
+        <td>You want a condensed version using the original sentences</td>
+      </tr>
+      <tr>
+        <td><strong>Abstractive Summarization</strong></td>
+        <td>Newly <strong>generated summary sentences</strong> (paraphrased, not copied)</td>
+        <td><code>AbstractiveSummarization</code></td>
+        <td>You want a fluent summary that may not match source text verbatim</td>
+      </tr>
+    </table>
+
+    <div class="callout exam">
+      <strong>Exam Tip — Q21 Pattern</strong>
+      If an exam question asks you to <em>"summarize text documents into key phrases"</em>, the answer is <strong>Key Phrase Extraction</strong>, not Extractive or Abstractive Summarization. Key Phrase Extraction specifically returns phrases; the summarization tasks return sentences or paragraphs.
+    </div>
+
+    <div class="callout warn">
+      <strong>Summarization is async</strong>: Both extractive and abstractive summarization use a long-running operation pattern (submit → poll → retrieve results). Key Phrase Extraction is synchronous.
+    </div>
+
   </div>
 
   <div class="page-nav">

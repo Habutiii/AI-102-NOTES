@@ -190,6 +190,77 @@ eval_result = client.evaluations.create(
     evaluation={<span class="str">"display_name"</span>: <span class="str">"RAG eval run"</span>, ...}
 )</pre>
 
+    <h3>Azure AI Foundry Agent Service</h3>
+    <p>The <strong>Agent Service</strong> lets you build AI agents that use tools to interact with external systems, APIs, and data sources — without managing the orchestration loop manually.</p>
+
+    <h4>Built-in Agent Tools</h4>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Bing Search</div>
+        <p>Enables the agent to search the web for up-to-date information. Configure by adding Bing search tools in the agent configuration.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Azure Functions</div>
+        <p>Execute custom code programmatically — booking, sending emails, updating databases, scheduling meetings. Configure via the agent configuration file.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Code Interpreter</div>
+        <p>Executes Python code in a sandboxed environment. Useful for data analysis, calculations, and file processing.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">File Search</div>
+        <p>Searches uploaded documents to answer questions grounded in your files.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Azure AI Search</div>
+        <p>Connects to an AI Search index for RAG-style data retrieval from structured knowledge bases (Q10).</p>
+      </div>
+    </div>
+
+    <div class="callout exam">
+      <strong>Exam Tips — Agent Tools (Q1, Q43)</strong>
+      <ul>
+        <li>Agent needs to <strong>search external data sources and execute actions</strong> → <strong>Bing search tools</strong> + <strong>Azure Functions</strong></li>
+        <li>Agent needs to <strong>schedule meetings and send notifications</strong> → <strong>Azure Functions</strong> (programmatic actions)</li>
+        <li>Do NOT choose "Deploy a containerized image" or "Set up a SQL database" — these do not configure agent capabilities</li>
+      </ul>
+    </div>
+
+    <h4>Connecting an Agent to a Deployed Model (Q53)</h4>
+    <p>To configure an agent to use a specific model deployed in Foundry:</p>
+    <ol>
+      <li>Provide the <strong>Azure AI Foundry project endpoint</strong></li>
+      <li>Specify the <strong>deployment name</strong> (the name you gave the deployment — not the model ID)</li>
+    </ol>
+    <pre><span class="kw">from</span> azure.ai.projects <span class="kw">import</span> <span class="cls">AIProjectClient</span>
+<span class="kw">from</span> azure.identity <span class="kw">import</span> <span class="cls">DefaultAzureCredential</span>
+
+client = <span class="cls">AIProjectClient</span>(endpoint=<span class="str">"&lt;project-endpoint&gt;"</span>, credential=<span class="cls">DefaultAzureCredential</span>())
+agent = client.agents.<span class="fn">create_agent</span>(
+    model=<span class="str">"gpt-35-turbo-deployment"</span>,   <span class="cm"># deployment name, not model name</span>
+    name=<span class="str">"my-agent"</span>,
+    instructions=<span class="str">"You are a helpful assistant."</span>
+)</pre>
+
+    <h4>Responsible AI Constraints for Agents (Q40)</h4>
+    <p>Agents must align with Microsoft Responsible AI principles. To enforce constraints:</p>
+    <ul>
+      <li>Configure the agent's <strong>system prompt</strong> with explicit behavioural rules and scope limits</li>
+      <li>Integrate <strong>Azure AI Content Safety</strong> (Prompt Shield) to block jailbreak attempts</li>
+      <li>Grant tools <strong>only the minimum permissions</strong> required for approved business functions</li>
+    </ul>
+
+    <h4>Tracing and Feedback Collection (Q47)</h4>
+    <p>To collect trace data, aggregate metrics, and user feedback for a Foundry flow or application:</p>
+    <ol>
+      <li>In the Foundry portal: <strong>Project Settings → Tracing → Enable</strong></li>
+      <li>Select an <strong>Azure Application Insights</strong> resource to receive trace data</li>
+      <li>Trace data (per-request spans, latency, token usage) flows into Application Insights automatically</li>
+    </ol>
+
+    <h4>Multi-Agent Orchestration — Prompt Flow (Q55)</h4>
+    <p>For workflows that involve multiple agent types or multi-step automation (e.g., a data agent feeding an email agent), use <strong>Prompt Flow</strong> to orchestrate the steps with minimal administrative effort. Prompt Flow's visual graph editor connects LLM nodes, Python nodes, and tool nodes without writing orchestration boilerplate.</p>
+
     <h3>Connections</h3>
     <p>Connections store credentials and endpoints for external services, so code doesn't contain secrets.</p>
     <table>

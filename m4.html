@@ -129,6 +129,65 @@ result = recognizer.<span class="fn">recognize_once_async</span>().get()
   <span class="str">"locale"</span>: <span class="str">"en-US"</span>,
   <span class="str">"displayName"</span>: <span class="str">"My batch transcription"</span>
 }</pre>
+
+    <div class="callout exam">
+      <strong>Exam Tip — Storage for Batch Transcription (Q22)</strong>
+      Audio files for batch transcription must be stored in <strong>Azure Blob Storage</strong>. The API accepts SAS URLs or managed identity access to Blob containers directly. Results are also written back to a Blob location you specify. Supported formats: WAV, MP3, OGG, FLAC.
+    </div>
+
+    <h3>Speaker Recognition &amp; Voice Profiles</h3>
+    <p>Speaker Recognition identifies or verifies who is speaking by analysing voice characteristics. It relies on <strong>voice profiles</strong> created from enrolled audio.</p>
+
+    <table>
+      <tr><th>Profile Type</th><th>Use Case</th><th>How It Works</th></tr>
+      <tr>
+        <td><strong>TextDependentVerification</strong></td>
+        <td>Speaker <em>verification</em> (1:1) — is this the enrolled person?</td>
+        <td>Speaker says a <strong>specific passphrase</strong> during enrolment and at verification time</td>
+      </tr>
+      <tr>
+        <td><strong>TextIndependentIdentification</strong></td>
+        <td>Speaker <em>identification</em> (1:N) and <strong>diarization</strong> — who is speaking at each moment?</td>
+        <td>Speaker can say <strong>anything</strong>; no passphrase required. Works on natural speech.</td>
+      </tr>
+    </table>
+
+    <div class="callout exam">
+      <strong>Exam Tip — Voice Profile for Meeting Recordings (Q14)</strong>
+      To identify who is speaking at each point in a meeting recording, use the <strong>TextIndependentIdentification</strong> voice profile type. It does not require a passphrase and supports 1:N matching across multiple speakers (diarization). TextDependentVerification is for 1:1 passphrase-based verification only.
+    </div>
+
+    <h3>Pattern Matching Intent Recognition</h3>
+    <p>Pattern matching is a lightweight, <strong>offline</strong> intent recognition approach — no cloud call needed after the SDK is downloaded. It matches utterances against defined patterns rather than an ML model.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">ExactPhrase</div>
+        <p>Matches a <strong>specific phrase exactly</strong> from a defined catalog. Use when you have a fixed list of phrases to detect as entities.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Any</div>
+        <p>Matches any text in a position — a wildcard slot within a pattern.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">IntegerRange / FloatRange</div>
+        <p>Matches numbers within a specified range (e.g., quantities, temperatures).</p>
+      </div>
+    </div>
+
+    <div class="callout exam">
+      <strong>Exam Tip — Pattern Matching Entities (Q44)</strong>
+      To detect entities defined in a <strong>catalog of phrases</strong> using pattern matching intent recognition, use the <strong>ExactPhrase</strong> entity type. It performs exact string matching against your phrase list with no ML inference.
+    </div>
+
+    <h3>Speech Recognition in Noisy Environments</h3>
+    <p>For noisy environments, recommend the <strong>Whisper</strong> model (available via Azure AI Speech and Azure OpenAI). Whisper is trained on diverse, real-world audio and handles:</p>
+    <ul>
+      <li>Background noise and ambient sound</li>
+      <li>Multiple accents and dialects</li>
+      <li>Multi-language audio</li>
+    </ul>
+    <p>Alternatively, use <strong>Custom Speech</strong> with acoustically-matched training data recorded in the target noisy environment to improve accuracy.</p>
   </div>
 
   <div class="page-nav">

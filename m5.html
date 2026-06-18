@@ -92,6 +92,35 @@
 → Define intents → Add utterances → Label entities
 → Train → Evaluate (precision/recall/F1) → Deploy → Call prediction API</pre>
 
+    <h3>Evaluation Metrics</h3>
+    <p>After training, CLU reports three metrics per intent and entity. Understanding the formulas is exam-tested.</p>
+    <table>
+      <tr><th>Metric</th><th>Formula</th><th>Meaning</th><th>Prioritise when…</th></tr>
+      <tr>
+        <td><strong>Precision</strong></td>
+        <td>TP ÷ (TP + FP)</td>
+        <td>Of everything the model labelled as X, how many were <em>actually</em> X? High precision = few false positives.</td>
+        <td>False positives are costly (e.g., triggering the wrong action)</td>
+      </tr>
+      <tr>
+        <td><strong>Recall</strong></td>
+        <td>TP ÷ (TP + FN)</td>
+        <td>Of all actual X instances, how many did the model <em>find</em>? High recall = few missed positives.</td>
+        <td>Missing a true positive is costly (e.g., safety alerts)</td>
+      </tr>
+      <tr>
+        <td><strong>F1 Score</strong></td>
+        <td>2 × (P × R) ÷ (P + R)</td>
+        <td>Harmonic mean of Precision and Recall. Balanced measure.</td>
+        <td>Neither false positives nor false negatives can be tolerated</td>
+      </tr>
+    </table>
+
+    <div class="callout exam">
+      <strong>Exam Tip — Precision Definition (Q32)</strong>
+      "Ratio between correctly identified positives (true positives) and <em>all identified positives</em>" = <strong>Precision</strong> = TP ÷ (TP + FP). Recall divides by (TP + FN) — i.e., all <em>actual</em> positives, not all <em>identified</em> ones.
+    </div>
+
     <h4>Prediction API</h4>
     <pre>POST https://&lt;endpoint&gt;.cognitiveservices.azure.com/language/:analyze-conversations
     ?api-version=2023-04-01
@@ -116,6 +145,17 @@
       <strong>Use case</strong>
       A single bot that can answer HR questions (Q&amp;A KB), book meetings (CLU project A), and order supplies (CLU project B). The Orchestration project picks the right backend.
     </div>
+
+    <h4>What you CAN do in an Orchestration Workflow (Q20)</h4>
+    <ul>
+      <li><strong>Route utterances</strong> to the correct CLU model or Q&amp;A project based on intent classification</li>
+      <li><strong>Connect multiple language understanding projects</strong> (CLU + Custom Q&amp;A) within one unified endpoint</li>
+    </ul>
+    <h4>What you CANNOT do</h4>
+    <ul>
+      <li>Train new intents directly inside the orchestration workflow — it only routes to existing projects</li>
+      <li>Perform entity extraction — that happens in the downstream CLU projects</li>
+    </ul>
 
     <h3>Bot Framework Integration</h3>
     <p>CLU integrates with <strong>Azure Bot Service</strong> and <strong>Bot Framework SDK</strong>. The bot middleware calls the CLU prediction endpoint, then routes based on the top intent.</p>

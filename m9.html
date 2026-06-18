@@ -76,6 +76,26 @@
       0 = safe. 2 = low. 4 = medium. 6 = high/severe. You configure <strong>thresholds</strong> per category to decide when to block content. Threshold of 2 means any score ≥ 2 is rejected.
     </div>
 
+    <h4>Error Types — False Positives vs False Negatives</h4>
+    <table>
+      <tr><th>Error Type</th><th>What Happened</th><th>Risk</th></tr>
+      <tr>
+        <td><strong>False Negative</strong></td>
+        <td>Harmful content receives a <strong>severity score of 0</strong> (classified as safe). The system <em>missed</em> the harmful content.</td>
+        <td>Most dangerous — harmful content passes through undetected</td>
+      </tr>
+      <tr>
+        <td><strong>False Positive</strong></td>
+        <td>Safe content is flagged as harmful and blocked.</td>
+        <td>Causes unnecessary content blocking; user frustration</td>
+      </tr>
+    </table>
+
+    <div class="callout exam">
+      <strong>Exam Tip — False Negative (Q41)</strong>
+      If the Content Safety solution returns <strong>severity level 0 for harmful text</strong>, that is a <strong>False Negative</strong> — the model failed to detect the harm. This is the more dangerous error type for safety systems.
+    </div>
+
     <h4>Content Safety API — Text Analysis</h4>
     <pre>POST https://&lt;resource&gt;.cognitiveservices.azure.com/contentsafety/text:analyze?api-version=2024-09-01
 
@@ -85,12 +105,23 @@
   <span class="str">"outputType"</span>: <span class="str">"FourSeverityLevels"</span>
 }</pre>
 
+    <h3>Image Moderation — Blob Storage Access (Q45)</h3>
+    <p>When images are stored in <strong>Azure Blob Storage</strong>, Content Safety needs permission to read them. The recommended approach uses <strong>Managed Identity</strong> to avoid storing credentials in the application.</p>
+    <ol>
+      <li>Enable <strong>System-assigned Managed Identity</strong> on the Content Safety resource</li>
+      <li>Assign the <strong>Storage Blob Data Reader</strong> role to that managed identity on the storage account</li>
+    </ol>
+    <div class="callout exam">
+      <strong>Exam Tip — Content Safety + Blob Storage (Q45)</strong>
+      To let Content Safety analyse images in Blob Storage: <strong>enable managed identity</strong> on the Content Safety resource + assign <strong>Storage Blob Data Reader</strong> to that identity. This avoids SAS tokens or embedded storage keys.
+    </div>
+
     <h3>Advanced Content Safety Features</h3>
 
     <div class="card-grid">
       <div class="card">
         <div class="card-title">Prompt Shields</div>
-        <p>Detects two types of attacks: <strong>Direct jailbreaks</strong> (user tries to override system instructions) and <strong>Indirect prompt injection</strong> (malicious instructions embedded in documents or web pages fed to the model).</p>
+        <p>Detects two types of attacks: <strong>Direct jailbreaks</strong> (user tries to override system instructions, Q18) and <strong>Indirect prompt injection</strong> (malicious instructions embedded in documents or web pages fed to the model). Include Prompt Shields in any Azure OpenAI solution to prevent UPIA jailbreak attacks.</p>
       </div>
       <div class="card">
         <div class="card-title">Groundedness Detection</div>

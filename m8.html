@@ -199,6 +199,71 @@ User query
 )
 image_url = result.data[<span class="num">0</span>].url</pre>
 
+    <h4>DALL-E REST API — Parameters &amp; HTTP Details</h4>
+    <table>
+      <tr><th>Parameter</th><th>Required</th><th>Description</th></tr>
+      <tr><td><code>prompt</code></td><td>Yes</td><td>Text description of the image to generate</td></tr>
+      <tr><td><code>n</code></td><td>No</td><td>Number of images (DALL-E 3 only supports <code>n=1</code>)</td></tr>
+      <tr><td><code>size</code></td><td>No</td><td><strong>Dimensions</strong> of the generated image: <code>"1024x1024"</code>, <code>"1792x1024"</code>, or <code>"1024x1792"</code></td></tr>
+      <tr><td><code>quality</code></td><td>No</td><td><code>"standard"</code> (default) or <code>"hd"</code> — higher detail and sharpness</td></tr>
+      <tr><td><code>style</code></td><td>No</td><td><code>"vivid"</code> (hyper-real, dramatic) or <code>"natural"</code> (realistic, subdued)</td></tr>
+    </table>
+
+    <div class="callout exam">
+      <strong>Exam Tips — DALL-E REST API (Q29, Q35, Q51, Q62)</strong>
+      <ul>
+        <li><strong>Required HTTP headers</strong>: <code>Content-Type: application/json</code>, <code>api-key: &lt;your-key&gt;</code>, and <code>api-version</code> as a query parameter</li>
+        <li><strong>Required body property</strong>: <code>prompt</code> — without it the request fails</li>
+        <li><strong>Image URL location</strong>: in the JSON response at <code>data[0].url</code> (or <code>data[0].b64_json</code> if <code>response_format=b64_json</code>)</li>
+        <li><strong>size parameter</strong>: controls the <em>dimensions</em> (resolution and aspect ratio) of the generated image</li>
+      </ul>
+    </div>
+
+    <pre><span class="cm"># Minimum REST example — DALL-E 3</span>
+POST https://&lt;resource&gt;.openai.azure.com/openai/deployments/dall-e-3/images/generations?api-version=2024-02-01
+
+Headers:
+  Content-Type: application/json
+  api-key: &lt;your-key&gt;
+
+{
+  <span class="str">"prompt"</span>: <span class="str">"A blue mountain at sunset"</span>,
+  <span class="str">"n"</span>: <span class="num">1</span>,
+  <span class="str">"size"</span>: <span class="str">"1024x1024"</span>
+}
+
+<span class="cm"># Response — image URL is at data[0].url</span>
+{
+  <span class="str">"data"</span>: [
+    { <span class="str">"url"</span>: <span class="str">"https://..."</span>, <span class="str">"revised_prompt"</span>: <span class="str">"..."</span> }
+  ]
+}</pre>
+
+    <h4>Foundation Model Providers in Azure AI Foundry (Q28)</h4>
+    <p>When you need a single model that can <strong>generate content, summarise text, understand images, perform semantic search, and generate code</strong>, the answer is <strong>OpenAI</strong> — specifically <strong>GPT-4o</strong>, which is multimodal (text + images) and supports all these capabilities in one deployment.</p>
+    <table>
+      <tr><th>Provider</th><th>When to Choose</th></tr>
+      <tr><td><strong>OpenAI</strong></td><td>Full multimodal capability (text, images, code); DALL-E for image generation; Whisper for audio; best overall quality</td></tr>
+      <tr><td>Microsoft Phi</td><td>Small, fast, efficient; good for on-device or edge scenarios</td></tr>
+      <tr><td>Meta Llama</td><td>Open weights; large community; general-purpose text</td></tr>
+      <tr><td>Mistral AI</td><td>Multilingual; efficient inference</td></tr>
+      <tr><td>Cohere</td><td>RAG-optimised; strong embeddings</td></tr>
+    </table>
+
+    <h4>System Message for Tone &amp; Style Alignment (Q48)</h4>
+    <p>To ensure model outputs match <strong>organisational tone and style</strong>, configure the <strong>system message</strong>. It sets persona, constraints, and style guidance applied before any user message — no retraining needed.</p>
+    <pre>{
+  <span class="str">"role"</span>: <span class="str">"system"</span>,
+  <span class="str">"content"</span>: <span class="str">"You are a concise, professional assistant. Always respond in formal British English. Summaries must be no longer than 3 sentences."</span>
+}</pre>
+
+    <h4>Model Version Retirement &amp; Auto-Update (Q61)</h4>
+    <p>When a GPT model version is <strong>retired by Microsoft</strong>, the deployment is automatically updated to the next stable version — <strong>even if auto-update is disabled</strong>. Auto-update preference only applies to non-retiring upgrades. Retirement forces an update regardless of the setting.</p>
+    <div class="callout warn">
+      <strong>Why a deployment might show a newer model version (Q61)</strong>
+      If auto-update is disabled but you find a newer model version running, the original version was <strong>retired</strong>. Retirement triggers a forced migration to the next available version. Check the Azure OpenAI model retirement schedule to plan ahead.
+    </div>
+
     <div class="callout info">
       <strong>Azure AI Foundry</strong>
       For managing deployments, running evaluations, building prompt flows, and accessing the full model catalog (including Phi, Llama, Mistral), use <strong>Azure AI Foundry</strong> — see the dedicated <a href="foundry.html">Azure AI Foundry page</a>.

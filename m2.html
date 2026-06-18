@@ -195,8 +195,104 @@ result = client.analyze(image_url=url, visual_features=[<span class="cls">Visual
       <tr><td>Sentiments</td><td>Timeline of positive/neutral/negative sentiment</td></tr>
       <tr><td>Topics</td><td>High-level topic classification</td></tr>
       <tr><td>Shots &amp; Scenes</td><td>Shot detection, scene grouping</td></tr>
+      <tr><td>Named Entities</td><td>People, locations, and brands extracted from speech/audio</td></tr>
     </table>
-  </div>
+
+    <h4>Multilingual Identification</h4>
+    <p>To enable automatic language detection per segment, set the <strong>sourceLanguage</strong> parameter to <code>"multi-language"</code> when uploading a video. This tells the indexer to detect languages per segment rather than using a single fixed language.</p>
+
+    <h4>Custom Language Model</h4>
+    <p>Upload a plain-text file of domain-specific words and phrases to improve speech-recognition accuracy for specialised vocabulary.</p>
+    <div class="callout warn">
+      <strong>Custom Language Model — Upload Rules</strong>
+      <ul>
+        <li>Maximum file size: <strong>2 GB</strong></li>
+        <li>Encoding: <strong>UTF-8</strong></li>
+        <li>One entry per line</li>
+        <li>Lines containing special characters (<strong>&amp; &lt; &gt; " #</strong>) are <strong>silently discarded</strong> — remove or replace them before upload</li>
+      </ul>
+    </div>
+
+    <div class="callout exam">
+      <strong>Exam Tip (Q19) — Custom Language Model Best Practices</strong>
+      Use <strong>plain text files</strong>, include <strong>domain-specific vocabulary</strong>, and <strong>avoid special characters</strong> in entries. Any line with a special character is dropped by the indexer without warning.
+    </div>
+
+    <h4>Custom People Model</h4>
+    <p>Train a <strong>Custom People Model</strong> by uploading images of specific individuals. Once trained, Video Indexer can recognise those people in videos — extending beyond the built-in celebrity recognition capability.</p>
+
+  </div><!-- end module m2 -->
+
+  <div class="module" id="m2-customvision-extra">
+
+    <h3>Custom Vision — Additional Exam Topics</h3>
+
+    <h4>Performance Assessment After Training</h4>
+    <p>After training an iteration, evaluate it using the <strong>Performance</strong> tab in the Custom Vision portal. Key metrics are:</p>
+    <table>
+      <tr><th>Metric</th><th>Meaning</th></tr>
+      <tr><td><strong>Precision</strong></td><td>Of all predictions made, what fraction were correct?</td></tr>
+      <tr><td><strong>Recall</strong></td><td>Of all actual positives, what fraction did the model find?</td></tr>
+      <tr><td><strong>AP (Average Precision)</strong></td><td>Area under the precision-recall curve — overall model quality per tag</td></tr>
+    </table>
+    <p>Use <strong>Quick Test</strong> (also on the Performance tab) to test with a new image without making a prediction endpoint call.</p>
+
+    <h4>Publishing Iterations</h4>
+    <p>A trained iteration must be <strong>published</strong> to a Prediction resource before it can be used for inference via the API. Unpublished iterations can only be tested using Quick Test inside the portal.</p>
+
+    <div class="callout exam">
+      <strong>Exam Tip (Q26) — Publishing</strong>
+      Custom Vision has separate <strong>Training</strong> and <strong>Prediction</strong> resources. Publishing an iteration links it to a Prediction resource endpoint. Without publishing, external applications cannot call the model.
+    </div>
+
+    <h4>Firewall / Network Access</h4>
+    <p>When <strong>firewall rules</strong> are enabled on an Azure AI Services account, only requests from allowed IPs or VNets are accepted. For internet-hosted applications, add the application's outbound IP address to the allowed list on the resource's <strong>Networking</strong> tab in the Azure portal.</p>
+
+    <div class="callout warn">
+      <strong>Network Access (Q25)</strong>
+      If your app receives HTTP 403 or connection errors after enabling firewall rules, check that the app's public outbound IP is listed under <strong>Firewall and virtual networks</strong> on the Azure AI resource.
+    </div>
+
+  </div><!-- end module m2-customvision-extra -->
+
+  <div class="module" id="m2-imageanalysis-extra">
+
+    <h3>Image Analysis — Additional Exam Topics</h3>
+
+    <h4>Color Analysis (Q34)</h4>
+    <p>The Image Analysis API can return color information about an image:</p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Dominant Foreground Color</div>
+        <p>The most prominent color in the foreground subject. Returns a basic color name.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Dominant Background Color</div>
+        <p>The most prominent color in the background. Returns a basic color name.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Accent Color</div>
+        <p>The single most vibrant color in the image, returned as a hex code.</p>
+      </div>
+    </div>
+    <p>Background and foreground color values are limited to these basic color names: <strong>Black, Blue, Brown, Gray, Green, Orange, Pink, Purple, Red, Teal, White, Yellow</strong>.</p>
+
+    <h4>Object Detection vs. Tags — Coordinates (Q16)</h4>
+    <table>
+      <tr><th>Feature</th><th>Returns Bounding Box?</th><th>Use When</th></tr>
+      <tr><td><strong>Objects</strong></td><td>Yes — (x, y, w, h) per object</td><td>You need the exact location of a detected object</td></tr>
+      <tr><td><strong>Tags</strong></td><td>No</td><td>You only need to know what is in the image, not where</td></tr>
+    </table>
+
+    <div class="callout exam">
+      <strong>Exam Tip (Q16)</strong>
+      If a question asks how to find <em>where</em> an object is in an image, choose the <strong>Objects</strong> visual feature, not Tags. Only Objects returns bounding box coordinates.
+    </div>
+
+    <h4>People Detection in Video (Q57)</h4>
+    <p>Use the <strong>People</strong> visual feature (also referred to as <strong>spatialAnalysis</strong>) in Azure AI Vision to detect the presence of people in a video feed. The API returns a bounding box for each detected person per frame. This is distinct from Face API identification — it detects presence, not identity.</p>
+
+  </div><!-- end module m2-imageanalysis-extra -->
 
   <div class="page-nav">
     <a href="m1.html" class="page-nav-btn">← Azure AI Services</a>
