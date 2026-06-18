@@ -76,24 +76,39 @@
       0 = safe. 2 = low. 4 = medium. 6 = high/severe. You configure <strong>thresholds</strong> per category to decide when to block content. Threshold of 2 means any score ≥ 2 is rejected.
     </div>
 
-    <h4>Error Types — False Positives vs False Negatives</h4>
+    <h4>Prediction Outcomes — Confusion Matrix</h4>
+    <p>Every prediction falls into one of four outcomes. Knowing all four is necessary to reason about precision, recall, and safety trade-offs.</p>
     <table>
-      <tr><th>Error Type</th><th>What Happened</th><th>Risk</th></tr>
+      <tr><th>Outcome</th><th>Actual</th><th>Predicted</th><th>Content Safety meaning</th></tr>
       <tr>
-        <td><strong>False Negative</strong></td>
-        <td>Harmful content receives a <strong>severity score of 0</strong> (classified as safe). The system <em>missed</em> the harmful content.</td>
-        <td>Most dangerous — harmful content passes through undetected</td>
+        <td><strong>True Positive (TP)</strong></td>
+        <td>Harmful</td>
+        <td>Harmful ✓</td>
+        <td>Harmful content correctly detected and blocked</td>
       </tr>
       <tr>
-        <td><strong>False Positive</strong></td>
-        <td>Safe content is flagged as harmful and blocked.</td>
-        <td>Causes unnecessary content blocking; user frustration</td>
+        <td><strong>True Negative (TN)</strong></td>
+        <td>Safe</td>
+        <td>Safe ✓</td>
+        <td>Safe content correctly passed through</td>
+      </tr>
+      <tr>
+        <td><strong>False Positive (FP)</strong></td>
+        <td>Safe</td>
+        <td>Harmful ✗</td>
+        <td>Safe content incorrectly blocked — unnecessary rejection, user frustration</td>
+      </tr>
+      <tr>
+        <td><strong>False Negative (FN)</strong></td>
+        <td>Harmful</td>
+        <td>Safe ✗</td>
+        <td>Harmful content receives severity 0 and passes through — most dangerous outcome for safety systems</td>
       </tr>
     </table>
 
     <div class="callout exam">
       <strong>Exam Tip — False Negative (Q41)</strong>
-      If the Content Safety solution returns <strong>severity level 0 for harmful text</strong>, that is a <strong>False Negative</strong> — the model failed to detect the harm. This is the more dangerous error type for safety systems.
+      If the Content Safety solution returns <strong>severity level 0 for harmful text</strong>, that is a <strong>False Negative</strong> — the model failed to detect the harm. Lowering the detection threshold reduces false negatives but increases false positives (more safe content gets blocked). Raising the threshold does the opposite.
     </div>
 
     <h4>Content Safety API — Text Analysis</h4>

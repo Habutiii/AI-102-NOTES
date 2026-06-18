@@ -94,6 +94,16 @@
 
     <h3>Evaluation Metrics</h3>
     <p>After training, CLU reports three metrics per intent and entity. Understanding the formulas is exam-tested.</p>
+
+    <h4>Confusion Matrix Terms</h4>
+    <table>
+      <tr><th>Term</th><th>Meaning</th></tr>
+      <tr><td><strong>True Positive (TP)</strong></td><td>Model predicted the label — and was correct</td></tr>
+      <tr><td><strong>True Negative (TN)</strong></td><td>Model did not predict the label — and was correct (it was indeed absent)</td></tr>
+      <tr><td><strong>False Positive (FP)</strong></td><td>Model predicted the label — but was wrong (it wasn't actually there)</td></tr>
+      <tr><td><strong>False Negative (FN)</strong></td><td>Model did not predict the label — but was wrong (it was actually there, and was missed)</td></tr>
+    </table>
+
     <table>
       <tr><th>Metric</th><th>Formula</th><th>Meaning</th><th>Prioritise when…</th></tr>
       <tr>
