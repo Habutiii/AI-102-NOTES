@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-102 Quick Test</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header"><span>AI-102</span>Azure AI Engineer Associate</div>
+  <nav>
+    <div class="section-label">Overview</div>
+    <a href="index.html">Exam Overview</a>
+    <div class="section-label">Module 1</div>
+    <a href="m1.html">Azure AI Services</a>
+    <div class="section-label">Module 2</div>
+    <a href="m2.html">Computer Vision</a>
+    <div class="section-label">Module 3</div>
+    <a href="m3.html">Azure AI Language</a>
+    <a href="translator.html">Azure AI Translator</a>
+    <div class="section-label">Module 4</div>
+    <a href="m4.html">Speech Services</a>
+    <div class="section-label">Module 5</div>
+    <a href="m5.html">Language Understanding (CLU)</a>
+    <div class="section-label">Module 6</div>
+    <a href="m6.html">Document Intelligence</a>
+    <div class="section-label">Module 7</div>
+    <a href="m7.html">Knowledge Mining &amp; AI Search</a>
+    <div class="section-label">Module 8</div>
+    <a href="m8.html">Azure OpenAI &amp; Generative AI</a>
+    <div class="section-label">Module 9</div>
+    <a href="m9.html">Content Safety &amp; Responsible AI</a>
+    <div class="section-label">Platform</div>
+    <a href="foundry.html">Azure AI Foundry</a>
+    <div class="section-label">Reference</div>
+    <a href="pricing.html">Tiers &amp; Pricing</a>
+    <a href="quickref.html">Quick Reference</a>
+    <a href="test.html">Quick Test</a>
+  </nav>
+</div>
+
+<div class="main">
+  <div class="hero">
+    <h1>Quick Test</h1>
+    <p>A randomized practice quiz generated directly from <code>questions/questions.json</code>. Add more questions to the JSON and they become eligible automatically.</p>
+    <div class="tags">
+      <span class="tag">Randomized</span>
+      <span class="tag">Single + Multi-select</span>
+      <span class="tag">Auto-loaded from JSON</span>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module-header">
+      <div class="module-number">T</div>
+      <h2>Practice Setup</h2>
+    </div>
+
+    <div class="card test-controls">
+      <label for="topic-filter">Topic</label>
+      <select id="topic-filter"></select>
+      <label for="question-count">Questions</label>
+      <select id="question-count"></select>
+      <button id="start-test" class="action-btn" type="button">Start New Test</button>
+      <button id="submit-test" class="action-btn secondary" type="button" disabled>Submit Answers</button>
+    </div>
+
+    <div id="test-status" class="callout info">
+      <strong>Status</strong>
+      Loading question bank...
+    </div>
+
+    <div id="test-results"></div>
+    <div id="test-container"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const pages = [
+    { file: 'index.html',      title: 'Exam Overview' },
+    { file: 'm1.html',         title: 'Azure AI Services' },
+    { file: 'm2.html',         title: 'Computer Vision' },
+    { file: 'm3.html',         title: 'Azure AI Language' },
+    { file: 'translator.html', title: 'Azure AI Translator' },
+    { file: 'm4.html',         title: 'Speech Services' },
+    { file: 'm5.html',         title: 'Language Understanding (CLU)' },
+    { file: 'm6.html',         title: 'Document Intelligence' },
+    { file: 'm7.html',         title: 'Knowledge Mining & AI Search' },
+    { file: 'm8.html',         title: 'Azure OpenAI & Generative AI' },
+    { file: 'm9.html',         title: 'Content Safety & Responsible AI' },
+    { file: 'foundry.html',    title: 'Azure AI Foundry' },
+    { file: 'pricing.html',    title: 'Tiers & Pricing' },
+    { file: 'quickref.html',   title: 'Quick Reference' },
+    { file: 'test.html',       title: 'Quick Test' }
+  ];
+  const cur = window.location.pathname.split('/').pop() || 'test.html';
+  const idx = pages.findIndex((page) => page.file === cur);
+  document.querySelectorAll('.sidebar nav a').forEach((link) => {
+    if (link.getAttribute('href').split('#')[0] === cur) {
+      link.classList.add('active');
+    }
+  });
+
+  const state = {
+    allQuestions: [],
+    activeQuestions: []
+  };
+
+  const countSelect = document.getElementById('question-count');
+  const topicSelect = document.getElementById('topic-filter');
+  const startButton = document.getElementById('start-test');
+  const submitButton = document.getElementById('submit-test');
+  const status = document.getElementById('test-status');
+  const results = document.getElementById('test-results');
+  const container = document.getElementById('test-container');
+
+  function shuffle(items) {
+    const copy = items.slice();
+    for (let i = copy.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function updateStatus(kind, title, message) {
+    status.className = 'callout ' + kind;
+    status.innerHTML = '<strong>' + title + '</strong>' + message;
+  }
+
+  function buildQuestionCountOptions(total) {
+    countSelect.innerHTML = '';
+    const presets = Array.from(new Set([5, 10, 15, total].filter((value) => value > 0 && value <= total))).sort((a, b) => a - b);
+    presets.forEach((value) => {
+      const option = document.createElement('option');
+      option.value = String(value);
+      option.textContent = value + ' questions';
+      countSelect.appendChild(option);
+    });
+    countSelect.value = String(Math.min(10, total));
+  }
+
+  function buildTopicOptions(questions) {
+    const topics = Array.from(new Set(questions.map((question) => question.topic).filter(Boolean))).sort((a, b) => a.localeCompare(b));
+    topicSelect.innerHTML = '<option value="__all__">All topics</option>';
+    topics.forEach((topic) => {
+      const option = document.createElement('option');
+      option.value = topic;
+      option.textContent = topic;
+      topicSelect.appendChild(option);
+    });
+  }
+
+  function getFilteredQuestions() {
+    if (topicSelect.value === '__all__') {
+      return state.allQuestions.slice();
+    }
+    return state.allQuestions.filter((question) => question.topic === topicSelect.value);
+  }
+
+  function renderQuestions() {
+    container.innerHTML = state.activeQuestions.map((question, index) => {
+      const inputType = question.type === 'multi-select' ? 'checkbox' : 'radio';
+      const hint = question.type === 'multi-select' ? 'Choose all that apply.' : 'Choose one answer.';
+      const options = question.options.map((option, optionIndex) => {
+        const inputName = 'question-' + question.id;
+        const inputId = inputName + '-option-' + optionIndex;
+        return (
+          '<label class="test-option" for="' + inputId + '">' +
+            '<input type="' + inputType + '" id="' + inputId + '" name="' + inputName + '" value="' + optionIndex + '">' +
+            '<span>' + escapeHtml(option) + '</span>' +
+          '</label>'
+        );
+      }).join('');
+
+      return (
+        '<section class="card test-question" data-question-id="' + question.id + '">' +
+          '<div class="test-question-meta">' +
+            '<span class="badge azure">Q' + (index + 1) + '</span>' +
+            '<span class="badge">' + escapeHtml(question.topic) + '</span>' +
+            '<span class="badge">' + escapeHtml(question.type) + '</span>' +
+          '</div>' +
+          '<h3>' + escapeHtml(question.scenario).replace(/\n/g, '<br>') + '</h3>' +
+          '<p class="test-hint">' + hint + '</p>' +
+          '<div class="test-options">' + options + '</div>' +
+          '<div class="test-feedback" hidden></div>' +
+        '</section>'
+      );
+    }).join('');
+  }
+
+  function collectAnswers(section) {
+    return Array.from(section.querySelectorAll('input:checked'))
+      .map((input) => Number.parseInt(input.value, 10))
+      .sort((a, b) => a - b);
+  }
+
+  function sameAnswers(left, right) {
+    if (left.length !== right.length) {
+      return false;
+    }
+    return left.every((value, index) => value === right[index]);
+  }
+
+  function markTest() {
+    let score = 0;
+    const topicStats = new Map();
+
+    state.activeQuestions.forEach((question) => {
+      const section = container.querySelector('[data-question-id="' + question.id + '"]');
+      const feedback = section.querySelector('.test-feedback');
+      const selected = collectAnswers(section);
+      const expected = question.correct.slice().sort((a, b) => a - b);
+      const correct = sameAnswers(selected, expected);
+      const topicKey = question.topic || 'Uncategorized';
+      const topicEntry = topicStats.get(topicKey) || { total: 0, correct: 0 };
+
+      topicEntry.total += 1;
+      if (correct) {
+        topicEntry.correct += 1;
+      }
+      topicStats.set(topicKey, topicEntry);
+
+      section.classList.remove('is-correct', 'is-incorrect');
+      section.classList.add(correct ? 'is-correct' : 'is-incorrect');
+
+      section.querySelectorAll('.test-option').forEach((optionEl, optionIndex) => {
+        optionEl.classList.remove('expected', 'selected-wrong');
+        if (expected.includes(optionIndex)) {
+          optionEl.classList.add('expected');
+        }
+        if (selected.includes(optionIndex) && !expected.includes(optionIndex)) {
+          optionEl.classList.add('selected-wrong');
+        }
+      });
+
+      feedback.hidden = false;
+      feedback.innerHTML =
+        '<strong>' + (correct ? 'Correct' : 'Review') + '</strong>' +
+        escapeHtml(question.explanation);
+
+      if (correct) {
+        score += 1;
+      }
+    });
+
+    const percent = Math.round((score / state.activeQuestions.length) * 100);
+    const topicSummary = Array.from(topicStats.entries())
+      .sort((left, right) => {
+        const leftPct = left[1].correct / left[1].total;
+        const rightPct = right[1].correct / right[1].total;
+        if (leftPct !== rightPct) {
+          return leftPct - rightPct;
+        }
+        return left[0].localeCompare(right[0]);
+      })
+      .map(([topic, stats]) => {
+        const topicPercent = Math.round((stats.correct / stats.total) * 100);
+        const weakClass = topicPercent < 70 ? 'topic-score weak' : 'topic-score';
+        return (
+          '<div class="' + weakClass + '">' +
+            '<span>' + escapeHtml(topic) + '</span>' +
+            '<strong>' + stats.correct + '/' + stats.total + ' (' + topicPercent + '%)</strong>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    results.innerHTML =
+      '<div class="callout ' + (percent >= 70 ? 'tip' : 'warn') + '">' +
+        '<strong>Score</strong>' +
+        'You got ' + score + ' of ' + state.activeQuestions.length + ' correct (' + percent + '%).' +
+        (topicSummary ? '<div class="topic-breakdown"><h4>Topic Breakdown</h4>' + topicSummary + '</div>' : '') +
+      '</div>';
+
+    updateStatus('info', 'Status', 'Review the explanations below. Start a new test to draw a fresh random set from the JSON bank.');
+  }
+
+  function startTest() {
+    const filteredQuestions = getFilteredQuestions();
+    const requested = Number.parseInt(countSelect.value, 10);
+    state.activeQuestions = shuffle(filteredQuestions).slice(0, requested);
+    results.innerHTML = '';
+    renderQuestions();
+    submitButton.disabled = false;
+    updateStatus(
+      'info',
+      'Status',
+      'Test ready. Questions were selected randomly from ' +
+      (topicSelect.value === '__all__' ? 'the full JSON bank.' : '<strong>' + escapeHtml(topicSelect.value) + '</strong>.')
+    );
+  }
+
+  function syncAvailableQuestionCounts() {
+    const filteredQuestions = getFilteredQuestions();
+    buildQuestionCountOptions(filteredQuestions.length);
+    startButton.disabled = filteredQuestions.length === 0;
+    submitButton.disabled = filteredQuestions.length === 0;
+    if (filteredQuestions.length === 0) {
+      container.innerHTML = '';
+      results.innerHTML = '';
+      updateStatus('warn', 'No questions', 'No questions match the selected topic.');
+    }
+  }
+
+  async function loadQuestions() {
+    try {
+      const response = await fetch('questions/questions.json', { cache: 'no-store' });
+      if (!response.ok) {
+        throw new Error('HTTP ' + response.status);
+      }
+
+      const questions = await response.json();
+      if (!Array.isArray(questions) || questions.length === 0) {
+        throw new Error('Question bank is empty.');
+      }
+
+      state.allQuestions = questions.filter((question) => {
+        return question && Array.isArray(question.options) && Array.isArray(question.correct);
+      });
+
+      if (state.allQuestions.length === 0) {
+        throw new Error('No valid questions found.');
+      }
+
+      buildTopicOptions(state.allQuestions);
+      buildQuestionCountOptions(state.allQuestions.length);
+      submitButton.disabled = false;
+      updateStatus('tip', 'Ready', 'Loaded ' + state.allQuestions.length + ' questions from the JSON bank.');
+      startTest();
+    } catch (error) {
+      submitButton.disabled = true;
+      updateStatus(
+        'warn',
+        'Load failed',
+        'Could not load <code>questions/questions.json</code>. If you opened this page directly from the filesystem, serve the folder with a local web server first.'
+      );
+    }
+  }
+
+  startButton.addEventListener('click', startTest);
+  submitButton.addEventListener('click', markTest);
+  topicSelect.addEventListener('change', syncAvailableQuestionCounts);
+
+  if (idx >= 0) {
+    const pct = Math.round(((idx + 1) / pages.length) * 100);
+    const prev = pages[idx - 1];
+    const next = pages[idx + 1];
+    const nav = document.createElement('div');
+    nav.className = 'page-nav page-nav-top';
+    nav.innerHTML =
+      (prev ? '<a href="' + prev.file + '" class="page-nav-btn">← ' + prev.title + '</a>' : '<span style="min-width:80px"></span>') +
+      '<div class="page-nav-progress"><div class="progress-track"><div class="progress-fill" style="width:' + pct + '%"></div></div><span class="progress-label">' + (idx + 1) + ' / ' + pages.length + '</span></div>' +
+      (next ? '<a href="' + next.file + '" class="page-nav-btn">' + next.title + ' →</a>' : '<span style="min-width:80px"></span>');
+    document.querySelector('.module').insertAdjacentElement('beforebegin', nav);
+  }
+
+  loadQuestions();
+})();
+</script>
+</body>
+</html>
