@@ -19,7 +19,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 /* Layout */
 .sidebar { position: fixed; top: 0; left: 0; width: 260px; height: 100vh; background: var(--azure-dark); color: #fff; overflow-y: auto; z-index: 100; padding-bottom: 2rem; }
 .sidebar-header { background: var(--azure); padding: 1.2rem 1rem; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.15); }
-.sidebar-header span { font-size: 1.1rem; display: block; margin-bottom: 2px; }
+.sidebar-header > span { font-size: 1.1rem; display: block; margin-bottom: 2px; }
 .sidebar-toggle { display: none; }
 .sidebar nav a { display: block; padding: 0.45rem 1rem 0.45rem 1.2rem; color: rgba(255,255,255,0.82); text-decoration: none; font-size: 0.82rem; border-left: 3px solid transparent; transition: all 0.15s; }
 .sidebar nav a:hover, .sidebar nav a.active { background: rgba(255,255,255,0.1); border-left-color: var(--note); color: #fff; }
@@ -162,7 +162,7 @@ ul li::marker { color: var(--azure); }
     justify-content: space-between;
     gap: 1rem;
   }
-  .sidebar-header span {
+  .sidebar-header > span {
     margin-bottom: 0;
   }
   .sidebar-toggle {
@@ -183,6 +183,11 @@ ul li::marker { color: var(--azure); }
     text-transform: uppercase;
     cursor: pointer;
   }
+  .sidebar-toggle span {
+    display: inline-flex;
+    align-items: center;
+    font-size: inherit;
+  }
   .sidebar-toggle-icon {
     display: inline-flex;
     align-items: center;
@@ -194,13 +199,14 @@ ul li::marker { color: var(--azure); }
   }
   .sidebar nav {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.1rem;
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
     padding: 0.4rem;
-    max-height: 40vh;
+    max-height: 70vh;
     opacity: 1;
     overflow: hidden auto;
     transition: max-height 0.2s ease, opacity 0.2s ease, padding 0.2s ease;
+    -webkit-overflow-scrolling: touch;
   }
   .sidebar nav .section-label {
     grid-column: 1 / -1;
