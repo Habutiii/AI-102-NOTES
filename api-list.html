@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-102 API List</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header"><span>AI-102</span>Azure AI Engineer Associate</div>
+  <nav>
+    <div class="section-label">Overview</div>
+    <a href="index.html">Exam Overview</a>
+    <div class="section-label">Module 1</div>
+    <a href="m1.html">Azure AI Services</a>
+    <div class="section-label">Module 2</div>
+    <a href="m2.html">Computer Vision</a>
+    <div class="section-label">Module 3</div>
+    <a href="m3.html">Azure AI Language</a>
+    <a href="translator.html">Azure AI Translator</a>
+    <div class="section-label">Module 4</div>
+    <a href="m4.html">Speech Services</a>
+    <div class="section-label">Module 5</div>
+    <a href="m5.html">Language Understanding (CLU)</a>
+    <div class="section-label">Module 6</div>
+    <a href="m6.html">Document Intelligence</a>
+    <div class="section-label">Module 7</div>
+    <a href="m7.html">Knowledge Mining &amp; AI Search</a>
+    <div class="section-label">Module 8</div>
+    <a href="m8.html">Azure OpenAI &amp; Generative AI</a>
+    <div class="section-label">Module 9</div>
+    <a href="m9.html">Content Safety &amp; Responsible AI</a>
+    <div class="section-label">Platform</div>
+    <a href="foundry.html">Azure AI Foundry</a>
+    <div class="section-label">Reference</div>
+    <a href="pricing.html">Tiers &amp; Pricing</a>
+    <a href="quickref.html">Quick Reference</a>
+    <a href="api-list.html">API List</a>
+    <a href="test.html">Quick Test</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <div class="hero">
+    <h1>API List</h1>
+    <p>Compact API reference extracted from the study material. Use this page to review function names, endpoint patterns, request attributes, and response field names.</p>
+    <div class="tags">
+      <span class="tag">REST + SDK</span>
+      <span class="tag">Attribute Names</span>
+      <span class="tag">Exam Revision</span>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module-header">
+      <div class="module-number">0</div>
+      <h2>Common Auth Attributes</h2>
+    </div>
+    <table>
+      <tr><th>Pattern</th><th>Key Attributes / Headers</th><th>Notes</th></tr>
+      <tr><td>API key auth</td><td><code>Ocp-Apim-Subscription-Key</code></td><td>Common across Azure AI Services.</td></tr>
+      <tr><td>Bearer token auth</td><td><code>Authorization: Bearer &lt;token&gt;</code></td><td>Token issued from <code>/sts/v1.0/issueToken</code>.</td></tr>
+      <tr><td>Translator multi-service auth</td><td><code>Ocp-Apim-Subscription-Key</code>, <code>Ocp-Apim-Subscription-Region</code></td><td>Region header required for multi-service keys.</td></tr>
+      <tr><td>SDK credential objects</td><td><code>AzureKeyCredential</code>, <code>DefaultAzureCredential</code></td><td>Used across Language, Vision, Document Intelligence, Foundry.</td></tr>
+      <tr><td>OpenAI client config</td><td><code>azure_endpoint</code>, <code>api_key</code>, <code>api_version</code></td><td>Use deployment name in the <code>model</code> parameter.</td></tr>
+    </table>
+  </div>
+
+  <div class="module">
+    <div class="module-header">
+      <div class="module-number">2</div>
+      <h2>Vision APIs</h2>
+    </div>
+    <table>
+      <tr><th>Component</th><th>Function / Endpoint</th><th>Request Attributes</th><th>Response Fields</th></tr>
+      <tr><td>Image Analysis v4</td><td><code>POST /computervision/imageanalysis:analyze</code></td><td><code>api-version</code>, <code>features</code>, <code>language</code>, body <code>url</code></td><td>Feature-dependent output such as captions, tags, objects, or read results.</td></tr>
+      <tr><td>Vision SDK</td><td><code>client.analyze(image_url=..., visual_features=[...])</code></td><td><code>image_url</code>, <code>visual_features</code></td><td><code>result.read.blocks[].lines[].text</code></td></tr>
+      <tr><td>OCR / Read</td><td><code>features=Read</code></td><td>Same analyze endpoint, body <code>url</code></td><td><code>blocks</code>, <code>lines</code>, <code>words</code></td></tr>
+      <tr><td>Custom Vision resources</td><td>Training and Prediction resources</td><td><code>Training</code> key for create/train, <code>Prediction</code> key for inference, published <code>iteration</code></td><td>Published iteration exposed for prediction</td></tr>
+      <tr><td>Custom model outputs</td><td>Image classification / object detection</td><td>Trained model plus input image</td><td>Classification labels or object bounding boxes <code>(x, y, w, h)</code></td></tr>
+      <tr><td>Face Detection</td><td>Face detect operation</td><td>Input image plus detection settings</td><td><code>faceRectangle</code>, <code>age</code>, <code>gender</code>, <code>emotion</code>, <code>accessories</code>, <code>blur</code>, <code>exposure</code>, <code>noise</code>, <code>occlusion</code>, <code>headPose</code>, <code>smile</code>, <code>glasses</code></td></tr>
+      <tr><td>Face Verification</td><td>Verify operation</td><td>Two face references</td><td><code>confidence</code></td></tr>
+      <tr><td>Face Identification</td><td>Identify operation</td><td>Detected face plus <code>PersonGroup</code></td><td>Match result against trained group</td></tr>
+      <tr><td>Video Indexer</td><td>Video upload/index request</td><td><code>sourceLanguage="multi-language"</code></td><td>Multilingual segment detection during indexing</td></tr>
+      <tr><td>People detection</td><td>Vision people / spatial analysis feature</td><td>Video or image input</td><td>Bounding box per detected person</td></tr>
+    </table>
+  </div>
+
+  <div class="module">
+    <div class="module-header">
+      <div class="module-number">3</div>
+      <h2>Language APIs</h2>
+    </div>
+    <table>
+      <tr><th>Component</th><th>Function / Endpoint</th><th>Request Attributes</th><th>Response Fields</th></tr>
+      <tr><td>Analyze text base endpoint</td><td><code>POST /language/:analyze-text</code></td><td><code>kind</code>, <code>analysisInput.documents[].id</code>, <code>analysisInput.documents[].language</code>, <code>analysisInput.documents[].text</code></td><td>Task-specific result payload</td></tr>
+      <tr><td>Sentiment analysis</td><td><code>kind="SentimentAnalysis"</code></td><td>Same base schema</td><td>Sentiment result for each document</td></tr>
+      <tr><td>PII recognition</td><td><code>kind="PiiEntityRecognition"</code></td><td><code>parameters.piiCategories[]</code>, <code>parameters.redactionCharacter</code></td><td>Detected PII entities and redacted output</td></tr>
+      <tr><td>Extractive summarization</td><td><code>client.begin_extract_summary(...)</code></td><td>Input documents, <code>max_sentence_count</code></td><td><code>doc.sentences[].text</code>, <code>doc.sentences[].rank_score</code></td></tr>
+      <tr><td>Abstractive summarization</td><td><code>client.begin_abstract_summary(...)</code></td><td>Input documents, <code>sentence_count</code></td><td><code>doc.summaries[].text</code></td></tr>
+      <tr><td>Synonyms payload</td><td>Q&amp;A synonym definition</td><td><code>synonyms[].alterations[]</code></td><td>Used as config payload rather than inference response</td></tr>
+      <tr><td>Key phrase extraction</td><td><code>kind="KeyPhraseExtraction"</code></td><td>Same base schema</td><td>Important words and short phrases</td></tr>
+      <tr><td>Question answering</td><td>Prediction endpoint workflow</td><td>Question input against KB / project</td><td>Answer candidates from the knowledge base</td></tr>
+    </table>
+  </div>
+
+  <div class="module">
+    <div class="module-header">
+      <div class="module-number">T</div>
+      <h2>Translator APIs</h2>
+    </div>
+    <table>
+      <tr><th>Component</th><th>Function / Endpoint</th><th>Request Attributes</th><th>Response Fields</th></tr>
+      <tr><td>Translate text</td><td><code>POST /translate</code></td><td>Query <code>api-version</code>, <code>to</code>, optional <code>from</code>, optional <code>category</code>; body <code>[{ text }]</code></td><td><code>detectedLanguage.language</code>, <code>detectedLanguage.score</code>, <code>translations[].text</code>, <code>translations[].to</code></td></tr>
+      <tr><td>Transliterate</td><td><code>POST /transliterate</code></td><td><code>language</code>, <code>fromScript</code>, <code>toScript</code>, body <code>[{ text }]</code></td><td>Transliterated text result</td></tr>
+      <tr><td>Document translation batch</td><td><code>POST /translator/text/batch/v1.1/batches</code></td><td><code>inputs[].source.sourceUrl</code>, <code>inputs[].source.language</code>, <code>inputs[].targets[].language</code>, <code>inputs[].targets[].targetUrl</code></td><td>Async job status after polling</td></tr>
+      <tr><td>Python SDK</td><td><code>client.translate(...)</code></td><td><code>body</code>, <code>to_language</code></td><td>Translation result collection</td></tr>
+      <tr><td>Other endpoints</td><td><code>/detect</code>, <code>/dictionary/lookup</code>, <code>/dictionary/examples</code>, <code>/breaksentence</code>, <code>/languages</code></td><td>Endpoint-specific query/body values</td><td>Detection, dictionary, sentence, or language metadata</td></tr>
+    </table>
+  </div>
+
+  <div class="module">
+    <div class="module-header">
+      <div class="module-number">4</div>
+      <h2>Speech APIs</h2>
+    </div>
+    <table>
+      <tr><th>Component</th><th>Function / Endpoint</th><th>Request Attributes</th><th>Response Fields</th></tr>
+      <tr><td>Speech SDK setup</td><td><code>SpeechConfig(subscription=..., region=...)</code></td><td><code>subscription</code>, <code>region</code>, <code>speech_recognition_language</code></td><td>Configuration object</td></tr>
+      <tr><td>Speech recognition</td><td><code>SpeechRecognizer(...).recognize_once_async().get()</code></td><td><code>speech_config</code>, <code>audio_config</code></td><td><code>result.reason</code>, <code>result.text</code></td></tr>
+      <tr><td>Audio input</td><td><code>AudioConfig(use_default_microphone=True)</code></td><td><code>use_default_microphone</code></td><td>Microphone source configuration</td></tr>
+      <tr><td>Batch transcription</td><td><code>POST /speechtotext/v3.1/transcriptions</code></td><td><code>contentUrls[]</code>, <code>locale</code>, <code>displayName</code></td><td>Async transcription job metadata</td></tr>
+      <tr><td>Speech synthesis SSML</td><td><code>&lt;speak&gt;</code> payload</td><td><code>voice name</code>, <code>prosody rate</code>, <code>prosody pitch</code>, <code>break time</code>, <code>emphasis level</code></td><td>Rendered speech output</td></tr>
+    </table>
+  </div>
+
+  <div class="module">
+    <div class="module-header">
+      <div class="module-number">5</div>
+      <h2>CLU APIs</h2>
+    </div>
+    <table>
+      <tr><th>Component</th><th>Function / Endpoint</th><th>Request Attributes</th><th>Response Fields</th></tr>
+      <tr><td>Conversation prediction</td><td><code>POST /language/:analyze-conversations</code></td><td><code>kind</code>, <code>analysisInput.conversationItem.text</code>, <code>analysisInput.conversationItem.id</code>, <code>analysisInput.conversationItem.participantId</code>, <code>parameters.projectName</code>, <code>parameters.deploymentName</code></td><td>Top intent and project-specific prediction result</td></tr>
+      <tr><td>Orchestration routing</td><td>Unified orchestration endpoint</td><td>User utterance routed across connected projects</td><td>Selected target project / route</td></tr>
+    </table>
+  </div>
+
+  <div class="module">
+    <div class="module-header">
+      <div class="module-number">6</div>
+      <h2>Document Intelligence APIs</h2>
+    </div>
+    <table>
+      <tr><th>Component</th><th>Function / Endpoint</th><th>Request Attributes</th><th>Response Fields</th></tr>
+      <tr><td>Prebuilt model selection</td><td><code>POST /documentintelligence/documentModels/{modelId}:analyze</code></td><td><code>modelId</code> such as <code>prebuilt-read</code>, <code>prebuilt-layout</code>, <code>prebuilt-document</code>, <code>prebuilt-invoice</code>, <code>prebuilt-receipt</code>, <code>prebuilt-idDocument</code>, <code>prebuilt-businessCard</code>, <code>prebuilt-tax.us.w2</code>, <code>prebuilt-tax.us.1098</code>, <code>prebuilt-tax.us.1099</code>, <code>prebuilt-healthInsuranceCard.us</code></td><td>Model-specific extracted document fields</td></tr>
+      <tr><td>Analyze document REST</td><td><code>POST /documentintelligence/documentModels/{modelId}:analyze</code></td><td><code>api-version</code>, model ID such as <code>prebuilt-invoice</code>, body <code>url</code></td><td><code>operation-location</code> header for polling</td></tr>
+      <tr><td>Poll analyze result</td><td><code>GET {operation-location}</code></td><td>Operation URL</td><td><code>status</code>, extracted fields, values, confidence, bounding boxes</td></tr>
+      <tr><td>Python SDK</td><td><code>client.begin_analyze_document(...)</code></td><td><code>model_id</code>, <code>analyze_request.url</code></td><td><code>result.documents[]</code>, <code>invoice.fields["InvoiceTotal"].value_currency.amount</code></td></tr>
+      <tr><td>Custom template model</td><td>Custom model training/deployment workflow</td><td>5+ labeled samples, fixed layout, deployed named <code>modelId</code></td><td>Field extraction based on learned anchors</td></tr>
+      <tr><td>Custom neural model</td><td>Custom model training/deployment workflow</td><td>10+ samples, variable layout, deployed named <code>modelId</code></td><td>Field extraction across varying document formats</td></tr>
+      <tr><td>Composed model</td><td>Combined custom model endpoint</td><td>Multiple trained custom models composed into one endpoint</td><td>Service auto-routes document to the best submodel</td></tr>
+      <tr><td>Prebuilt receipt model</td><td>Receipt extraction</td><td>Receipt document input using prebuilt receipt model</td><td><code>MerchantName</code>, <code>TransactionDate</code>, <code>TransactionTime</code>, <code>Items</code>, <code>Subtotal</code>, <code>Tax</code>, <code>Tip</code>, <code>Total</code></td></tr>
+      <tr><td>Prebuilt ID model</td><td>ID / passport extraction</td><td>ID document input using prebuilt ID model</td><td><code>FirstName</code>, <code>LastName</code>, <code>DateOfBirth</code>, <code>DocumentNumber</code></td></tr>
+      <tr><td>Prebuilt business card model</td><td>Business card extraction</td><td>Business card input using prebuilt business card model</td><td><code>ContactNames</code>, <code>CompanyName</code>, <code>JobTitles</code>, <code>Emails</code>, <code>Websites</code>, <code>PhoneNumbers</code>, <code>Addresses</code></td></tr>
+      <tr><td>Prebuilt layout model</td><td>Layout extraction</td><td>General document input using layout model</td><td>Text, tables, selection marks, structural layout, bounding boxes</td></tr>
+      <tr><td>Prebuilt read model</td><td>Read / OCR extraction</td><td>General document input using read model</td><td>Document text, handwriting, tables</td></tr>
+      <tr><td>Prebuilt general document model</td><td>General document extraction</td><td>General form or document input using general document model</td><td>Key-value pairs, tables, and text from general documents</td></tr>
+      <tr><td>Prebuilt W-2 model</td><td>US W-2 tax extraction</td><td>W-2 document input using <code>prebuilt-tax.us.w2</code></td><td>Structured W-2 wage and tax fields</td></tr>
+      <tr><td>Prebuilt 1098 model</td><td>US 1098 tax extraction</td><td>1098 document input using <code>prebuilt-tax.us.1098</code></td><td>Structured 1098 tax form fields</td></tr>
+      <tr><td>Prebuilt 1099 model</td><td>US 1099 tax extraction</td><td>1099 document input using <code>prebuilt-tax.us.1099</code></td><td>Structured 1099 tax form fields</td></tr>
+      <tr><td>Prebuilt health insurance card model</td><td>US health insurance card extraction</td><td>Card input using <code>prebuilt-healthInsuranceCard.us</code></td><td>Member and plan information from insurance cards</td></tr>
+      <tr><td>Common invoice fields</td><td>Prebuilt invoice result schema</td><td>Invoice document input</td><td><code>VendorName</code>, <code>CustomerName</code>, <code>InvoiceId</code>, <code>InvoiceDate</code>, <code>DueDate</code>, <code>SubTotal</code>, <code>Tax</code>, <code>InvoiceTotal</code>, <code>LineItems</code></td></tr>
+    </table>
+  </div>
+
+  <div class="module">
+    <div class="module-header">
+      <div class="module-number">7</div>
+      <h2>AI Search APIs</h2>
+    </div>
+    <table>
+      <tr><th>Component</th><th>Function / Endpoint</th><th>Request Attributes</th><th>Response Fields</th></tr>
+      <tr><td>Data source definition</td><td>Search data source resource</td><td>Connection details for Blob, SQL DB, Cosmos DB, Table Storage, or ADLS Gen2</td><td>Reusable source definition for indexers</td></tr>
+      <tr><td>Index definition</td><td>Search index resource</td><td><code>fields</code>, field <code>types</code>, analyzers, suggesters, scoring profiles</td><td>Searchable schema for documents</td></tr>
+      <tr><td>Indexer definition</td><td>Indexer resource</td><td>Target index, source data connection, optional skillset, optional schedule, field mappings, output field mappings</td><td>Indexed and enriched documents written to the search index</td></tr>
+      <tr><td>Custom Web API skill</td><td>Skill JSON definition</td><td><code>@odata.type</code>, <code>uri</code>, <code>httpMethod</code>, <code>inputs[].name</code>, <code>inputs[].source</code>, <code>outputs[].name</code>, <code>outputs[].targetName</code></td><td>Custom skill output projected into target field</td></tr>
+      <tr><td>Skillset definition</td><td>Skillset JSON</td><td><code>skills[]</code> required; optional <code>name</code>, <code>description</code>, <code>cognitiveServices</code>, <code>knowledgeStore</code></td><td>Skillset resource definition</td></tr>
+      <tr><td>Built-in enrichment skills</td><td>Skillset <code>skills[]</code> entries</td><td>Skill types such as OCR, Image Analysis, Language Detection, Text Split, Entity Recognition, Key Phrase Extraction, Sentiment Analysis, PII Detection, Translation, Shaper</td><td>Enriched fields added before indexing</td></tr>
+      <tr><td>Semantic search</td><td><code>POST /indexes/{index}/docs/search</code></td><td><code>search</code>, <code>queryType</code>, <code>semanticConfiguration</code>, <code>answers</code>, <code>captions</code></td><td>Search results plus semantic answers / captions</td></tr>
+      <tr><td>Full query syntax</td><td>Search request</td><td><code>queryType=full</code>, <code>search=az*</code></td><td>Lucene wildcard behavior</td></tr>
+      <tr><td>Vector query pattern</td><td>Search request</td><td><code>vectors=[...]</code></td><td>Nearest-neighbor matches</td></tr>
+      <tr><td>Index field attributes</td><td>Index schema definition</td><td><code>searchable</code>, <code>filterable</code>, <code>sortable</code>, <code>facetable</code>, <code>retrievable</code>, <code>key</code></td><td>Field behavior in search and retrieval</td></tr>
+      <tr><td>Entity linking skill</td><td><code>#Microsoft.Skills.Text.V3.EntityLinkingSkill</code></td><td>Skill input text</td><td>Entity name, Wikipedia URL, confidence score</td></tr>
+      <tr><td>Knowledge store projections</td><td>Knowledge store configuration</td><td><code>knowledgeStore</code> with table, object, or file projections</td><td>Structured rows, JSON objects, or normalized binary files</td></tr>
+    </table>
+  </div>
+
+  <div class="module">
+    <div class="module-header">
+      <div class="module-number">8</div>
+      <h2>Azure OpenAI APIs</h2>
+    </div>
+    <table>
+      <tr><th>Component</th><th>Function / Endpoint</th><th>Request Attributes</th><th>Response Fields</th></tr>
+      <tr><td>Client creation</td><td><code>AzureOpenAI(...)</code></td><td><code>azure_endpoint</code>, <code>api_key</code>, <code>api_version</code></td><td>Configured client</td></tr>
+      <tr><td>Chat completions</td><td><code>client.chat.completions.create(...)</code></td><td><code>model</code>, <code>messages[]</code>, <code>temperature</code>, <code>top_p</code>, <code>max_tokens</code>, <code>frequency_penalty</code>, <code>presence_penalty</code>, <code>stop</code></td><td><code>response.choices[0].message.content</code></td></tr>
+      <tr><td>Message schema</td><td><code>messages[]</code></td><td><code>role</code>, <code>content</code></td><td>Conversation turn structure</td></tr>
+      <tr><td>Multimodal input</td><td><code>messages[].content[]</code></td><td><code>type="text"</code>, <code>text</code>, <code>type="image_url"</code>, <code>image_url.url</code></td><td>Vision-capable model answer</td></tr>
+      <tr><td>Image generation SDK</td><td><code>client.images.generate(...)</code></td><td><code>model</code>, <code>prompt</code>, <code>n</code>, <code>size</code>, <code>quality</code>, <code>style</code></td><td><code>result.data[0].url</code></td></tr>
+      <tr><td>DALL-E REST</td><td><code>POST /openai/deployments/{deployment}/images/generations</code></td><td><code>api-version</code>, body <code>prompt</code>, <code>n</code>, <code>size</code>, optional <code>quality</code>, optional <code>style</code></td><td><code>data[0].url</code>, <code>data[0].revised_prompt</code></td></tr>
+      <tr><td>RAG pattern</td><td>Search + completion flow</td><td>Embedding model, top-K retrieval, grounded prompt construction</td><td>Grounded answer with citations</td></tr>
+    </table>
+  </div>
+
+  <div class="module">
+    <div class="module-header">
+      <div class="module-number">F</div>
+      <h2>Foundry APIs</h2>
+    </div>
+    <table>
+      <tr><th>Component</th><th>Function / Endpoint</th><th>Request Attributes</th><th>Response Fields</th></tr>
+      <tr><td>Project client from connection string</td><td><code>AIProjectClient.from_connection_string(...)</code></td><td><code>conn_str</code>, <code>credential</code></td><td>Project-scoped client</td></tr>
+      <tr><td>Project client from endpoint</td><td><code>AIProjectClient(endpoint=..., credential=...)</code></td><td><code>endpoint</code>, <code>credential</code></td><td>Project-scoped client</td></tr>
+      <tr><td>Get OpenAI client</td><td><code>client.inference.get_azure_openai_client(...)</code></td><td><code>api_version</code></td><td>Azure OpenAI client tied to the project</td></tr>
+      <tr><td>Get connection</td><td><code>client.connections.get(...)</code></td><td><code>connection_name</code></td><td>Connection resource details</td></tr>
+      <tr><td>Create evaluation</td><td><code>client.evaluations.create(...)</code></td><td><code>evaluation.display_name</code> and evaluation payload</td><td>Evaluation run metadata</td></tr>
+      <tr><td>Create agent</td><td><code>client.agents.create_agent(...)</code></td><td><code>model</code>, <code>name</code>, <code>instructions</code></td><td>Agent resource</td></tr>
+      <tr><td>Agent model binding</td><td>Agent configuration</td><td>Foundry project endpoint, deployment <code>model</code> name</td><td>Agent uses selected deployed model</td></tr>
+    </table>
+  </div>
+
+  <div class="module">
+    <div class="module-header">
+      <div class="module-number">9</div>
+      <h2>Content Safety APIs</h2>
+    </div>
+    <table>
+      <tr><th>Component</th><th>Function / Endpoint</th><th>Request Attributes</th><th>Response Fields</th></tr>
+      <tr><td>Text analysis</td><td><code>POST /contentsafety/text:analyze</code></td><td><code>text</code>, <code>categories[]</code>, <code>outputType</code></td><td>Per-category safety analysis with severity output</td></tr>
+      <tr><td>Image moderation with Blob</td><td>Managed identity access pattern</td><td>System-assigned managed identity, Blob role <code>Storage Blob Data Reader</code></td><td>Allows service to read source images from Blob Storage</td></tr>
+      <tr><td>Prompt Shields</td><td>Safety configuration</td><td>Enable protection against direct jailbreak and indirect prompt injection</td><td>Blocked / flagged prompt attack attempts</td></tr>
+    </table>
+  </div>
+
+  <div class="page-nav">
+    <a href="quickref.html" class="page-nav-btn">← Quick Reference</a>
+    <a href="test.html" class="page-nav-btn">Quick Test →</a>
+  </div>
+
+  <footer style="text-align:center; color: var(--muted); font-size:0.8rem; padding: 2rem 0; border-top: 1px solid var(--border); margin-top: 2rem;">
+    AI-102 Study Notes &mdash; API List &mdash; Attribute names are summarized from the local study material in this workspace.
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  const pages = [
+    { file: 'index.html',      title: 'Exam Overview' },
+    { file: 'm1.html',         title: 'Azure AI Services' },
+    { file: 'm2.html',         title: 'Computer Vision' },
+    { file: 'm3.html',         title: 'Azure AI Language' },
+    { file: 'translator.html', title: 'Azure AI Translator' },
+    { file: 'm4.html',         title: 'Speech Services' },
+    { file: 'm5.html',         title: 'Language Understanding (CLU)' },
+    { file: 'm6.html',         title: 'Document Intelligence' },
+    { file: 'm7.html',         title: 'Knowledge Mining & AI Search' },
+    { file: 'm8.html',         title: 'Azure OpenAI & Generative AI' },
+    { file: 'm9.html',         title: 'Content Safety & Responsible AI' },
+    { file: 'foundry.html',    title: 'Azure AI Foundry' },
+    { file: 'pricing.html',    title: 'Tiers & Pricing' },
+    { file: 'quickref.html',   title: 'Quick Reference' },
+    { file: 'api-list.html',   title: 'API List' },
+    { file: 'test.html',       title: 'Quick Test' }
+  ];
+  const cur = window.location.pathname.split('/').pop() || 'api-list.html';
+  const idx = pages.findIndex((page) => page.file === cur);
+  const prev = pages[idx - 1];
+  const next = pages[idx + 1];
+  const pct = Math.round((idx + 1) / pages.length * 100);
+
+  document.querySelectorAll('.sidebar nav a').forEach((link) => {
+    if (link.getAttribute('href').split('#')[0] === cur) {
+      link.classList.add('active');
+    }
+  });
+
+  function buildNav(isTop) {
+    const prevBtn = prev
+      ? '<a href="' + prev.file + '" class="page-nav-btn">← ' + prev.title + '</a>'
+      : '<span style="min-width:80px"></span>';
+    const nextBtn = next
+      ? '<a href="' + next.file + '" class="page-nav-btn">' + next.title + ' →</a>'
+      : '<span style="min-width:80px"></span>';
+    const prog = '<div class="page-nav-progress"><div class="progress-track"><div class="progress-fill" style="width:' + pct + '%"></div></div><span class="progress-label">' + (idx + 1) + ' / ' + pages.length + '</span></div>';
+    return '<div class="page-nav' + (isTop ? ' page-nav-top' : '') + '">' + prevBtn + prog + nextBtn + '</div>';
+  }
+
+  const main = document.querySelector('.main');
+  if (!main) {
+    return;
+  }
+  const existing = main.querySelector('.page-nav');
+  if (existing) {
+    existing.outerHTML = buildNav(false);
+  }
+  const firstModule = main.querySelector('.module');
+  if (firstModule) {
+    firstModule.insertAdjacentHTML('beforebegin', buildNav(true));
+  }
+})();
+</script>
+</body>
+</html>
