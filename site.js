@@ -3,6 +3,7 @@
   if (!sidebar) {
     return;
   }
+  const storageKey = 'ai102-sidebar-collapsed';
 
   const sections = [
     {
@@ -84,7 +85,7 @@
   ];
 
   sidebar.innerHTML =
-    '<div class="sidebar-header"><span>AI-102</span>Azure AI Engineer Associate</div>' +
+    '<div class="sidebar-header"><div class="sidebar-header-content"><span class="sidebar-title">AI-102</span><span class="sidebar-subtitle">Azure AI Engineer Associate</span></div></div>' +
     '<nav>' +
     sections.map(function (section) {
       return (
@@ -113,31 +114,37 @@
   toggle.innerHTML = '<span>Menu</span><span class="sidebar-toggle-icon" aria-hidden="true">+</span>';
   header.appendChild(toggle);
 
-  function applyMobileState() {
-    const mobile = window.matchMedia('(max-width: 768px)').matches;
-    if (!mobile) {
-      sidebar.classList.remove('is-collapsed');
-      toggle.setAttribute('aria-expanded', 'true');
-      toggle.setAttribute('aria-label', 'Navigation visible');
+  function setCollapsed(collapsed) {
+    sidebar.classList.toggle('is-collapsed', collapsed);
+    document.body.classList.toggle('sidebar-collapsed', collapsed);
+    toggle.setAttribute('aria-expanded', String(!collapsed));
+    toggle.setAttribute('aria-label', collapsed ? 'Open navigation' : 'Close navigation');
+    try {
+      window.localStorage.setItem(storageKey, collapsed ? '1' : '0');
+    } catch (error) {
+      // Ignore storage failures.
+    }
+  }
+
+  function readStoredState() {
+    try {
+      return window.localStorage.getItem(storageKey);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function applySidebarState() {
+    const stored = readStoredState();
+    if (stored === '1' || stored === '0') {
+      setCollapsed(stored === '1');
       return;
     }
-
-    if (!sidebar.classList.contains('is-collapsed') && toggle.getAttribute('data-ready') !== 'true') {
-      sidebar.classList.add('is-collapsed');
-    }
-    toggle.setAttribute('aria-expanded', String(!sidebar.classList.contains('is-collapsed')));
-    toggle.setAttribute('aria-label', sidebar.classList.contains('is-collapsed') ? 'Open navigation' : 'Close navigation');
-    toggle.setAttribute('data-ready', 'true');
+    setCollapsed(window.matchMedia('(max-width: 768px)').matches);
   }
 
   toggle.addEventListener('click', function () {
-    if (!window.matchMedia('(max-width: 768px)').matches) {
-      return;
-    }
-    sidebar.classList.toggle('is-collapsed');
-    const expanded = !sidebar.classList.contains('is-collapsed');
-    toggle.setAttribute('aria-expanded', String(expanded));
-    toggle.setAttribute('aria-label', expanded ? 'Close navigation' : 'Open navigation');
+    setCollapsed(!sidebar.classList.contains('is-collapsed'));
   });
 
   nav.addEventListener('click', function (event) {
@@ -145,11 +152,9 @@
     if (!link || !window.matchMedia('(max-width: 768px)').matches) {
       return;
     }
-    sidebar.classList.add('is-collapsed');
-    toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-label', 'Open navigation');
+    setCollapsed(true);
   });
 
-  window.addEventListener('resize', applyMobileState);
-  applyMobileState();
+  window.addEventListener('resize', applySidebarState);
+  applySidebarState();
 })();
