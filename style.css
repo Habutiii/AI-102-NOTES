@@ -76,7 +76,7 @@ pre code { background: transparent; color: inherit; padding: 0; }
 .kw { color: #569cd6; } .str { color: #ce9178; } .cm { color: #6a9955; } .fn { color: #dcdcaa; } .cls { color: #4ec9b0; } .num { color: #b5cea8; }
 
 /* Tables */
-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; display: block; overflow-x: auto; white-space: nowrap; }
 th { background: var(--azure); color: #fff; padding: 0.6rem 0.9rem; text-align: left; font-weight: 600; }
 td { padding: 0.55rem 0.9rem; border-bottom: 1px solid var(--border); }
 tr:nth-child(even) td { background: var(--bg); }
@@ -138,8 +138,61 @@ ul li::marker { color: var(--azure); }
 /* Print / responsive */
 @media print { .sidebar { display: none; } .main { margin-left: 0; } }
 @media (max-width: 768px) {
-  .sidebar { display: none; }
-  .main { margin-left: 0; padding: 1rem; }
+  body { font-size: 14px; }
+  .sidebar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    max-height: 52vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 0.75rem;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+  }
+  .sidebar-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 0.9rem 1rem;
+  }
+  .sidebar nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.1rem;
+    padding: 0.4rem;
+  }
+  .sidebar nav .section-label {
+    grid-column: 1 / -1;
+    padding: 0.55rem 0.5rem 0.2rem;
+  }
+  .sidebar nav a {
+    border-left: none;
+    border-radius: 8px;
+    margin: 0;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.8rem;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .sidebar nav a:hover,
+  .sidebar nav a.active {
+    border-left-color: transparent;
+  }
+  .main {
+    margin-left: 0;
+    max-width: none;
+    padding: 1rem;
+  }
+  .hero {
+    padding: 1.5rem 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 { font-size: 1.55rem; }
+  .card-grid { grid-template-columns: 1fr; }
+  pre { padding: 1rem; }
   .test-controls { align-items: stretch; }
   .test-controls label, .test-controls select, .test-controls button { width: 100%; }
 }
